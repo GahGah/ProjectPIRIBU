@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
-{
+{/*
     public float timer = 0f;
     public static GameManager Instance;
 
@@ -62,4 +62,6 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
     }
+
+	*/
 }

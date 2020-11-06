@@ -4,15 +4,13 @@ using UnityEngine;
 
 public class Character : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+	public T GetChildClass<T>() where T : Character {
+		return (T)this;
+	}
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+	[HideInInspector]
+	public Unit unit;
+	public StateMachine stateMachine;
+	public Animator animator;
+
 }
