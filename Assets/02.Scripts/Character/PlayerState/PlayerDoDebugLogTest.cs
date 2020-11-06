@@ -11,7 +11,7 @@ public class PlayerDoDebugLogTest : PlayerState
     }
     public override void Excute(Player _player)
     {
-        Debug.Log("TestExcute");
+        //Debug.Log("TestExcute");
     }
     public override void Exit(Player _player)
     {

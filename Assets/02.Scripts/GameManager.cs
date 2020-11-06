@@ -7,7 +7,22 @@ public class GameManager : MonoBehaviour
     public float timer = 0f;
     public static GameManager Instance;
 
-    public Player player;
+    public Player player = null;
+
+    public InputManager inputManager;
+    private void Init()
+    {
+        if (player==null)
+        {
+            Debug.Log("player==null");
+        }
+        
+        if (inputManager==null)
+        {
+            inputManager = GetComponent<InputManager>();
+        }
+
+    }
     private void Awake()
     {
         if (Instance ==null)
@@ -27,7 +42,7 @@ public class GameManager : MonoBehaviour
     IEnumerator GameProcessTimeEvent() //인게임의 시간당 이벤트 (테스트용) 
     {
         StartCoroutine(GameProcessTimer());
-        float eventTime = 5f;
+        float eventTime = 0.1f;
 
         player.ChangeState(new PlayerDoDebugLogTest());
 

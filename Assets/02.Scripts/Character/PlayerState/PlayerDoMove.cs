@@ -7,11 +7,15 @@ public class PlayerDoMove : PlayerState
 {
     public override void Enter(Player _player)
     {
+        _player.StartCurrentStateExcute();
+        _player.StartMove();
     }
     public override void Excute(Player _player)
     {
     }
     public override void Exit(Player _player)
     {
+        _player.StopCurrentStateExcute();
+        _player.StopMove();
     }
 }
