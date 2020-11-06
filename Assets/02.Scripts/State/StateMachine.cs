@@ -13,12 +13,17 @@ public class StateMachine {
 	}
 	void Update() {
 	}
+
 }
 
 public class CharacterStateMachine : StateMachine {
 	public Character character;
 	public void SetCharacter(Character _character) {
 		character = _character;
+	}
+
+	public CharacterStateMachine(Character _character) {
+		SetCharacter(_character);
 	}
 
 }
