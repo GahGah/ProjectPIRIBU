@@ -11,10 +11,8 @@ public class PlayerState : CharacterState {
 	}
 }
 
-public class PlayerIdle : PlayerState {
-}
+public class PlayerGround : PlayerState {
 
-public class PlayerMove : PlayerState {
 }
 
 public class PlayerJump : PlayerState {

@@ -8,7 +8,6 @@ public class Character : MonoBehaviour
 		return (T)this;
 	}
 
-	[HideInInspector]
 	public Unit unit;
 	public StateMachine stateMachine;
 	public Animator animator;
