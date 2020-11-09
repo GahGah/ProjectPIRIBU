@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class EnemyState : CharacterState {
 	public Enemy enemy;
-	public override void SetCharacter(Character _character) {
-		_character.GetChildClass<Enemy>();
+	public override void Init() {
+		base.Init();
+		enemy = character.GetChildClass<Enemy>();
 	}
 }
 

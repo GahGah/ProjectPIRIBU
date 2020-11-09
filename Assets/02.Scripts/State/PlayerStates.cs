@@ -5,10 +5,12 @@ using UnityEngine;
 
 public class PlayerState : CharacterState {
 	public Player player;
-	public override void SetCharacter(Character _character) {
-		_character.GetChildClass<Player>();
+	public override void Init() {
+		base.Init();
+		player = character.GetChildClass<Player>();
 	}
 }
+
 public class PlayerIdle : PlayerState {
 }
 

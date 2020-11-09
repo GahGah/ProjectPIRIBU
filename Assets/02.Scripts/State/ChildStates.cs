@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ChildState : CharacterState {
-	public Child Child;
-	public override void SetCharacter(Character _character) {
-		_character.GetChildClass<Child>();
+	public Child child;
+	public override void Init() {
+		base.Init();
+		child = character.GetChildClass<Child>();
 	}
 }
 
