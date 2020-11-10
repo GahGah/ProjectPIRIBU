@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : SingleTon<GameManager>
 {
@@ -17,21 +18,29 @@ public class GameManager : SingleTon<GameManager>
     public float timer = 0f;
 
     public InputManager inputManager;
-    private void Init()
-    {
-        if (inputManager==null)
-        {
-            inputManager = GetComponent<InputManager>();
-        }
 
-    }
-    protected void Awake()
+	protected override void Awake() {
+		base.Awake();//여기서 Init한다.
+	}
+
+	protected override void Init()
     {
-		Init();
+		base.Init();
+		inputManager = InputManager.Instance;
     }
 
 
-    IEnumerator GameProcessTimer() // 인게임 내부에서 돌아가는 실제시간 타이머 (테스트용)
+	private void Update() {
+		//R키 누르면 임의 리셋.. 하려했는데 오류가
+		/*
+		if (Input.GetKeyDown(KeyCode.R)) {
+			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+		}
+		*/
+	}
+
+
+	IEnumerator GameProcessTimer() // 인게임 내부에서 돌아가는 실제시간 타이머 (테스트용)
     {
         timer = 0f;
 

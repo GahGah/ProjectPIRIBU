@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 //모든 입력 관리
-public class InputManager : MonoBehaviour
+public class InputManager : SingleTon<InputManager>
 {
     private Input input = null;
 
