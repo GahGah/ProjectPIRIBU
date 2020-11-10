@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class Player : Character {
 
-	private void Start() {
+	protected override void Start() {
+		base.Start();
 		stateMachine = new CharacterStateMachine(this,States.Player_Ground);
 	}
 
-	private void FixedUpdate() {
-		stateMachine.Update();
+	protected override void FixedUpdate() {
+		base.FixedUpdate();
 	}
 }

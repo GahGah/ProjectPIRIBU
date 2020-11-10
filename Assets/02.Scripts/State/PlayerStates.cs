@@ -18,9 +18,10 @@ public class PlayerGround : PlayerState {
 	}
 	public override void Execute() {
 		tick += Time.deltaTime;
+		player.unit.rigid.velocity += Vector2.down*10f * Time.deltaTime;
 		//player.unit.transform.position += Vector3.left*Time.deltaTime;
 		if (tick >= 1.5f) {
-			//sm.SetState(States.Player_Jump);
+			sm.SetState(States.Player_Jump);
 		}
 	}
 }
@@ -29,7 +30,7 @@ public class PlayerJump : PlayerState {
 	float tick;
 	public override void Enter() {
 		Debug.Log("Jump!");
-		player.unit.rigid.velocity += Vector2.up*5;
+		player.unit.rigid.velocity += Vector2.up*10;
 	}
 	public override void Execute() {
 		tick += Time.deltaTime;

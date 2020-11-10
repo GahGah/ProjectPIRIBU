@@ -5,7 +5,7 @@ using UnityEngine.Serialization;
 
 [RequireComponent(typeof(HingeJoint2D))]
 [RequireComponent(typeof(Rigidbody2D))]
-public class SeeSaw : MonoBehaviour
+public class HingeJointPlatform : MonoBehaviour
 {
 	private HingeJoint2D hinge;
 	private Rigidbody2D rigid;
