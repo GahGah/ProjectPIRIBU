@@ -8,26 +8,34 @@ public class StateMachine {
 		return (T)this;
 	}
 
-
 	State currentState;
-	protected Dictionary<States, State> stateDict;
+	protected Dictionary<States, State> stateDict = new Dictionary<States, State>();
 	public virtual void SetState(States _state) {
 		//탈출
 		if (currentState != null) {
 			currentState.Exit();
 		}
-		//진입
+		//State 객체 게으른 생성
 		if (!stateDict.ContainsKey(_state)) {
-			//State 객체 게으른 생성
-			stateDict[_state] = StateFactory.Instance.GetState(this, _state);
+			State requstedState;
+			requstedState = StateFactory.Instance.GetState(this, _state);
+			if (requstedState != null) {
+				stateDict[_state] = requstedState;
+			}
 		}
+		//진입
 		if (stateDict.ContainsKey(_state)) {
 			currentState = stateDict[_state];
 			currentState.Enter();
+		} else {
+			Debug.LogWarning("StateMachine : " + _state.ToString() + "로 전이하지 못했어요.");
 		}
 	}
+	//실행
 	public virtual void Update() {
-		currentState.Execute();
+		if (currentState != null) { 
+			currentState.Execute(); 
+		}
 	}
 
 }

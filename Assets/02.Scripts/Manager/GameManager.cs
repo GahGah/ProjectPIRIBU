@@ -25,9 +25,8 @@ public class GameManager : SingleTon<GameManager>
         }
 
     }
-    protected override void Awake()
+    protected void Awake()
     {
-		base.Awake();
 		Init();
     }
 

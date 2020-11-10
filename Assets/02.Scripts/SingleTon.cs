@@ -2,23 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SingleTon<T> : MonoBehaviour where T : class, new() {
-	protected static object _instanceLock = new object();
-	protected static volatile T _instance;
-	public static T Instance {
-		get { return _instance; }
-	}
+public class SingleTon<T> : MonoBehaviour where T : MonoBehaviour {
 
-	protected virtual void Awake() {
-		if (_instance == null) {
-			lock (_instanceLock) {
-				if (null == _instance) {
-					_instance = new T();
-					DontDestroyOnLoad(this.gameObject);
-				}
+	protected static T instance = null;
+	public static T Instance {
+		get {
+            if (instance == null) {
+				instance = new GameObject(typeof(T).ToString()).AddComponent<T>();
+				DontDestroyOnLoad(instance);
 			}
-		} else {
-			Destroy(this);
+			return instance;
 		}
 	}
 }

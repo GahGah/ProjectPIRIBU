@@ -12,10 +12,34 @@ public class PlayerState : CharacterState {
 }
 
 public class PlayerGround : PlayerState {
-
+	float tick;
+	public override void Enter() {
+		tick = 0f;
+	}
+	public override void Execute() {
+		tick += Time.deltaTime;
+		player.unit.transform.position += Vector3.left*Time.deltaTime;
+		if (tick >= 1.5f) {
+			sm.SetState(States.Player_Jump);
+		}
+	}
 }
 
 public class PlayerJump : PlayerState {
+	float tick;
+	public override void Enter() {
+		Debug.Log("Jump!");
+		player.unit.rigid.velocity += Vector2.up*5;
+		if (GameManager.Instance.timer > 0) {
+
+		}
+	}
+	public override void Execute() {
+		tick += Time.deltaTime;
+		if (tick >= 0.1f) {
+			sm.SetState(States.Player_Ground);
+		}
+	}
 }
 
 public class PlayerAir : PlayerState {

@@ -1,10 +1,14 @@
+
+#if UNITY_EDITOR
+//콘솔창 Log 띄운 코드를 추적하려 하면 여기로 와짐!
+//그래서 에디터일땐 적용 안하게 했습니다..
+#else
 using UnityEngine;
 using System.Collections;
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using UnityEngineInternal;
-
 public static class Debug 
 {
     public static bool isDebugBuild
@@ -66,3 +70,4 @@ public static class Debug
 	if (!condition) throw new Exception();
     }
 }
+#endif
