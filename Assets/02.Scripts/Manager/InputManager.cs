@@ -7,14 +7,14 @@ using UnityEngine.InputSystem.Controls;
 //모든 입력 관리
 public class InputManager : SingleTon<InputManager>
 {
-    public ButtonControl buttonW = Keyboard.current.wKey;
-    public ButtonControl buttonA = Keyboard.current.aKey;
-    public ButtonControl buttonS = Keyboard.current.sKey;
-    public ButtonControl buttonD = Keyboard.current.dKey;
-    public ButtonControl buttonSpace = Keyboard.current.spaceKey;
+    public ButtonControl buttonUp = Keyboard.current.wKey;
+    public ButtonControl buttonLeft = Keyboard.current.aKey;
+    public ButtonControl buttonDown = Keyboard.current.sKey;
+    public ButtonControl buttonRight = Keyboard.current.dKey;
+    public ButtonControl buttonJump = Keyboard.current.spaceKey;
     public ButtonControl buttonMouseLeft = Mouse.current.leftButton;
     public ButtonControl buttonCtrl = Keyboard.current.ctrlKey;
-    public ButtonControl buttonESC = Keyboard.current.escapeKey;
+    public ButtonControl buttonPause = Keyboard.current.escapeKey;
     public ButtonControl buttonCatch = Keyboard.current.leftShiftKey;
 
     //protected override void Init()
