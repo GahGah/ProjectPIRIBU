@@ -6,8 +6,8 @@ using UnityEngine;
 [Serializable]
 public class CharacterStatus
 {
-	string name;
-	float hp;
-	float walkSpeed;
-	float jumpSpeed;
+	public string name;
+	public float hp;
+	public float walkSpeed;
+	public float jumpSpeed;
 }

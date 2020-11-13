@@ -8,7 +8,7 @@ public class Hero : Character {
 		base.Start();
 		stateMachine = new CharacterStateMachine(this,States.Hero_Ground);
 	}
-
+	
 	protected override void FixedUpdate() {
 		base.FixedUpdate();
 	}

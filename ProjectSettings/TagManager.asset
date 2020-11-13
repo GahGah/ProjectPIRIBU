@@ -4,8 +4,8 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - generalPlatform
-  - oneWayPlatform
+  - Platform
+  - LinearPlatform
   layers:
   - Default
   - TransparentFX
@@ -15,8 +15,8 @@ TagManager:
   - UI
   - 
   - 
-  - CharacterBody
-  - CharacterFoot
+  - GroundBody
+  - OneWayBody
   - 
   - 
   - Ground
