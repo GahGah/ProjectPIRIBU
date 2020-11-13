@@ -13,6 +13,9 @@ public class LinearPlatform : MonoBehaviour {
 		preScale, currScale,
 		preAngle, currAngle,
 		preNormal, currNormal;
+	[HideInInspector]
+	public PreVector3
+		deltaPos;
 
 	private void Awake() {
 		gameObject.tag = "LinearPlatform";
@@ -25,20 +28,11 @@ public class LinearPlatform : MonoBehaviour {
 		UpdatePreTransforms();
 	}
 
-	void FixedUpdate() {
+	void Update() {
 		UpdatePreTransforms();
-
-		Vector3 up, right;
-		up = transform.up;
-		right = transform.right;
-
-		Vector3 leftTop, rightTop;
-		leftTop = currPos + up * currScale.y * 0.5f - right * currScale.x * 0.5f;
-		leftTop.z = 0;
-		rightTop = leftTop + right * currScale.x;
-		Debug.DrawLine(leftTop, rightTop, Color.red);
-
 		UpdateCurrTransforms();
+		deltaPos = new PreVector3(currPos) - new PreVector3(prePos);
+		Debug.Log(currPos.x + " / " +prePos.x);
 	}
 
 	//1프레임 전 트랜스폼 업데이트
@@ -62,19 +56,29 @@ public class LinearPlatform : MonoBehaviour {
 		Vector3 center = currPos + currNormal * currScale.y * 0.5f;//지형 선분의 중앙점
 		bool isOneWayIgnore = true;//충돌연산 Off
 
-		if (Vector3.Dot(currNormal, charPos - center) >= 0//캐릭터가 표면 위에 있다면
-			//&& Vector3.Dot(charVelocity, currNormal) <= 0//캐릭터 속도는 표면노말과...
-			) {
-
+		//캐릭터가 표면 위에 있다면 캐릭터는 충돌해야한다.
+		if (Vector3.Dot(currNormal, charPos - center) >= 0) {
 			Debug.DrawLine(currPos, currPos + currNormal, Color.red);
 			Debug.DrawLine(currPos, currPos + (charPos - center), Color.blue);
-			isOneWayIgnore = false;//캐릭터는 충돌 해야한다.
+			isOneWayIgnore = false;
 		}
 
 		return isOneWayIgnore;
 	}
 
 	public Vector3 GetLiftPosition(Vector3 charPos) {
-		return Vector3.zero;
+		return deltaPos+charPos;
+	}
+
+	public void DrawPlatformSegment() {
+		Vector3 up, right;
+		up = transform.up;
+		right = transform.right;
+
+		Vector3 leftTop, rightTop;
+		leftTop = currPos + up * currScale.y * 0.5f - right * currScale.x * 0.5f;
+		leftTop.z = 0;
+		rightTop = leftTop + right * currScale.x;
+		Debug.DrawLine(leftTop, rightTop, Color.green);
 	}
 }

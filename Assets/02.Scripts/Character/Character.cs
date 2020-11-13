@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.UIElements;
 using UnityEngine;
 
 /// <summary>
@@ -12,8 +13,7 @@ public class Character : MonoBehaviour
 	public StateMachine stateMachine;
 	public Animator animator;
 
-	public Collider2D footCollider;
-	public Collider2D SensorCollider;
+	public CharacterFoot foot;
 	public StageObjectSensor sensor;
 
 	public CharacterStatus status;
@@ -34,18 +34,25 @@ public class Character : MonoBehaviour
 	public void ManageFootCollider()
     {
 		Vector3 velocity = unit.rigid.velocity; //캐릭터의 움직임 방향벡터
-		Vector3 footPos = footCollider.transform.position;
+		Vector3 footPos = foot.transform.position;
 
-		//현재 맞닿아잇는 플랫폼들을 순회
+		//One-Way 충돌체 분류
 		foreach (LinearPlatform platform in sensor.linearPlatforms) {
 			// One-way 플랫폼일 경우
 			if (platform.isOneWay)
 			{
+				bool isIgnore = platform.GetIsOneWayIgnore(footPos, velocity);
 				// One-Way 플랫폼 충돌무시 검사
 				Physics2D.IgnoreCollision(
-					footCollider, platform.GetComponent<Collider2D>(),
-					platform.GetIsOneWayIgnore(footPos,velocity));
+
+					foot.collider, platform.GetComponent<Collider2D>(),isIgnore);
 			}
+		}
+
+		//Lifting Platform
+		if (foot.adjacentlinearPlatforms.Count > 0) {
+			LinearPlatform platform = foot.adjacentlinearPlatforms[0];
+			transform.position = platform.GetLiftPosition(transform.position);
 		}
     }
 	
