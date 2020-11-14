@@ -55,7 +55,7 @@ public struct PreVector3 {
 	}
 }
 
-public static class Utillity
+public static class Utility
 {	
 	delegate Vector3 Vector3_Operator(Vector3 a, Vector3 b);
 
@@ -65,5 +65,9 @@ public static class Utillity
 	}
 	public static PreVector3 GetVector3Plus(Vector3 a, Vector3 b) {
 		return new PreVector3(a.x + b.x, a.y + b.y, a.z + b.z);
+	}
+
+	public static void DrawDir(Vector3 Pos, Vector3 Dir, Color color) {
+		Debug.DrawLine(Pos, Pos + Dir.normalized * 3, color);
 	}
 }

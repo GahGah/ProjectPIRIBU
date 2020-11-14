@@ -31,12 +31,10 @@ public class GameManager : SingleTon<GameManager>
 
 
 	private void Update() {
-		//R키 누르면 임의 리셋.. 하려했는데 오류가
-		/*
-		if (Input.GetKeyDown(KeyCode.R)) {
+		//ESC키 누르면 임의 리셋
+		if (inputManager.buttonPause.isPressed) {
 			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 		}
-		*/
 	}
 
 

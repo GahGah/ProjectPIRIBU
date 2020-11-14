@@ -35,19 +35,17 @@ public class HeroGround : HeroState {
 
 		float speed = 0;
 		if (input.buttonLeft.isPressed) {
-			speed -= 10;
+			speed -= 10*50;
 		}
 		if (input.buttonRight.isPressed) {
-			speed += 10;
+			speed += 10*50;
 		}
 
-		hero.unit.rigid.velocity += Vector2.down * 10f * Time.deltaTime;
-		
-		Vector3 vel = hero.unit.rigid.velocity;
-		vel.x *= 0.3f;
-		hero.unit.rigid.velocity = vel;
-
-		hero.unit.transform.position += Vector3.right*speed * Time.deltaTime;
+		Vector2 vel = hero.unit.rigid.velocity;
+		hero.unit.rigid.velocity =
+			new Vector2(0,vel.y) + (
+			Vector2.right * speed + Vector2.down * 10f )
+			*Time.deltaTime;
 
 		if (input.buttonJump.isPressed) {
 			sm.SetState(States.Hero_Jump);
