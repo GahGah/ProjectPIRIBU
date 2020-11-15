@@ -33,24 +33,20 @@ public class HeroGround : HeroState {
 	public override void Execute() {
 		tick += Time.deltaTime;
 
-		float speed = 0;
-		if (input.buttonLeft.isPressed) {
-			speed -= 10*50;
-		}
-		if (input.buttonRight.isPressed) {
-			speed += 10*50;
-		}
+		//좌우이동
+		int moveDir = 0;
+		if (input.buttonLeft.isPressed) moveDir = -1;
+		if (input.buttonRight.isPressed) moveDir = 1;
 
-		Vector2 vel = hero.unit.rigid.velocity;
-		hero.unit.rigid.velocity =
-			new Vector2(0,vel.y) + (
-			Vector2.right * speed + Vector2.down * 10f )
-			*Time.deltaTime;
+		hero.HandleMoveSpeed( moveDir, charStat.groundMoveSpeed);
+
+		Vector2 vel = hero.unit.GetVelocity();
+		vel = new Vector2(charStat.sideMoveSpeed, vel.y - charStat.fallSpeed);
+		hero.unit.SetMovement(MovementType.SetVelocity, vel);
 
 		if (input.buttonJump.isPressed) {
 			sm.SetState(States.Hero_Jump);
 		}
-
 	}
 }
 
@@ -59,7 +55,7 @@ public class HeroJump : HeroState {
 	public override void Enter() {
 		Debug.Log("Jump!");
 		tick = 0;
-		hero.unit.rigid.velocity += Vector2.up * 10;
+		hero.unit.SetMovement(MovementType.AddVelocity, Vector2.up * 30);
 	}
 	public override void Execute() {
 		tick += Time.deltaTime;

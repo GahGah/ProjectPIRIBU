@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//캐릭터 물리담당
-[RequireComponent(typeof(Rigidbody2D))]
 public class UnitCharacter : Unit
 {
 	[SerializeField] protected LayerMask groundLayer;
-	public Rigidbody2D rigid;
 	[HideInInspector] public Character character;
 
 	public CharacterFoot foot;
@@ -44,8 +41,6 @@ public class UnitCharacter : Unit
 			lift = foot.adjacentlinearPlatforms[0];
 		}
 		SetLiftParent(lift);
-		if (lift)
-			lift.Draw();
 	}
 
 	//LiftParent 설정
@@ -53,10 +48,10 @@ public class UnitCharacter : Unit
 		//다른 parent로 전이
 		if (liftParent != lift) {
 			if (liftParent)
-				liftParent.RemoveChild(character.transform);
+				liftParent.RemoveChild(character.unit);
 			liftParent = lift;
 			if (liftParent)
-				liftParent.AddChild(character.transform);
+				liftParent.AddChild(character.unit);
 		}
 	}
 	public RaycastHit2D RayGround(Vector2 _dir) {

@@ -17,11 +17,13 @@ public class CharacterStateMachine : StateMachine {
 
 public class CharacterState : State {
 	protected Character character;
+	protected CharacterStatus charStat;
 	//protected UnitCharacter unitCharacter;
 
 	public override void Init() {
 		base.Init();
 		character = sm.GetChildClass<CharacterStateMachine>().GetCharacter();
+		charStat = character.status;
 		//unitCharacter = character.unit;
 	}
 

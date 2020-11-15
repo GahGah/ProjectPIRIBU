@@ -9,11 +9,8 @@ public class LinearPlatform : LiftObject {
 
 	public bool isOneWay = true;
 
-	public float firstDegree;
-
 	protected override void Awake() {
 		base.Awake();
-		childs = new List<Transform>();
 
 		gameObject.tag = "LinearPlatform";
 		if (isOneWay) {
@@ -24,12 +21,7 @@ public class LinearPlatform : LiftObject {
 		
 	}
 
-	protected override void UpdateTransform() {
-		transform.position =
-			standardPos +
-			Vector3.left * Mathf.Sin(firstDegree+Time.time * 2f) * 5f
-			+ Vector3.up * Mathf.Cos(firstDegree+Time.time * 2f) * 5f;
-	}
+	protected virtual void Update() {}
 
 	public bool GetIsOneWayIgnore(Vector3 charPos) {
 
@@ -39,8 +31,8 @@ public class LinearPlatform : LiftObject {
 
 		//캐릭터가 표면 위에 있다면 캐릭터는 충돌해야한다.
 		if (Vector3.Dot(currNormal, charPos - center) >= 0) {
-			Debug.DrawLine(currPos, currPos + currNormal, Color.red);
-			Debug.DrawLine(currPos, currPos + (charPos - center), Color.blue);
+			//Debug.DrawLine(currPos, currPos + currNormal, Color.red);
+			//Debug.DrawLine(currPos, currPos + (charPos - center), Color.blue);
 			isOneWayIgnore = false;
 		}
 
