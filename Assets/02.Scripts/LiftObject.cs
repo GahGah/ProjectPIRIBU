@@ -53,45 +53,75 @@ public class LiftObject : MonoBehaviour
 
 		//자신에게 붙은 객체 위치 변경
 		foreach (LiftObject child in childs) {
-			child.transform.position = GetLiftPosition(child.transform.position);
+			//child.transform.position = GetLiftPosition(child.currPos);
+			child.SetMovement(MovementType.SetTargetPos,GetLiftPosition(child.currPos));
 		}
 	}
 
 	public Vector3 GetLiftPosition(Vector3 charPos) {
-		return (Vector3)GetVelocity() + charPos;
+		return deltaPos + charPos;
+		//return (Vector3)GetVelocity() + charPos;
 	}
 
 
-	//사용자 지정 이동함수
-	Vector3 inputVector = Vector3.zero;
-	MovementType inputType = MovementType.None;
-	protected virtual void UpdateTransform() {
-
-		switch (inputType) {
-			case MovementType.None:
-				break;
-			//Transform.Position = TargetPosition과 같은 역할.
-			case MovementType.SetTargetPos:
-				rigid.velocity = inputVector - transform.position;
-				transform.position = inputVector;
-				break;
-			//Rigidbody.Velocity += (초당 이동위치)와 같은 역할.
-			case MovementType.AddVelocity:
-				rigid.AddForce(inputVector*fixedUpdatePerSec);
-				break;
-			//Rigidbody.Velocity = (초당 이동위치)와 같은 역할.
-			case MovementType.SetVelocity:
-				rigid.AddForce( ((Vector2)inputVector-rigid.velocity)
-					*fixedUpdatePerSec );
-				break;
+	//사용자 지정 이동함수 리스트
+	struct MovementInput {
+		public MovementType type;
+		public Vector3 vector;
+		public MovementInput(MovementType _type, Vector3 _vec) {
+			type = _type;
+			vector = _vec;
 		}
-		inputType = MovementType.None;
+	}
+	private List<MovementInput> movementInputs = new List<MovementInput>();
+
+	protected virtual void UpdateTransform() {
+		if (movementInputs.Count == 0) return;
+
+		Vector3 targetPos = transform.position;
+		Vector3 totalVel = Vector3.zero;
+		Vector3 targetVel = rigid.velocity;
+
+		foreach(MovementInput input in movementInputs) {
+			switch (input.type) {
+				case MovementType.None:
+					break;
+				//Transform.Position = TargetPosition과 같은 역할.
+				case MovementType.SetTargetPos:
+					targetPos = input.vector;
+					break;
+				//Rigidbody.Velocity += (초당 이동위치)와 같은 역할.
+				case MovementType.AddVelocity:
+					totalVel += input.vector;
+					break;
+				//Rigidbody.Velocity = (초당 이동위치)와 같은 역할.
+				case MovementType.SetVelocity:
+					targetVel = input.vector;
+					break;
+			}
+		}
+		movementInputs.Clear();
+		if (this.gameObject.name == "Hero") {
+			Debug.Log(targetPos - transform.position + " / " + targetVel);
+		}
+		//이동량이다.
+		Vector3 finalVel = 
+			(targetPos - transform.position)// 
+			+ totalVel
+			+ targetVel- (Vector3)rigid.velocity;
+
+		rigid.AddForce(
+			finalVel * fixedUpdatePerSec 
+			//* (1 + Time.fixedDeltaTime * rigid.drag) 
+			* rigid.mass//Drag,Mass 무시
+			);
+		//transform.position = targetPos;
+
 	}
 
 	//매프레임마다 LiftObject를 움직이는 방식은 사용자 지정
-	public void SetMovement(MovementType setType,Vector2 _input) {
-		inputType = setType;
-		inputVector = _input;
+	public void SetMovement(MovementType inputType,Vector2 inputVec) {
+		movementInputs.Add(new MovementInput(inputType, inputVec));
 	}
 	public Vector2 GetVelocity() {
 		return rigid.velocity;

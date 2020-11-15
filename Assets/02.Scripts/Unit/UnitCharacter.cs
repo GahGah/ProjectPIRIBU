@@ -21,7 +21,6 @@ public class UnitCharacter : Unit
 				bool isIgnore = false;
 				//부모는 밟고있어야 한다.
 				if (platform == liftParent) {
-					isIgnore = platform.GetIsOneWayIgnore(footPos);
 					isIgnore = false;
 					Physics2D.IgnoreCollision(foot.collider, platform.coll, isIgnore);
 					continue;

@@ -17,16 +17,18 @@ public class CircleMovePlatform : LinearPlatform
 				CircleMovePlatform inst = 
 				Instantiate(this.gameObject).GetComponent<CircleMovePlatform>();
 				inst.isOriginal = false;
-				inst.firstDegree = i * Mathf.Deg2Rad;
+				inst.firstDegree = i;
 				inst.standardPos = standardPos;
 			}
 		}
 	}
 	protected override void Update() {
-		targetPos =
+		Vector3 pos =
 			standardPos +
-			Vector3.left * Mathf.Sin(firstDegree + Time.time * 0f) * 5f
-			+ Vector3.up * Mathf.Cos(firstDegree + Time.time * 0f) * 5f;
-		SetMovement(MovementType.SetTargetPos, targetPos);
+			Vector3.left * Mathf.Sin(firstDegree + Time.time * 2f) * 8f
+			+ Vector3.up * Mathf.Cos(firstDegree + Time.time * 2f) * 8f;
+		SetMovement(MovementType.SetTargetPos, pos);
+
+		Utility.DrawDir(pos, Vector3.up, Color.red);
 	}
 }
