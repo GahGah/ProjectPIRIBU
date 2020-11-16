@@ -40,6 +40,8 @@ public class UnitCharacter : Unit
 			lift = foot.adjacentlinearPlatforms[0];
 		}
 		SetLiftParent(lift);
+		if (liftParent)
+			liftParent.Draw();
 	}
 
 	//LiftParent 설정

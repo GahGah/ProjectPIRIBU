@@ -54,7 +54,7 @@ public class LiftObject : MonoBehaviour {
 		//자신에게 붙은 객체 위치 변경
 		foreach (LiftObject child in childs) {
 			//child.SetMovement(MovementType.AddVelocity, deltaPos);
-			//child.SetMovement(MovementType.SetTargetPos, GetLiftPosition(child));
+			child.SetMovement(MovementType.SetTargetPos, GetLiftPosition(child));
 		}
 	}
 
@@ -108,14 +108,16 @@ public class LiftObject : MonoBehaviour {
 		Vector2 addVel = totalVel + (targetVel - rigid.velocity);
 		//MovePos
 		if (movePos != (Vector2)transform.position) {
-				rigid.MovePosition(movePos);				
+			rigid.MovePosition(movePos + addVel*Time.fixedDeltaTime);
 		}
+		
 		rigid.AddForce(
 			addVel
 			* fixedUpdatePerSec
 			* (1 + Time.fixedDeltaTime * rigid.drag)
 			* rigid.mass//Drag,Mass 무시
 		);
+		
 	}
 
 	//매프레임마다 LiftObject를 움직이는 방식은 사용자 지정
