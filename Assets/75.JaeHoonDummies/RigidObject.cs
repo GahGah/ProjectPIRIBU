@@ -17,29 +17,36 @@ public class RigidObject : MonoBehaviour
 
 
 		#region 합력 테스트
-		/*
 		// 1/fixedDeltaTime는 초당 물리연산 횟수이다.
-		float mult = rigid.mass / Time.fixedDeltaTime / Time.fixedDeltaTime ;
-		float moveMount = 15;
+		float mult = rigid.mass / Time.fixedDeltaTime ;
+		float moveMount = 1f;
 
-		//AddForce는 왼쪽 위를 향한다.
-		rigid.AddForce((Vector2.left + Vector2.up)* moveMount * mult);
+		//AddForce는 위를 향한다.
+		Vector3 addVel = Vector2.up * moveMount;
+		//rigid.AddForce(addVel * mult);
 
-		//MovePosition은 오른쪽 위를 향한다.
-		rigid.MovePosition(transform.position+ (Vector3.right + Vector3.up) * moveMount);
+		//Addforce의 이동을 상쇄시킨 MovePosition의 식
+		if(InputManager.Instance.buttonUp.isPressed)
+		rigid.MovePosition(transform.position- addVel*Time.fixedDeltaTime);
 
-		//두 연산이 합쳐져 결과적으로 한프레임당 Vector3.up*moveMount만큼 이동한다.
+		rigid.velocity = addVel*(1*rigid.drag);
+		//두 연산이 합쳐져 오브젝트는 정지한다
+
+		/*
+		 * Velocity *= 1-drag*fixedDeltaTime;
+		 * 200 1/5
+		 * 100 1/3
+		 * 25 2/3
+		 * 0 1
+		 * 
+		
 		*/
+		//또한 MovePosition이 호출된 프레임에선 velocity는 아예 변화하지 않는다.
 		#endregion
 
-		Vector3 pos = transform.position;
-		float moveMount = 1f;
-		rigid.MovePosition(pos + Vector3.right * moveMount);
-		rigid.MovePosition(pos - Vector3.right * moveMount);
-		//결과 : 마지막에 호출된 MovePosition만 적용되어 프레임당 1씩 왼쪽으로 이동한다.
+		
 
 	}
-	Vector3 currPos;
 
 
 }

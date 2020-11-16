@@ -34,7 +34,7 @@ public class HeroGround : HeroState {
 		tick += Time.deltaTime;
 
 		//지형 부착
-		hero.unit.RayGround(Vector2.down);
+		//hero.unit.RayGround(Vector2.down);
 
 		//좌우이동
 		int moveDir = 0;

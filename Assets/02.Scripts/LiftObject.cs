@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum MovementType {
-	None, SetTargetPos, SetVelocity, AddVelocity
+	None, MovePos, SetVelocity, AddVelocity
 }
 
 /// <summary>
@@ -53,8 +53,7 @@ public class LiftObject : MonoBehaviour {
 
 		//자신에게 붙은 객체 위치 변경
 		foreach (LiftObject child in childs) {
-			//child.SetMovement(MovementType.AddVelocity, deltaPos);
-			child.SetMovement(MovementType.SetTargetPos, GetLiftPosition(child));
+			child.SetMovement(MovementType.MovePos, GetLiftPosition(child));
 		}
 	}
 
@@ -90,7 +89,7 @@ public class LiftObject : MonoBehaviour {
 				case MovementType.None:
 					break;
 				//Transform.Position = TargetPosition과 같은 역할.
-				case MovementType.SetTargetPos:
+				case MovementType.MovePos:
 					movePos = input.vector;
 					break;
 				//Rigidbody.Velocity += (초당 이동위치)와 같은 역할.
@@ -105,19 +104,24 @@ public class LiftObject : MonoBehaviour {
 		}
 		movementInputs.Clear();
 
-		Vector2 addVel = totalVel + (targetVel - rigid.velocity);
+		bool isHero = gameObject.name == "Hero";
+
+		float mult = rigid.mass * fixedUpdatePerSec;
+		Vector2 addVel = (totalVel + (targetVel - rigid.velocity));
 		//MovePos
 		if (movePos != (Vector2)transform.position) {
-			rigid.MovePosition(movePos + addVel*Time.fixedDeltaTime);
+			rigid.MovePosition(movePos
+				//+ addVel * Time.fixedDeltaTime
+			);
+			//rigid.velocity = movePos - (Vector2)transform.position;
+			if (isHero) {
+				Debug.DrawLine(transform.position, movePos);
+			}
+		} else {
+			rigid.AddForce(addVel * mult);
 		}
-		
-		rigid.AddForce(
-			addVel
-			* fixedUpdatePerSec
-			* (1 + Time.fixedDeltaTime * rigid.drag)
-			* rigid.mass//Drag,Mass 무시
-		);
-		
+
+
 	}
 
 	//매프레임마다 LiftObject를 움직이는 방식은 사용자 지정
