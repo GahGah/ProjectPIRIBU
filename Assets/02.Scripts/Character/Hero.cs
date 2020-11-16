@@ -33,6 +33,9 @@ public class HeroGround : HeroState {
 	public override void Execute() {
 		tick += Time.deltaTime;
 
+		//지형 부착
+		hero.unit.RayGround(Vector2.down);
+
 		//좌우이동
 		int moveDir = 0;
 		if (input.buttonLeft.isPressed) moveDir = -1;
@@ -53,6 +56,7 @@ public class HeroGround : HeroState {
 public class HeroJump : HeroState {
 	float tick;
 	public override void Enter() {
+		hero.unit.SetLiftParent(null);
 		Debug.Log("Jump!");
 		tick = 0;
 		hero.unit.SetMovement(MovementType.AddVelocity, Vector2.up * 30);

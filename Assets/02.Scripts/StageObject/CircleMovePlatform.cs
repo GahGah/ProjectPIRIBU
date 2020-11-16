@@ -23,12 +23,12 @@ public class CircleMovePlatform : LinearPlatform
 		}
 	}
 	protected override void Update() {
+		float time = Time.time * 0.5f;
+		float radious = 8f;
 		Vector3 pos =
 			standardPos +
-			Vector3.left * Mathf.Sin(firstDegree + Time.time * 2f) * 8f
-			+ Vector3.up * Mathf.Cos(firstDegree + Time.time * 2f) * 8f;
+			Vector3.left * Mathf.Sin(firstDegree + time) * radious
+			+ Vector3.up * Mathf.Cos(firstDegree + time) * radious;
 		SetMovement(MovementType.SetTargetPos, pos);
-
-		Utility.DrawDir(pos, Vector3.up, Color.red);
 	}
 }

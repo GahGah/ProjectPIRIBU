@@ -43,7 +43,7 @@ public class UnitCharacter : Unit
 	}
 
 	//LiftParent 설정
-	protected void SetLiftParent(LiftObject lift) {
+	public void SetLiftParent(LiftObject lift) {
 		//다른 parent로 전이
 		if (liftParent != lift) {
 			if (liftParent)

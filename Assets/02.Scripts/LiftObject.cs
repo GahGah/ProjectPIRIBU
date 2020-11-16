@@ -10,8 +10,7 @@ public enum MovementType {
 /// 게임내의 모든 움직이는 클래스 (캐릭터나 플랫폼)
 /// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
-public class LiftObject : MonoBehaviour
-{
+public class LiftObject : MonoBehaviour {
 	[HideInInspector] public List<LiftObject> childs;//옮길 대상
 	[HideInInspector] public Collider2D coll;
 	[HideInInspector] public Rigidbody2D rigid;
@@ -45,30 +44,31 @@ public class LiftObject : MonoBehaviour
 
 
 	private void FixedUpdate() {
+
 		UpdatePreTransforms();
 		UpdateTransform();
 		UpdateCurrTransforms();
 
-		deltaPos = currPos- prePos;
+		deltaPos = currPos - prePos;
 
 		//자신에게 붙은 객체 위치 변경
 		foreach (LiftObject child in childs) {
-			//child.transform.position = GetLiftPosition(child.currPos);
-			child.SetMovement(MovementType.SetTargetPos,GetLiftPosition(child.currPos));
+			//child.SetMovement(MovementType.AddVelocity, deltaPos);
+			//child.SetMovement(MovementType.SetTargetPos, GetLiftPosition(child));
 		}
 	}
 
-	public Vector3 GetLiftPosition(Vector3 charPos) {
-		return deltaPos + charPos;
+	public Vector3 GetLiftPosition(LiftObject child) {
+		return deltaPos + child.transform.position;
 		//return (Vector3)GetVelocity() + charPos;
-	}
+	} 
 
 
 	//사용자 지정 이동함수 리스트
 	struct MovementInput {
 		public MovementType type;
-		public Vector3 vector;
-		public MovementInput(MovementType _type, Vector3 _vec) {
+		public Vector2 vector;
+		public MovementInput(MovementType _type, Vector2 _vec) {
 			type = _type;
 			vector = _vec;
 		}
@@ -76,19 +76,22 @@ public class LiftObject : MonoBehaviour
 	private List<MovementInput> movementInputs = new List<MovementInput>();
 
 	protected virtual void UpdateTransform() {
-		if (movementInputs.Count == 0) return;
+		if (movementInputs.Count == 0) {
+			Utility.DrawDir(currPos, currNormal, Color.blue);
+			return;
+		}
 
-		Vector3 targetPos = transform.position;
-		Vector3 totalVel = Vector3.zero;
-		Vector3 targetVel = rigid.velocity;
+		Vector2 movePos = transform.position;
+		Vector2 totalVel = Vector2.zero;
+		Vector2 targetVel = rigid.velocity;
 
-		foreach(MovementInput input in movementInputs) {
+		foreach (MovementInput input in movementInputs) {
 			switch (input.type) {
 				case MovementType.None:
 					break;
 				//Transform.Position = TargetPosition과 같은 역할.
 				case MovementType.SetTargetPos:
-					targetPos = input.vector;
+					movePos = input.vector;
 					break;
 				//Rigidbody.Velocity += (초당 이동위치)와 같은 역할.
 				case MovementType.AddVelocity:
@@ -101,26 +104,22 @@ public class LiftObject : MonoBehaviour
 			}
 		}
 		movementInputs.Clear();
-		if (this.gameObject.name == "Hero") {
-			Debug.Log(targetPos - transform.position + " / " + targetVel);
+
+		Vector2 addVel = totalVel + (targetVel - rigid.velocity);
+		//MovePos
+		if (movePos != (Vector2)transform.position) {
+				rigid.MovePosition(movePos);				
 		}
-		//이동량이다.
-		Vector3 finalVel = 
-			(targetPos - transform.position)// 
-			+ totalVel
-			+ targetVel- (Vector3)rigid.velocity;
-
 		rigid.AddForce(
-			finalVel * fixedUpdatePerSec 
-			//* (1 + Time.fixedDeltaTime * rigid.drag) 
+			addVel
+			* fixedUpdatePerSec
+			* (1 + Time.fixedDeltaTime * rigid.drag)
 			* rigid.mass//Drag,Mass 무시
-			);
-		//transform.position = targetPos;
-
+		);
 	}
 
 	//매프레임마다 LiftObject를 움직이는 방식은 사용자 지정
-	public void SetMovement(MovementType inputType,Vector2 inputVec) {
+	public void SetMovement(MovementType inputType, Vector2 inputVec) {
 		movementInputs.Add(new MovementInput(inputType, inputVec));
 	}
 	public Vector2 GetVelocity() {
