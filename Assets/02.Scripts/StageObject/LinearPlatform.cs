@@ -25,13 +25,13 @@ public class LinearPlatform : LiftObject {
 
 	public bool GetIsOneWayIgnore(Vector3 charPos) {
 
-		Vector3 center = currPos + (currNormal*0.5f * currScale.y);//지형 선분의 중앙점
+		Vector3 center = currPos;// + (currNormal*0 * currScale.y);//지형 선분의 중앙점
 		bool isOneWayIgnore = true;//충돌연산 Off
 
 		//캐릭터가 표면 위에 있다면 캐릭터는 충돌해야한다.
 		if (Vector3.Dot(currNormal, charPos - center) >= 0) {
-			//Debug.DrawLine(currPos, currPos + currNormal, Color.red);
-			//Debug.DrawLine(currPos, currPos + (charPos - center), Color.blue);
+			Debug.DrawLine(currPos, currPos + currNormal, Color.red);
+			Debug.DrawLine(currPos, currPos + (charPos - center), Color.blue);
 			isOneWayIgnore = false;
 		}
 

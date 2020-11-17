@@ -56,14 +56,15 @@ public class HeroGround : HeroState {
 public class HeroJump : HeroState {
 	float tick;
 	public override void Enter() {
-		hero.unit.SetLiftParent(null);
+		hero.unit.ResetLiftParent();
+		hero.unit.foot.adjacentlinearPlatforms.Clear();
 		Debug.Log("Jump!");
 		tick = 0;
-		hero.unit.SetMovement(MovementType.AddVelocity, Vector2.up * 30);
+		hero.unit.SetMovement(MovementType.AddVelocity, Vector2.up * 15);
 	}
 	public override void Execute() {
 		tick += Time.deltaTime;
-		if (tick >= 0.1f) {
+		if (tick >= 0.5f) {
 			sm.SetState(States.Hero_Ground);
 		}
 	}

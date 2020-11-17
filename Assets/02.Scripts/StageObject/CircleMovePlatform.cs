@@ -13,7 +13,7 @@ public class CircleMovePlatform : LinearPlatform
 	private void Start() {
 		firstDegree = firstDegree * Mathf.Deg2Rad;
 		if (isOriginal) {
-			for (int i = 30; i < 360; i += 30) {
+			for (int i = 60; i < 360; i += 60) {
 				CircleMovePlatform inst = 
 				Instantiate(this.gameObject).GetComponent<CircleMovePlatform>();
 				inst.isOriginal = false;
@@ -23,7 +23,7 @@ public class CircleMovePlatform : LinearPlatform
 		}
 	}
 	protected override void Update() {
-		float time = Time.time * 0.5f;
+		float time = Time.time *0.5f;
 		float radious = 8f;
 		Vector3 pos =
 			standardPos +

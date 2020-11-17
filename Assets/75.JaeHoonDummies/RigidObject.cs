@@ -26,21 +26,12 @@ public class RigidObject : MonoBehaviour
 		//rigid.AddForce(addVel * mult);
 
 		//Addforce의 이동을 상쇄시킨 MovePosition의 식
-		if(InputManager.Instance.buttonUp.isPressed)
-		rigid.MovePosition(transform.position- addVel*Time.fixedDeltaTime);
+		//if(InputManager.Instance.buttonUp.isPressed)
+			rigid.MovePosition(transform.position);
 
 		rigid.velocity = addVel*(1*rigid.drag);
 		//두 연산이 합쳐져 오브젝트는 정지한다
 
-		/*
-		 * Velocity *= 1-drag*fixedDeltaTime;
-		 * 200 1/5
-		 * 100 1/3
-		 * 25 2/3
-		 * 0 1
-		 * 
-		
-		*/
 		//또한 MovePosition이 호출된 프레임에선 velocity는 아예 변화하지 않는다.
 		#endregion
 

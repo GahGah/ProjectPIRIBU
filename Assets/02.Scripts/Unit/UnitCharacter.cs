@@ -9,7 +9,6 @@ public class UnitCharacter : Unit
 
 	public CharacterFoot foot;
 	public StageObjectSensor sensor;
-	protected LiftObject liftParent;//사다리, Lift 지형 등의 객체
 
 	public void ManageFootCollider() {
 		Vector3 footPos = foot.transform.position;
@@ -20,7 +19,7 @@ public class UnitCharacter : Unit
 			if (platform.isOneWay) {
 				bool isIgnore = false;
 				//부모는 밟고있어야 한다.
-				if (platform == liftParent) {
+				if (platform == parent) {
 					isIgnore = false;
 					Physics2D.IgnoreCollision(foot.collider, platform.coll, isIgnore);
 					continue;
@@ -40,21 +39,10 @@ public class UnitCharacter : Unit
 			lift = foot.adjacentlinearPlatforms[0];
 		}
 		SetLiftParent(lift);
-		if (liftParent)
-			liftParent.Draw();
+		//if (parent) parent.Draw();
 	}
 
-	//LiftParent 설정
-	public void SetLiftParent(LiftObject lift) {
-		//다른 parent로 전이
-		if (liftParent != lift) {
-			if (liftParent)
-				liftParent.RemoveChild(character.unit);
-			liftParent = lift;
-			if (liftParent)
-				liftParent.AddChild(character.unit);
-		}
-	}
+	
 	public RaycastHit2D RayGround(Vector2 _dir) {
 		RaycastHit2D hit;
 		Vector2 origin = transform.position;
