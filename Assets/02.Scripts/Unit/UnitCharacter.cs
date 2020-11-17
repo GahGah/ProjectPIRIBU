@@ -46,7 +46,7 @@ public class UnitCharacter : Unit
 	/// <summary>
 	/// 지형에 RayCast하고 거리가 가장 짧은 ray를 raycastHitGround에 저장 및 가장 짧은 거리를 반환
 	/// </summary>
-	public float RayGround() {
+	public float RayGround(Vector2 _rayDir) {
 		float dist = Mathf.Infinity;
 
 		//여러군데 검사
@@ -57,7 +57,7 @@ public class UnitCharacter : Unit
 				+ foot.transform.right * foot.transform.localScale.x * ((float)i / rays * 0.5f);
 			
 			RaycastHit2D hit;
-			hit = Physics2D.Raycast(origin, Vector2.down, 100, groundLayer);
+			hit = Physics2D.Raycast(origin, _rayDir, 20, groundLayer);
 			if (hit.collider != null) {
 				dist = Mathf.Min(dist,hit.distance);
 				raycastHitGround = hit;
@@ -67,12 +67,22 @@ public class UnitCharacter : Unit
 		}
 		return dist;
 	}
-	public RaycastHit2D RayGround(Vector2 _dir) {
+
+	//발 밑바닥으로부터 offset만큼 떨어진 위치에서 지형까지의 거리 검사
+	//Child 인공지능이 사용한다
+	public float CheckRayDistance(Vector2 offset) {
 		RaycastHit2D hit;
-		Vector2 origin = foot.transform.position;
-		hit = Physics2D.Raycast(origin, _dir, 100, groundLayer);
-		Debug.DrawLine(origin, hit.point, Color.red);
-		return hit;
+		float dist = 50;
+		Vector2 origin = foot.transform.position
+				- foot.transform.up * foot.transform.localScale.y * 0.5f
+				+ (Vector3)offset;
+		hit = Physics2D.Raycast(origin, Vector2.down, dist, groundLayer);
+		if (hit.collider != null) {
+			dist = hit.distance;
+			Debug.DrawLine(origin, hit.point, Color.red);
+		}
+		return dist;
 	}
+
 
 }

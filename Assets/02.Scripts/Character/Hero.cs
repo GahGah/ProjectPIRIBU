@@ -7,9 +7,9 @@ public class Hero : Character {
 
 	protected override void Start() {
 		base.Start();
-		stateMachine = new CharacterStateMachine(this,States.Hero_Ground);
+		stateMachine = new CharacterStateMachine(this, States.Hero_Ground);
 	}
-	
+
 	protected override void FixedUpdate() {
 		base.FixedUpdate();
 	}
@@ -32,7 +32,9 @@ public class HeroState : CharacterState {
 //지형 상태
 public class HeroGround : HeroState {
 	float tick;
+	float rayDist;//지형 레이 거리
 	Vector2 groundNormal;//지형 노말
+	Vector2 groundForward;//GroundNormal의 직교벡터
 	public override void Enter() {
 		tick = 0f;
 		charStat.verticalSpeed = 0;
@@ -44,26 +46,29 @@ public class HeroGround : HeroState {
 		tick += Time.deltaTime;
 
 		//지형 부착
-		float dist = hero.unit.RayGround();
-		if (dist > hero.unit.groundDist) {
+		rayDist = hero.unit.RayGround(Vector2.down);
+		if (rayDist > hero.unit.groundDist) {
 			//땅과 거리차가 날시 공중상태
 			sm.SetState(States.Hero_Air);
-		}	else  {
+		} else {
 			groundNormal = hero.unit.raycastHitGround.normal;
-			hero.unit.SetMovement(MovementType.AddPos, -groundNormal * (dist+0.1f));
+			groundForward = new Vector2(groundNormal.y, -groundNormal.x);
+
+			hero.unit.SetMovement(MovementType.AddPos, Vector2.down * rayDist);
+			rayDist = hero.unit.RayGround(-groundNormal);
+			hero.unit.SetMovement(MovementType.AddPos, Vector2.down * rayDist);
 		}
-		//hero.unit.transform.position += Vector3.down * dist;
-		
 
 		//좌우이동
 		int moveDir = 0;
 		if (input.buttonLeft.isPressed) moveDir = -1;
 		if (input.buttonRight.isPressed) moveDir = 1;
-		hero.HandleMoveSpeed( moveDir, charStat.groundMoveSpeed);
+		hero.HandleMoveSpeed(moveDir, charStat.groundMoveSpeed);
 
-
+		
 		//이동호출
-		Vector2 vel = new Vector2(charStat.sideMoveSpeed, 0);
+		Vector2 vel = groundForward * charStat.sideMoveSpeed;
+		//Vector2 vel = new Vector2(charStat.sideMoveSpeed, 0);
 		hero.unit.SetMovement(MovementType.SetVelocity, vel);
 
 		if (input.buttonJump.isPressed) {
@@ -103,8 +108,8 @@ public class HeroAir : HeroState {
 		hero.unit.SetMovement(MovementType.SetVelocity, vel);
 
 		//지형 부착
-		float dist = hero.unit.RayGround();
-		if (dist < hero.unit.groundDist 
+		float dist = hero.unit.RayGround(Vector2.down);
+		if (dist < hero.unit.groundDist
 			&& charStat.verticalSpeed < 0//추락할때만 땅에 붙게(원래 이렇게하면 안됨)
 			) {
 			hero.unit.SetMovement(MovementType.AddPos, Vector2.down * dist);

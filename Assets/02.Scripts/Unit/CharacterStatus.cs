@@ -6,9 +6,7 @@ using UnityEngine;
 [Serializable]
 public class CharacterStatus
 {
-	public string name;
 	public float hp;
-	public float walkSpeed = 2;
 	public MoveSpeed groundMoveSpeed = new MoveSpeed();//공중 이동속도 관련값
 	public MoveSpeed airMoveSpeed = new MoveSpeed();//지형 이동속도 관련값
 	public float sideMoveSpeed = 0;//좌우 이동속력

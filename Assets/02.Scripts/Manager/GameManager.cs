@@ -18,6 +18,7 @@ public class GameManager : SingleTon<GameManager>
     public float timer = 0f;
 
     public InputManager inputManager;
+	public Hero hero;
 
 	protected override void Awake() {
 		base.Awake();//여기서 Init한다.

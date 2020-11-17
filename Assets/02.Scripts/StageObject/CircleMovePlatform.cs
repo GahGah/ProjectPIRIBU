@@ -23,7 +23,7 @@ public class CircleMovePlatform : LinearPlatform
 		}
 	}
 	protected override void Update() {
-		float time = Time.time *0.5f;
+		float time = Time.time *1f;
 		float radious = 8f;
 		Vector3 pos =
 			standardPos +
