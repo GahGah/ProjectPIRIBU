@@ -29,6 +29,6 @@ public class CircleMovePlatform : LinearPlatform
 			standardPos +
 			Vector3.left * Mathf.Sin(firstDegree + time) * radious
 			+ Vector3.up * Mathf.Cos(firstDegree + time) * radious;
-		SetMovement(MovementType.MovePos, pos);
+		SetMovement(MovementType.SetPos, pos);
 	}
 }

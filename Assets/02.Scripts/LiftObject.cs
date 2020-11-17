@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum MovementType {
-	None, MovePos, SetVelocity, AddVelocity
+	None, SetPos, AddPos, SetVelocity, AddVelocity
 }
 
 /// <summary>
@@ -33,6 +33,12 @@ public class LiftObject : MonoBehaviour {
 	public float fixedUpdatePerSec;
 
 	private float updatedTime = 0;//업데이트된 시각
+	public bool IsUpdated() {
+		if (updatedTime == Time.time)
+			return true;
+		else 
+			return false;
+	}
 
 	protected virtual void Awake() {
 		parent = null;
@@ -62,8 +68,9 @@ public class LiftObject : MonoBehaviour {
 		//bool isHero = gameObject.name == "Hero";
 		//if (isHero) Debug.Log(parent);
 
-		if (parent) 
-			SetMovement(MovementType.MovePos, parent.GetLiftPosition(this));
+		if (parent) {
+			SetMovement(MovementType.SetPos, parent.GetLiftPosition(this));
+		}
 		
 		//현재 트랜스폼 정보 업데이트
 		UpdateCurrTransforms();
@@ -80,9 +87,11 @@ public class LiftObject : MonoBehaviour {
 		//자신의 물리 업데이트 먼저!
 		UpdateNow();
 		return deltaPos + child.transform.position;
+	}
 
-		//MovePos함수 호출로 이동하면 다음에 어디로 갈지 정확히는 모른다.
-		//따라서 다음에 어디에 존재할지 예측하는 NextPos를 사용?
+	public Vector3 GetDeltaPos() {
+		UpdateNow();
+		return deltaPos;
 	}
 
 	//요청받은 이동함수 리스트에 맞추어 Rigidbody 관련 함수 호출.
@@ -101,44 +110,49 @@ public class LiftObject : MonoBehaviour {
 		if (movementInputs.Count == 0) return;
 
 		Vector2 movePos = currPos;
-		Vector2 totalVel = Vector2.zero;
+		Vector2 addPos = Vector2.zero;
 		Vector2 targetVel = rigid.velocity;
+		Vector2 addVel = Vector2.zero;
 
 		foreach (MovementInput input in movementInputs) {
 			switch (input.type) {
 				case MovementType.None:
 					break;
 				//Transform.Position = TargetPosition과 같은 역할.
-				case MovementType.MovePos:
+				case MovementType.SetPos:
 					movePos = input.vector;
 					break;
-				//Rigidbody.Velocity += (초당 이동위치)와 같은 역할.
-				case MovementType.AddVelocity:
-					totalVel += input.vector;
+				//Transform.Position += MovePosition과 같은 역할.
+				case MovementType.AddPos:
+					addPos += input.vector;
 					break;
-				//Rigidbody.Velocity = (초당 이동위치)와 같은 역할.
+				//Rigidbody.Velocity = (초당 이동량)과 같은 역할.
 				case MovementType.SetVelocity:
 					targetVel = input.vector;
+					break;
+				//Rigidbody.Velocity += (초당 이동량)과 같은 역할.
+				case MovementType.AddVelocity:
+					addVel += input.vector;
 					break;
 			}
 		}
 
 		float mult = rigid.mass * fixedUpdatePerSec;
-		Vector2 addVel = (totalVel + (targetVel - rigid.velocity));
+		Vector2 totalVel = (addVel + (targetVel - rigid.velocity));
+		Vector2 totalPos = movePos + addPos;
 		//MovePos
-		if (movePos != (Vector2)transform.position) {
-			if (addVel == Vector2.zero) {
-				rigid.MovePosition(movePos);//MovePos만 하는 경우
+		if (totalPos != (Vector2)transform.position) {
+			if (totalVel == Vector2.zero) {
+				rigid.MovePosition(totalPos);//1.MovePos만 하는 경우
 			} else {
-				rigid.MovePosition(
-				movePos
-				//+ addVel * (-Time.fixedDeltaTime)//addVel 상쇄
-				+ targetVel * Time.fixedDeltaTime//targetVel만큼 이동
-				+ Vector2.down * 0.2f//땅에 안붙어서 땜빵처리. 이렇게 구현하면 안된다!!!!
+				//3.Pos,Vel 둘다 변경되는 경우
+				rigid.MovePosition(totalPos
+				+ (addVel + targetVel) * Time.fixedDeltaTime//targetVel만큼 이동
 				);
+				rigid.velocity = Vector2.zero;
 			}
 		} else {
-			rigid.AddForce(addVel * mult);//AddForce만 하는 경우
+			rigid.AddForce(totalVel * mult);//2.AddForce만 하는 경우
 		}
 
 		nextPos = movePos;

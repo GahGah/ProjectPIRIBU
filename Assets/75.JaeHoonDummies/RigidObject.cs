@@ -29,7 +29,7 @@ public class RigidObject : MonoBehaviour
 		//if(InputManager.Instance.buttonUp.isPressed)
 			rigid.MovePosition(transform.position);
 
-		rigid.velocity = addVel*(1*rigid.drag);
+		rigid.velocity = -addVel*(1*rigid.drag);
 		//두 연산이 합쳐져 오브젝트는 정지한다
 
 		//또한 MovePosition이 호출된 프레임에선 velocity는 아예 변화하지 않는다.

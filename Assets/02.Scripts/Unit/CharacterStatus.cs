@@ -12,9 +12,10 @@ public class CharacterStatus
 	public MoveSpeed groundMoveSpeed = new MoveSpeed();//공중 이동속도 관련값
 	public MoveSpeed airMoveSpeed = new MoveSpeed();//지형 이동속도 관련값
 	public float sideMoveSpeed = 0;//좌우 이동속력
+	public float verticalSpeed = 0;//상하 이동속력
 
-	public float jumpSpeed = 10;//점프력
-	public float fallSpeed = 1.2f;//추가 추락속도
+	public float jumpSpeed = 17;//점프력
+	public float fallSpeed = 1.2f;//추락속도
 
 }
 

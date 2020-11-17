@@ -9,6 +9,7 @@ public class UnitCharacter : Unit
 
 	public CharacterFoot foot;
 	public StageObjectSensor sensor;
+	public float groundDist = 0.5f;//최소 지형 이격거리
 
 	public void ManageFootCollider() {
 		Vector3 footPos = foot.transform.position;
@@ -20,7 +21,6 @@ public class UnitCharacter : Unit
 				bool isIgnore = false;
 				//부모는 밟고있어야 한다.
 				if (platform == parent) {
-					isIgnore = false;
 					Physics2D.IgnoreCollision(foot.collider, platform.coll, isIgnore);
 					continue;
 				} else {
@@ -33,7 +33,7 @@ public class UnitCharacter : Unit
 			}
 		}
 
-		//Lifting Platform
+		//Lifting Platform을 Parent로
 		LiftObject lift = null;
 		if (foot.adjacentlinearPlatforms.Count > 0) {
 			lift = foot.adjacentlinearPlatforms[0];
@@ -42,11 +42,35 @@ public class UnitCharacter : Unit
 		//if (parent) parent.Draw();
 	}
 
-	
+	public RaycastHit2D raycastHitGround;
+	/// <summary>
+	/// 지형에 RayCast하고 거리가 가장 짧은 ray를 raycastHitGround에 저장 및 가장 짧은 거리를 반환
+	/// </summary>
+	public float RayGround() {
+		float dist = Mathf.Infinity;
+
+		//여러군데 검사
+		int rays = 1;
+		for (int i = -rays; i <= rays; i ++) {
+			Vector2 origin = foot.transform.position
+				- foot.transform.up * foot.transform.localScale.y * 0.5f
+				+ foot.transform.right * foot.transform.localScale.x * ((float)i / rays * 0.5f);
+			
+			RaycastHit2D hit;
+			hit = Physics2D.Raycast(origin, Vector2.down, 100, groundLayer);
+			if (hit.collider != null) {
+				dist = Mathf.Min(dist,hit.distance);
+				raycastHitGround = hit;
+				Debug.DrawLine(origin, hit.point, Color.red);
+				//Debug.DrawLine(hit.point, hit.point+ hit.normal, Color.cyan);
+			}
+		}
+		return dist;
+	}
 	public RaycastHit2D RayGround(Vector2 _dir) {
 		RaycastHit2D hit;
-		Vector2 origin = transform.position;
-		hit = Physics2D.Raycast(origin, _dir, 0, groundLayer);
+		Vector2 origin = foot.transform.position;
+		hit = Physics2D.Raycast(origin, _dir, 100, groundLayer);
 		Debug.DrawLine(origin, hit.point, Color.red);
 		return hit;
 	}
