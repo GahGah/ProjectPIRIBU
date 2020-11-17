@@ -50,9 +50,9 @@ public class HeroGround : HeroState {
 			sm.SetState(States.Hero_Air);
 		}	else  {
 			groundNormal = hero.unit.raycastHitGround.normal;
+			hero.unit.SetMovement(MovementType.AddPos, -groundNormal * (dist+0.1f));
 		}
-		hero.unit.transform.position += Vector3.down * dist;
-		//hero.unit.SetMovement(MovementType.AddPos, Vector2.down * dist);
+		//hero.unit.transform.position += Vector3.down * dist;
 		
 
 		//좌우이동
