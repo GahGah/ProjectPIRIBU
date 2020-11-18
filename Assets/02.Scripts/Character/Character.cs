@@ -29,7 +29,7 @@ public class Character : MonoBehaviour
 			speed += moveDir * moveSpeed.accel;
 		} else {
 			//브레이크
-			if (speed < moveSpeed.brake)
+			if (speed * speedDir < moveSpeed.brake)
 				speed = 0;
 			else
 				speed -= speedDir * moveSpeed.brake;

@@ -59,8 +59,13 @@ public class UnitCharacter : Unit
 		if (groundDist > rayDist) {
 			if (rayDist > 0) //일반적인 부착값
 				rayDist += 0.05f;
-			else //Dist가 음수면 foot가 올라가게 되어있다.
-				rayDist *= 0.1f;
+			else {//Dist가 음수면 foot가 올라가게 되어있다.
+				//모든 RayHit가 발 위라면 플랫폼에 끼였을 가능성이 높다.
+				if (isAllRayOverFoot)
+					rayDist *= 0.5f;
+				else
+					rayDist *= 0.2f;
+			}
 			SetMovement(MovementType.AddPos, -groundNormal * rayDist);
 			return true;
 		}
@@ -69,13 +74,14 @@ public class UnitCharacter : Unit
 		return false;
 	}
 
-
-	float rayGroundOffset = 0.15f;//발보다 약간 위에서 쬐어주는 값
+	bool isAllRayOverFoot;//지형검사에서 모든 Ray가 원점보다 위였는가?
+	float rayGroundOffset = 0.25f;//발보다 약간 위에서 쬐어주는 값
 	/// <summary>
 	/// 지형에 RayCast하고 거리가 가장 짧은 ray를 raycastHitGround에 저장 및 가장 짧은 거리를 반환
 	/// </summary>
 	public float RayGround(Vector2 _rayDir) {
 		float dist = Mathf.Infinity;
+		isAllRayOverFoot = true;
 
 		//여러군데 검사
 		int rays = 1;
@@ -88,6 +94,8 @@ public class UnitCharacter : Unit
 			RaycastHit2D hit;
 			hit = Physics2D.Raycast(origin, _rayDir, (groundDist+ rayGroundOffset) * 2, groundLayer);
 			if (hit.collider != null) {
+				if (hit.distance - rayGroundOffset * 0.5f > 0)
+					isAllRayOverFoot = false;
 				dist = Mathf.Min(dist,hit.distance- rayGroundOffset);
 				raycastHitGround = hit;
 				Color color;
@@ -97,6 +105,8 @@ public class UnitCharacter : Unit
 					color = Color.red;
 				Debug.DrawLine(origin, hit.point, color);
 				//Debug.DrawLine(hit.point, hit.point+ hit.normal, Color.cyan);
+			} else {
+				isAllRayOverFoot = false;
 			}
 		}
 		return dist;
