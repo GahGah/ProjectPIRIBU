@@ -46,17 +46,11 @@ public class HeroGround : HeroState {
 		tick += Time.deltaTime;
 
 		//지형 부착
-		rayDist = hero.unit.RayGround(Vector2.down);
-		if (rayDist > hero.unit.groundDist) {
-			//땅과 거리차가 날시 공중상태
-			sm.SetState(States.Hero_Air);
+		if (hero.unit.RayAttachGround()) {
+			groundForward = hero.unit.groundForward;
 		} else {
-			groundNormal = hero.unit.raycastHitGround.normal;
-			groundForward = new Vector2(groundNormal.y, -groundNormal.x);
-
-			hero.unit.SetMovement(MovementType.AddPos, Vector2.down * rayDist);
-			rayDist = hero.unit.RayGround(-groundNormal);
-			hero.unit.SetMovement(MovementType.AddPos, Vector2.down * rayDist);
+			//땅과 거리차가 날시 공중상태
+			sm.SetState(States.Hero_Air); 
 		}
 
 		//좌우이동
@@ -109,10 +103,14 @@ public class HeroAir : HeroState {
 
 		//지형 부착
 		float dist = hero.unit.RayGround(Vector2.down);
+		float groundYSpeed = 0;
+		if (hero.unit.raycastHitGround.rigidbody) {
+			groundYSpeed = hero.unit.raycastHitGround.rigidbody.velocity.y;
+		}
+
 		if (dist < hero.unit.groundDist
-			&& charStat.verticalSpeed < 0//추락할때만 땅에 붙게(원래 이렇게하면 안됨)
-			) {
-			hero.unit.SetMovement(MovementType.AddPos, Vector2.down * dist);
+			&& charStat.verticalSpeed-groundYSpeed < 0) {
+			//추락할때만 땅에 붙게 (지형 속도도 고려)
 			sm.SetState(States.Hero_Ground);
 		}
 	}

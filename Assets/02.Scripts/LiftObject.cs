@@ -12,7 +12,7 @@ public enum MovementType {
 [RequireComponent(typeof(Rigidbody2D))]
 public class LiftObject : MonoBehaviour {
 
-	public LiftObject parent;
+	[HideInInspector] public LiftObject parent;
 	[HideInInspector] public List<LiftObject> childs;//옮길 대상
 	[HideInInspector] public Collider2D coll;
 	[HideInInspector] public Rigidbody2D rigid;

@@ -9,7 +9,6 @@ public class UnitCharacter : Unit
 
 	public CharacterFoot foot;
 	public StageObjectSensor sensor;
-	public float groundDist = 0.5f;//최소 지형 이격거리
 
 	public void ManageFootCollider() {
 		Vector3 footPos = foot.transform.position;
@@ -42,7 +41,36 @@ public class UnitCharacter : Unit
 		//if (parent) parent.Draw();
 	}
 
+	#region Ground Detecting 관련
+
 	public RaycastHit2D raycastHitGround;
+	public Vector2 groundForward;
+	public float groundDist = 0.5f;//최소 지형 이격거리
+	//캐릭터를 땅에 붙임. groundForward가 업데이트됨. 붙이지 못했을시 false 반환
+	public bool RayAttachGround() {
+		RayGround(Vector2.down);
+		Vector2 groundNormal = raycastHitGround.normal;
+		groundForward = new Vector2(groundNormal.y, -groundNormal.x);
+
+		//발과 지형간의 최소거리인 rayDist값으로 지형부착 이동을 한다.
+		float rayDist = RayGround(-groundNormal);
+		
+		//지형부착 성공
+		if (groundDist > rayDist) {
+			if (rayDist > 0) //일반적인 부착값
+				rayDist += 0.05f;
+			else //Dist가 음수면 foot가 올라가게 되어있다.
+				rayDist *= 0.1f;
+			SetMovement(MovementType.AddPos, -groundNormal * rayDist);
+			return true;
+		}
+
+		//지형부착 실패
+		return false;
+	}
+
+
+	float rayGroundOffset = 0.15f;//발보다 약간 위에서 쬐어주는 값
 	/// <summary>
 	/// 지형에 RayCast하고 거리가 가장 짧은 ray를 raycastHitGround에 저장 및 가장 짧은 거리를 반환
 	/// </summary>
@@ -54,14 +82,20 @@ public class UnitCharacter : Unit
 		for (int i = -rays; i <= rays; i ++) {
 			Vector2 origin = foot.transform.position
 				- foot.transform.up * foot.transform.localScale.y * 0.5f
-				+ foot.transform.right * foot.transform.localScale.x * ((float)i / rays * 0.5f);
+				+ foot.transform.right * foot.transform.localScale.x * ((float)i / rays * 0.5f)
+				-(Vector3)_rayDir* rayGroundOffset;
 			
 			RaycastHit2D hit;
-			hit = Physics2D.Raycast(origin, _rayDir, 20, groundLayer);
+			hit = Physics2D.Raycast(origin, _rayDir, (groundDist+ rayGroundOffset) * 2, groundLayer);
 			if (hit.collider != null) {
-				dist = Mathf.Min(dist,hit.distance);
+				dist = Mathf.Min(dist,hit.distance- rayGroundOffset);
 				raycastHitGround = hit;
-				Debug.DrawLine(origin, hit.point, Color.red);
+				Color color;
+				if (dist < 0)
+					color = Color.blue;
+				else
+					color = Color.red;
+				Debug.DrawLine(origin, hit.point, color);
 				//Debug.DrawLine(hit.point, hit.point+ hit.normal, Color.cyan);
 			}
 		}
@@ -83,6 +117,6 @@ public class UnitCharacter : Unit
 		}
 		return dist;
 	}
-
+	#endregion
 
 }

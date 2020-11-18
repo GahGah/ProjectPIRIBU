@@ -28,36 +28,24 @@ public class ChildState : CharacterState {
 public class ChildGround : ChildState {
 	float tick;
 	float rayDist;//지형 레이 거리
-	Vector2 groundNormal;//지형 노말
-	Vector2 groundForward;//GroundNormal의 직교벡터
 	public override void Enter() {
 		tick = 0f;
 		charStat.verticalSpeed = 0;
-		groundNormal = Vector2.up;
 	}
 	public override void Execute() {
 
 		tick += Time.deltaTime;
 
+		Vector2 groundForward = Vector2.right;
 		//지형 부착
-		rayDist = child.unit.RayGround(Vector2.down);
-		if (rayDist > child.unit.groundDist) {
-			//땅과 거리차가 날시 공중상태
-			//sm.SetState(States.child_Air);
+		if (child.unit.RayAttachGround()) {
+			groundForward = child.unit.groundForward;
 		} else {
-			groundNormal = child.unit.raycastHitGround.normal;
-			groundForward = new Vector2(groundNormal.y, -groundNormal.x);
-
-			child.unit.SetMovement(MovementType.AddPos, Vector2.down * rayDist);
-			rayDist = child.unit.RayGround(-groundNormal);
-			child.unit.SetMovement(MovementType.AddPos, Vector2.down * rayDist);
 		}
 
 		//좌우이동 인공지능
 		int moveDir = 0;
 		float toHero = hero.unit.transform.position.x - child.unit.transform.position.x;
-
-
 
 		float groundDist = 0;
 		if (toHero > 3) {
