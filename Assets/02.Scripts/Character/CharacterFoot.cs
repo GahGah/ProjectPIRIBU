@@ -2,16 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Collider2D))]
+[RequireComponent(typeof(CapsuleCollider2D))]
 public class CharacterFoot : MonoBehaviour
 {
 	[HideInInspector]
-	public Collider2D collider;
+	public Vector2 size;
+	[HideInInspector]
+	public CapsuleCollider2D footcollider;
 	[HideInInspector]
 	public List<LinearPlatform> adjacentlinearPlatforms;//붙어있는 땅들
-	// Start is called before the first frame update
 	void Awake() {
-		collider = GetComponent<Collider2D>();
+		footcollider = GetComponent<CapsuleCollider2D>();
+		size = footcollider.size;
 		adjacentlinearPlatforms = new List<LinearPlatform>();
 	}
 

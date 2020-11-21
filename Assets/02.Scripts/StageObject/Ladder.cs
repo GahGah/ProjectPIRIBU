@@ -4,12 +4,13 @@ using UnityEngine;
 using UnityEngine.XR.WSA.Input;
 
 public class Ladder : InteractionObject {
-	float sqrDist = 10 * 10;
 
-	private void Awake() {
+	protected override void Awake() {
+		base.Awake();
+		rigid = GetComponent<Rigidbody2D>();
 		type = InteractionType.Ladder;
+		size = transform.localScale;
 	}
-	void FixedUpdate() {
-	}
+
 
 }

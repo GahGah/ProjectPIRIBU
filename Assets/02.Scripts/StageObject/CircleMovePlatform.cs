@@ -13,7 +13,8 @@ public class CircleMovePlatform : LinearPlatform
 	private void Start() {
 		firstDegree = firstDegree * Mathf.Deg2Rad;
 		if (isOriginal) {
-			for (int i = 60; i < 360; i += 60) {
+			int iPlus = 60;
+			for (int i = iPlus; i < 360; i += iPlus) {
 				CircleMovePlatform inst = 
 				Instantiate(this.gameObject).GetComponent<CircleMovePlatform>();
 				inst.isOriginal = false;

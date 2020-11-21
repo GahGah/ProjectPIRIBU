@@ -9,7 +9,6 @@ public enum MovementType {
 /// <summary>
 /// 게임내의 모든 움직이는 클래스 (캐릭터나 플랫폼)
 /// </summary>
-[RequireComponent(typeof(Rigidbody2D))]
 public class LiftObject : MonoBehaviour {
 
 	[HideInInspector] public LiftObject parent;
@@ -44,7 +43,10 @@ public class LiftObject : MonoBehaviour {
 		parent = null;
 		childs = new List<LiftObject>();
 		if (!coll) coll = GetComponent<Collider2D>();
+
+		//리짓바디 2D 컴포넌트 검색
 		if (!rigid) rigid = GetComponent<Rigidbody2D>();
+		if (!rigid && parent) parent.GetComponent<Rigidbody2D>();
 
 		UpdateCurrTransforms();
 		UpdatePreTransforms();

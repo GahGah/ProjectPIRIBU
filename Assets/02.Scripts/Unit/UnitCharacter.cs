@@ -45,13 +45,13 @@ public class UnitCharacter : Unit
 				bool isIgnore = false;
 				//부모는 밟고있어야 한다.
 				if (platform == parent) {
-					Physics2D.IgnoreCollision(foot.collider, platform.coll, isIgnore);
+					Physics2D.IgnoreCollision(foot.footcollider, platform.coll, isIgnore);
 					continue;
 				} else {
 					isIgnore = platform.GetIsOneWayIgnore(footPos);
 					// One-Way 플랫폼 충돌무시 검사
 					Physics2D.IgnoreCollision(
-						foot.collider, platform.coll, isIgnore);
+						foot.footcollider, platform.coll, isIgnore);
 
 				}
 			}
@@ -113,8 +113,8 @@ public class UnitCharacter : Unit
 		int rays = 1;
 		for (int i = -rays; i <= rays; i ++) {
 			Vector2 origin = foot.transform.position
-				- foot.transform.up * foot.transform.localScale.y * 0.5f
-				+ foot.transform.right * foot.transform.localScale.x * ((float)i / rays * 0.5f)
+				- foot.transform.up * foot.size.y * 0.5f
+				+ foot.transform.right * foot.size.x * ((float)i / rays * 0.5f)
 				-(Vector3)_rayDir* rayGroundOffset;
 
 			//Logic Error : Ignore중인 땅까지 스캔하고 있음. RaycastAll을 사용?ㅉ
@@ -145,7 +145,7 @@ public class UnitCharacter : Unit
 		RaycastHit2D hit;
 		float dist = 50;
 		Vector2 origin = foot.transform.position
-				- foot.transform.up * foot.transform.localScale.y * 0.5f
+				- foot.transform.up * foot.size.y * 0.5f
 				+ (Vector3)offset;
 		hit = Physics2D.Raycast(origin, Vector2.down, dist, groundLayer);
 		if (hit.collider != null) {
@@ -156,10 +156,9 @@ public class UnitCharacter : Unit
 	}
 	#endregion
 
-	[HideInInspector] public InteractionObject interactionObject;
-
 
 	#region 상호작용 오브젝트 관련
+	[HideInInspector] public InteractionObject interactionObject;
 
 	//사다리 안에 있는지 판별
 	public bool IsInLadder(float offset = 0, InteractionObject ladder = null) {
@@ -168,8 +167,8 @@ public class UnitCharacter : Unit
 
 		Vector3 ladderBottom, ladderTop, CurrPos;
 		//offset만큼 양쪽 범위 늘리기
-		ladderBottom = ladder.transform.position - ladder.transform.up * (ladder.transform.localScale.y * 0.5f + offset);
-		ladderTop = ladderBottom + ladder.transform.up * (ladder.transform.localScale.y + offset*2);
+		ladderBottom = ladder.transform.position - ladder.transform.up * (ladder.size.y * 0.5f + offset);
+		ladderTop = ladderBottom + ladder.transform.up * (ladder.size.y + offset*2);
 		CurrPos = transform.position;
 		if (Vector3.Dot(ladderBottom - CurrPos, ladderTop - CurrPos) <= 0) {
 			return true;
@@ -194,8 +193,8 @@ public class UnitCharacter : Unit
 		if (ladder == null) return ret;
 
 		Vector3 ladderBottom, ladderTop;
-		ladderBottom = ladder.transform.position - ladder.transform.up * ladder.transform.localScale.y * 0.5f;
-		ladderTop = ladderBottom + ladder.transform.up * ladder.transform.localScale.y;
+		ladderBottom = ladder.transform.position - ladder.transform.up * ladder.size.y * 0.5f;
+		ladderTop = ladderBottom + ladder.transform.up * ladder.size.y;
 		//Debug.DrawLine(ladderBottom, ladderTop, Color.red);
 
 		Vector3 targetPos = GetProjectionPoint(ladderBottom, ladderTop, transform.position);
@@ -204,7 +203,13 @@ public class UnitCharacter : Unit
 		ret = targetPos - transform.position;
 		return ret;
 	}
-	#endregion 
+	#endregion
+
+	#region Wall Detecting 관련
+	public void WallCheck(int dir = 1) {
+
+	}
+	#endregion
 
 	//투영벡터
 	public Vector3 GetProjectionPoint(Vector3 Start, Vector3 End, Vector3 Point) {

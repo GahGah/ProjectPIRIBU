@@ -89,6 +89,10 @@ public class HeroGround : HeroState {
 
 				//박스 밀기
 				case InteractionType.PushBox:
+					if (input.buttonCatch.isPressed) {
+						hero.unit.interactionObject = interaction;
+						sm.SetState(States.Hero_Box);
+					}
 					break;
 			}
 		}
@@ -133,7 +137,7 @@ public class HeroAir : HeroState {
 			groundYSpeed = hero.unit.raycastHitGround.rigidbody.velocity.y;
 		}
 
-		if (dist < hero.unit.groundDist
+		if (dist < hero.unit.groundDist*0.2f
 			&& charStat.verticalSpeed-groundYSpeed < 0) {
 			//추락할때만 땅에 붙게 (지형 속도도 고려)
 			sm.SetState(States.Hero_Ground);
@@ -235,7 +239,65 @@ public class HeroLadder : HeroState {
 		}
 	}
 }
+
+//박스밀기
 public class HeroBox : HeroState {
+	PushBox box;
+	HingeJoint2D joint;
+
 	public override void Enter() {
+		Debug.Log("Box Enter");
+		box = hero.unit.interactionObject.GetChildObject<PushBox>();
+		joint = box.gameObject.AddComponent<HingeJoint2D>();
+		joint.connectedBody = hero.unit.rigid;
+		joint.autoConfigureConnectedAnchor = false;
+		joint.breakTorque = 10;
+	}
+
+	public override void Execute() {
+		int moveDir = 0;
+		if (input.buttonLeft.isPressed) moveDir = -1;
+		if (input.buttonRight.isPressed) moveDir = 1;
+		hero.unit.HandleMoveSpeed(moveDir, charStat.groundMoveSpeed);
+
+		box.rigid.MovePosition(
+			(Vector2)box.transform.position+
+			Vector2.right*charStat.sideMoveSpeed*0.5f*Time.fixedDeltaTime);
+
+		if (!input.buttonCatch.isPressed) {
+			sm.SetState(States.Hero_Ground);
+			return;
+		}
+		
+		/*
+		//캐릭터 근처 있을시
+		if (Vector3.SqrMagnitude((Vector3)playerRigid.position - transform.position) < sqrDist) {
+
+			if (InputManager.Instance.buttonCatch.isPressed) {
+				if (joint == null) {
+					joint = gameObject.AddComponent<HingeJoint2D>();
+					joint.autoConfigureConnectedAnchor = true;
+					joint.connectedBody = playerRigid;
+					//joint.breakForce = 100;
+				}
+			} else {
+				//삭제
+				BreakJoint();
+			}
+		} else {
+			BreakJoint();
+		}
+		*/
+	}
+
+	public override void Exit() {
+		BreakJoint();
+	}
+
+	void BreakJoint() {
+		if (joint) {
+			joint.breakForce = 0;//알아서 컴포넌트 삭제됨
+			joint = null;
+		}
 	}
 }
