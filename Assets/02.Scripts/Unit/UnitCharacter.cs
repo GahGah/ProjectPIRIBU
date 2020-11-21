@@ -58,7 +58,7 @@ public class UnitCharacter : Unit
 		//지형부착 성공
 		if (groundDist > rayDist) {
 			if (rayDist > 0) //일반적인 부착값
-				rayDist += 0.05f;
+				rayDist += 0.1f;
 			else {//Dist가 음수면 foot가 올라가게 되어있다.
 				//모든 RayHit가 발 위라면 플랫폼에 끼였을 가능성이 높다.
 				if (isAllRayOverFoot)
@@ -90,7 +90,8 @@ public class UnitCharacter : Unit
 				- foot.transform.up * foot.transform.localScale.y * 0.5f
 				+ foot.transform.right * foot.transform.localScale.x * ((float)i / rays * 0.5f)
 				-(Vector3)_rayDir* rayGroundOffset;
-			
+
+			//문제 : Ignore중인 땅까지 스캔하고 있음. RaycastAll을 사용?ㅉ
 			RaycastHit2D hit;
 			hit = Physics2D.Raycast(origin, _rayDir, (groundDist+ rayGroundOffset) * 2, groundLayer);
 			if (hit.collider != null) {
