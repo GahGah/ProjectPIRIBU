@@ -50,14 +50,15 @@ public class HeroGround : HeroState {
 			groundForward = hero.unit.groundForward;
 		} else {
 			//땅과 거리차가 날시 공중상태
-			sm.SetState(States.Hero_Air); 
+			sm.SetState(States.Hero_Air);
+			return;
 		}
 
 		//좌우이동
 		int moveDir = 0;
 		if (input.buttonLeft.isPressed) moveDir = -1;
 		if (input.buttonRight.isPressed) moveDir = 1;
-		hero.HandleMoveSpeed(moveDir, charStat.groundMoveSpeed);
+		hero.unit.HandleMoveSpeed(moveDir, charStat.groundMoveSpeed);
 
 		
 		//이동호출
@@ -67,8 +68,32 @@ public class HeroGround : HeroState {
 
 		if (input.buttonJump.isPressed) {
 			sm.SetState(States.Hero_Jump);
+			return;
+		}
+
+		//상호작용 오브젝트
+		List<InteractionObject> interactions = hero.unit.sensor.InteractionObjects;
+		foreach (InteractionObject interaction in interactions) {
+			switch (interaction.type) {
+				//사다리
+				case InteractionType.Ladder:
+					if ((input.buttonUp.isPressed || input.buttonDown.isPressed)//위아래 키를 누를때만
+						&& hero.unit.GetDistanceToLadder(interaction) <= 1.5f //사다리 근처에 있을때만
+						&& hero.unit.IsInLadder(0, interaction)//사다리 범위 내에 있을 시에만
+						) {
+						hero.unit.interactionObject = interaction;
+						sm.SetState(States.Hero_Ladder);
+						return;
+					}
+					break;
+
+				//박스 밀기
+				case InteractionType.PushBox:
+					break;
+			}
 		}
 	}
+
 }
 
 public class HeroJump : HeroState {
@@ -92,7 +117,7 @@ public class HeroAir : HeroState {
 		int moveDir = 0;
 		if (input.buttonLeft.isPressed) moveDir = -1;
 		if (input.buttonRight.isPressed) moveDir = 1;
-		hero.HandleMoveSpeed(moveDir, charStat.airMoveSpeed);
+		hero.unit.HandleMoveSpeed(moveDir, charStat.airMoveSpeed);
 
 		//추락
 		charStat.verticalSpeed -= charStat.fallSpeed;
@@ -113,5 +138,104 @@ public class HeroAir : HeroState {
 			//추락할때만 땅에 붙게 (지형 속도도 고려)
 			sm.SetState(States.Hero_Ground);
 		}
+
+		//상호작용 오브젝트
+		List<InteractionObject> interactions = hero.unit.sensor.InteractionObjects;
+		foreach (InteractionObject interaction in interactions) {
+			switch (interaction.type) {
+				//사다리
+				case InteractionType.Ladder:
+					if ((input.buttonUp.isPressed || input.buttonDown.isPressed)//위아래 키를 누를때만
+						&& hero.unit.GetDistanceToLadder(interaction) <= 1.5f //사다리 근처에 있을때만
+						&& hero.unit.IsInLadder(0,interaction)//사다리 범위 내에 있을 시에만
+						) {
+							hero.unit.interactionObject = interaction;
+							sm.SetState(States.Hero_Ladder);
+							return;
+					}
+					break;
+
+				//공중에선 박스를 밀지 않음
+				case InteractionType.PushBox:
+					break;
+			}
+		}
+	}
+}
+
+//사다리 액션
+public class HeroLadder : HeroState {
+	InteractionObject ladder;
+	HingeJoint2D joint;
+	float attachSpeed;//사다리에 들러붙는 가중치
+	float time;//바로 점프 못하게 딜레이
+	public override void Enter() {
+		ladder = hero.unit.interactionObject;
+		joint = ladder.gameObject.AddComponent<HingeJoint2D>();
+		joint.connectedBody = hero.unit.rigid;
+		joint.autoConfigureConnectedAnchor = false;
+		
+		//사다리 탈땐 OneWay 무시
+		hero.unit.foot.gameObject.SetActive(false);
+
+		charStat.sideMoveSpeed = 0;
+		charStat.verticalSpeed = 0;
+
+		attachSpeed = 0.1f;
+
+		time = 0;
+	}
+
+	public override void Execute() {
+		//사다리에 무게싣기 (Logic Error : 이렇게 구현하면 안된다)
+		hero.unit.SetMovement(MovementType.AddVelocity, Vector2.down*charStat.fallSpeed*5);
+
+		
+		Vector3 newAnchor = joint.connectedAnchor;
+		
+		//사다리에 달라붙기
+		Vector3 dirToLadder = hero.unit.GetDirectionToLadder();
+		newAnchor -= dirToLadder*attachSpeed;
+		attachSpeed += (1-attachSpeed)*0.1f;
+
+
+		Vector3 ladderDir = ladder.transform.up;
+		//위아래 이동
+		if (input.buttonUp.isPressed) {
+			newAnchor -= ladderDir*0.15f;
+		}
+		if (input.buttonDown.isPressed) {
+			newAnchor += ladderDir*0.15f;
+		}
+		joint.connectedAnchor = newAnchor;
+
+		//사다리를 벗어났는가?
+		if (!hero.unit.IsInLadder(0.8f)) {
+			sm.SetState(States.Hero_Air);
+			return;
+		}
+
+
+		//점프로 끊기
+		time += Time.deltaTime;
+		if (input.buttonJump.isPressed && time > 0.5f) {
+			sm.SetState(States.Hero_Jump);
+			return;
+		}
+	}
+	public override void Exit() {
+		hero.unit.foot.gameObject.SetActive(true);
+		BreakJoint();
+	}
+
+	void BreakJoint() {
+		if (joint) {
+			joint.breakForce = 0;//알아서 컴포넌트 삭제됨
+			joint = null;
+		}
+	}
+}
+public class HeroBox : HeroState {
+	public override void Enter() {
 	}
 }

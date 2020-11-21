@@ -7,10 +7,12 @@ public class StageObjectSensor : MonoBehaviour
 {
 	[HideInInspector]
 	public List<LinearPlatform> linearPlatforms;
-    // Start is called before the first frame update
-    void Awake()
+	[HideInInspector]
+	public List<InteractionObject> InteractionObjects;
+	void Awake()
     {
 		linearPlatforms = new List<LinearPlatform>();
+		InteractionObjects = new List<InteractionObject>();
 	}
 
 	private void OnTriggerEnter2D(Collider2D collision) {
@@ -19,6 +21,12 @@ public class StageObjectSensor : MonoBehaviour
 				linearPlatforms.Add(collision.gameObject.GetComponent<LinearPlatform>());
 			} catch {
 				Debug.LogError("LinearPlatform Not Found!!", collision.gameObject);
+			}
+		} else if (collision.gameObject.CompareTag("InteractionObject")) {
+			try {
+				InteractionObjects.Add(collision.gameObject.GetComponent<InteractionObject>());
+			} catch {
+				Debug.LogError("InteractionObject Not Found!!", collision.gameObject);
 			}
 		}
 	}
@@ -29,6 +37,12 @@ public class StageObjectSensor : MonoBehaviour
 				linearPlatforms.Remove(collision.gameObject.GetComponent<LinearPlatform>());
 			} catch {
 				Debug.LogError("LinearPlatform Not Found!!", collision.gameObject);
+			}
+		} else if (collision.gameObject.CompareTag("InteractionObject")) {
+			try {
+				InteractionObjects.Remove(collision.gameObject.GetComponent<InteractionObject>());
+			} catch {
+				Debug.LogError("InteractionObject Not Found!!", collision.gameObject);
 			}
 		}
 	}

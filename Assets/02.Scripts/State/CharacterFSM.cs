@@ -23,7 +23,7 @@ public class CharacterState : State {
 	public override void Init() {
 		base.Init();
 		character = sm.GetChildClass<CharacterStateMachine>().GetCharacter();
-		charStat = character.status;
+		charStat = character.unit.status;
 		//unitCharacter = character.unit;
 	}
 

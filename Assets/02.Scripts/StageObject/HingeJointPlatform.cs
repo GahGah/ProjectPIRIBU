@@ -14,11 +14,11 @@ public class HingeJointPlatform : MonoBehaviour
 	[FormerlySerializedAs("원래 각도")]
 	public float targetAngle = 0;//돌아올 앵글
 
-	[Range(0.1f,5)]
+	[Range(0.1f,20)]
 	[FormerlySerializedAs("탄성력")]
 	public float recoveryPower = 2f;
 
-	[Range(1, 15)]
+	[Range(1, 100)]
 	[FormerlySerializedAs("시소 중량")]
 	public float weight = 2f;
 

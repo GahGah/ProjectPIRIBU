@@ -1,17 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR.WSA.Input;
 
 public class Ladder : InteractionObject {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+	float sqrDist = 10 * 10;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+	private void Awake() {
+		type = InteractionType.Ladder;
+	}
+	void FixedUpdate() {
+	}
+
 }

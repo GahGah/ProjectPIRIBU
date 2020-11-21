@@ -9,6 +9,7 @@ TagManager:
   - generalPlatform
   - oneWayPlatform
   - TESTTAG
+  - InteractionObject
   layers:
   - Default
   - TransparentFX
@@ -27,7 +28,7 @@ TagManager:
   - 
   - 
   - StageRigidBody
-  - NoCollision
+  - 
   - 
   - 
   - 

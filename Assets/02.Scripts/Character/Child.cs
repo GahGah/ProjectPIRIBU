@@ -60,7 +60,7 @@ public class ChildGround : ChildState {
 			}
 			moveDir = -1; 
 		}
-		child.HandleMoveSpeed(moveDir, charStat.groundMoveSpeed);
+		child.unit.HandleMoveSpeed(moveDir, charStat.groundMoveSpeed);
 
 		//이동호출
 		Vector2 vel = groundForward * charStat.sideMoveSpeed

@@ -5,11 +5,13 @@ using UnityEngine;
 public class PushBox : InteractionObject
 {
 	public Rigidbody2D playerRigid;
-	public HingeJoint2D joint;
 	float sqrDist = 10 * 10;
 
-    // Update is called once per frame
-    void Update()
+	private void Awake() {
+		type = InteractionType.PushBox;
+	}
+	// Update is called once per frame
+	void Update()
     {
 		//캐릭터 근처 있을시
 		if (Vector3.SqrMagnitude((Vector3)playerRigid.position - transform.position) < sqrDist) { 
