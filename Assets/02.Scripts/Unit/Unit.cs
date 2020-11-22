@@ -7,4 +7,8 @@ public class Unit : LiftObject {
 	public T GetChildClass<T>() where T : Unit {
 		return (T)this;
 	}
+
+	public virtual void Awake() {
+
+	}
 }

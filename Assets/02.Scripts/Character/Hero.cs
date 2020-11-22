@@ -46,7 +46,7 @@ public class HeroGround : HeroState {
 		tick += Time.deltaTime;
 
 		//지형 부착
-		if (hero.unit.RayAttachGround()) {
+		if (hero.unit.AttachGround()) {
 			groundForward = hero.unit.groundForward;
 		} else {
 			//땅과 거리차가 날시 공중상태
@@ -55,10 +55,7 @@ public class HeroGround : HeroState {
 		}
 
 		//좌우이동
-		int moveDir = 0;
-		if (input.buttonLeft.isPressed) moveDir = -1;
-		if (input.buttonRight.isPressed) moveDir = 1;
-		hero.unit.HandleMoveSpeed(moveDir, charStat.groundMoveSpeed);
+		hero.unit.HandleMoveSpeed(hero.unit.GetSideMoveDirection(), charStat.groundMoveSpeed);
 
 		
 		//이동호출
@@ -87,11 +84,14 @@ public class HeroGround : HeroState {
 					}
 					break;
 
-				//박스 밀기
+				//쉬프트 눌러 박스 밀기
 				case InteractionType.PushBox:
 					if (input.buttonCatch.isPressed) {
-						hero.unit.interactionObject = interaction;
-						sm.SetState(States.Hero_Box);
+						//박스가 앞에 있을때만
+						if (hero.unit.WallCheck(charStat.modelSide,interaction.gameObject)) {
+							hero.unit.interactionObject = interaction;
+							sm.SetState(States.Hero_Box);
+						}
 					}
 					break;
 			}
@@ -100,10 +100,11 @@ public class HeroGround : HeroState {
 
 }
 
+//점프
 public class HeroJump : HeroState {
 	public override void Enter() {
 		hero.unit.ResetLiftParent();
-		hero.unit.foot.adjacentlinearPlatforms.Clear();
+		hero.unit.foot.adjacentLiftObjects.Clear();
 		charStat.verticalSpeed = charStat.jumpSpeed;
 		sm.SetState(States.Hero_Air);
 	}
@@ -118,10 +119,7 @@ public class HeroAir : HeroState {
 	public override void Execute() {
 		Draw(Color.yellow);
 		//좌우이동
-		int moveDir = 0;
-		if (input.buttonLeft.isPressed) moveDir = -1;
-		if (input.buttonRight.isPressed) moveDir = 1;
-		hero.unit.HandleMoveSpeed(moveDir, charStat.airMoveSpeed);
+		hero.unit.HandleMoveSpeed(hero.unit.GetSideMoveDirection(), charStat.airMoveSpeed);
 
 		//추락
 		charStat.verticalSpeed -= charStat.fallSpeed;
@@ -130,16 +128,18 @@ public class HeroAir : HeroState {
 		Vector2 vel = new Vector2(charStat.sideMoveSpeed, charStat.verticalSpeed);
 		hero.unit.SetMovement(MovementType.SetVelocity, vel);
 
-		//지형 부착
+		//착지판정 
 		float dist = hero.unit.RayGround(Vector2.down);
 		float groundYSpeed = 0;
 		if (hero.unit.raycastHitGround.rigidbody) {
 			groundYSpeed = hero.unit.raycastHitGround.rigidbody.velocity.y;
 		}
-
-		if (dist < hero.unit.groundDist*0.2f
-			&& charStat.verticalSpeed-groundYSpeed < 0) {
-			//추락할때만 땅에 붙게 (지형 속도도 고려)
+		
+		if (dist < 0.05f//지형에 가까이 있을때
+			&& charStat.verticalSpeed-groundYSpeed < 0//추락할때만 땅에 붙게 (지형 속도도 고려)
+			&& hero.unit.IsGroundNormal(hero.unit.raycastHitGround.normal)//지형 각도 범위일때
+			) {
+			//Logic Error : GroundDist와 Normal을 판정하는 영역이 달라서 착지가 좀 이상한 문제가 있다.
 			sm.SetState(States.Hero_Ground);
 		}
 
@@ -243,61 +243,43 @@ public class HeroLadder : HeroState {
 //박스밀기
 public class HeroBox : HeroState {
 	PushBox box;
-	HingeJoint2D joint;
-
+	int pushSide;
 	public override void Enter() {
-		Debug.Log("Box Enter");
 		box = hero.unit.interactionObject.GetChildObject<PushBox>();
-		joint = box.gameObject.AddComponent<HingeJoint2D>();
-		joint.connectedBody = hero.unit.rigid;
-		joint.autoConfigureConnectedAnchor = false;
-		joint.breakTorque = 10;
+
+		//미는방향
+		pushSide = box.currPos.x-hero.unit.currPos.x > 0 ? 1 : -1;
+
 	}
 
 	public override void Execute() {
-		int moveDir = 0;
-		if (input.buttonLeft.isPressed) moveDir = -1;
-		if (input.buttonRight.isPressed) moveDir = 1;
-		hero.unit.HandleMoveSpeed(moveDir, charStat.groundMoveSpeed);
 
-		box.rigid.MovePosition(
-			(Vector2)box.transform.position+
-			Vector2.right*charStat.sideMoveSpeed*0.5f*Time.fixedDeltaTime);
-
-		if (!input.buttonCatch.isPressed) {
+		//박스가 앞에 없거나, 키를 뗐을 시 원상태로
+		if (!hero.unit.WallCheck(pushSide, box.gameObject, 0.25f) || !input.buttonCatch.isPressed) {
 			sm.SetState(States.Hero_Ground);
 			return;
 		}
+
+		//땅과 거리차가 날시 추락
+		if (!hero.unit.AttachGround()) {
+			sm.SetState(States.Hero_Air);
+			return;
+		}
+
+		//박스 밀기 ()
+		int moveDir = hero.unit.GetSideMoveDirection();
 		
-		/*
-		//캐릭터 근처 있을시
-		if (Vector3.SqrMagnitude((Vector3)playerRigid.position - transform.position) < sqrDist) {
+		//밀때는 앞의 박스를 벽으로 인식하지 않고, 당길때는 뒤의 벽을 인식하게
+		bool considerWall = moveDir == pushSide ? false : true;
 
-			if (InputManager.Instance.buttonCatch.isPressed) {
-				if (joint == null) {
-					joint = gameObject.AddComponent<HingeJoint2D>();
-					joint.autoConfigureConnectedAnchor = true;
-					joint.connectedBody = playerRigid;
-					//joint.breakForce = 100;
-				}
-			} else {
-				//삭제
-				BreakJoint();
-			}
-		} else {
-			BreakJoint();
-		}
-		*/
+		hero.unit.HandleMoveSpeed(moveDir, charStat.groundMoveSpeed, considerWall);
+
+		Vector2 moveVec = Vector2.right * charStat.sideMoveSpeed * 0.5f*Time.deltaTime;
+		box.SetMovement(MovementType.AddPos, moveVec);
+		hero.unit.SetMovement(MovementType.AddPos, moveVec);
+
 	}
 
-	public override void Exit() {
-		BreakJoint();
-	}
-
-	void BreakJoint() {
-		if (joint) {
-			joint.breakForce = 0;//알아서 컴포넌트 삭제됨
-			joint = null;
-		}
+	public override void Exit() {	
 	}
 }

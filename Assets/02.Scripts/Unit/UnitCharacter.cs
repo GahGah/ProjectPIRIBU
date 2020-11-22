@@ -1,20 +1,47 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using UnityEngine;
 
 public class UnitCharacter : Unit
 {
 	[SerializeField] protected LayerMask groundLayer;
 	[HideInInspector] public Character character;
+	[HideInInspector] public List<Collider2D> IgnoreColliders;//무시하는 지형들
 	public CharacterFoot foot;
+	public CapsuleCollider2D body;
 	public StageObjectSensor sensor;
 	public CharacterStatus status;
 
-	//이동속도 처리 함수
-	public void HandleMoveSpeed(int moveDir, MoveSpeed moveSpeed) {
-		float speed = status.sideMoveSpeed;
+	//입력에 맞추어 좌우 이동방향 선택
+	public int GetSideMoveDirection() {
+		int moveDir = 0;
+		if (InputManager.Instance.buttonLeft.isPressed) moveDir = -1;
+		if (InputManager.Instance.buttonRight.isPressed) moveDir = 1;
+		return moveDir;
+	}
 
+	public override void Awake() {
+		base.Awake();
+		IgnoreColliders = new List<Collider2D>();
+	}
+
+	//이동속도 처리 함수
+	public void HandleMoveSpeed(int moveDir, MoveSpeed moveSpeed, bool wallCheck = true) {
+		float speed = status.sideMoveSpeed;
 		int speedDir = (speed > 0 ? 1 : -1);
+		
+		//벽 충돌체크
+		if (wallCheck) {
+			if (WallCheck(moveDir)) {
+				moveDir = 0;
+				//브레이크
+				if (speed * speedDir < moveSpeed.brake)
+					speed = 0;
+				else
+					speed -= speedDir * moveSpeed.brake;
+			}
+		}
 
 		if (moveDir != 0) {
 			//가속
@@ -32,48 +59,58 @@ public class UnitCharacter : Unit
 		}
 
 		status.sideMoveSpeed = speed;
+		if (moveDir != 0) status.modelSide = moveDir;
 	}
 
-	//OneWay 플랫폼 관련 충돌처리
-	public void ManageFootCollider() {
+	//OneWay 플랫폼 관련 충돌처리 및 Parenting
+	public void ManageColliders() {
 		Vector3 footPos = foot.transform.position;
 
 		//플랫폼 순회
 		foreach (LinearPlatform platform in sensor.linearPlatforms) {
+			Collider2D targetColl = platform.coll;
 			// One-way 플랫폼일 경우
 			if (platform.isOneWay) {
 				bool isIgnore = false;
 				//부모는 밟고있어야 한다.
 				if (platform == parent) {
-					Physics2D.IgnoreCollision(foot.footcollider, platform.coll, isIgnore);
+					foot.IgnoreWith(targetColl, isIgnore);
+					IgnoreColliders.Remove(targetColl);
 					continue;
 				} else {
 					isIgnore = platform.GetIsOneWayIgnore(footPos);
 					// One-Way 플랫폼 충돌무시 검사
-					Physics2D.IgnoreCollision(
-						foot.footcollider, platform.coll, isIgnore);
-
+					foot.IgnoreWith(targetColl, isIgnore);
+					if (isIgnore) IgnoreColliders.Add(targetColl);
+					else IgnoreColliders.Remove(targetColl);
 				}
 			}
 		}
 
 		//Lifting Platform을 Parent로
 		LiftObject lift = null;
-		if (foot.adjacentlinearPlatforms.Count > 0) {
-			lift = foot.adjacentlinearPlatforms[0];
+		if (foot.adjacentLiftObjects.Count > 0) {
+			lift = foot.adjacentLiftObjects[0];
 		}
 		SetLiftParent(lift);
 		//if (parent) parent.Draw();
 	}
 
+	[HideInInspector] public float groundDegree = 50;//지형으로 판정되는 각도
 	#region Ground Detecting 관련
 
 	[HideInInspector] public RaycastHit2D raycastHitGround;
 	[HideInInspector] public Vector2 groundForward;
 	[HideInInspector] public float groundDist = 0.5f;//최소 지형 이격거리
+
+	//해당 면의 노말이 땅인가?
+	public bool IsGroundNormal(Vector2 normal) {
+		return Vector2.Angle(transform.up, normal) <= groundDegree ? true : false;
+	}
+
 	//캐릭터를 땅에 붙임. groundForward가 업데이트됨. 붙이지 못했을시 false 반환
 	//Logic Error : Attach 과정 자체가 캐릭터를 내리는 행위라 mass가 더 붙은 듯한 문제가 있음.
-	public bool RayAttachGround() {
+	public bool AttachGround() {
 		RayGround(Vector2.down);
 		Vector2 groundNormal = raycastHitGround.normal;
 		groundForward = new Vector2(groundNormal.y, -groundNormal.x);
@@ -84,7 +121,7 @@ public class UnitCharacter : Unit
 		//지형부착 성공
 		if (groundDist > rayDist) {
 			if (rayDist > 0) //일반적인 부착값
-				rayDist += 0.1f;
+				rayDist += 0.05f;
 			else {//Dist가 음수면 foot가 올라가게 되어있다.
 				//모든 RayHit가 발 위라면 플랫폼에 끼였을 가능성이 높다.
 				if (isAllRayOverFoot)
@@ -117,7 +154,7 @@ public class UnitCharacter : Unit
 				+ foot.transform.right * foot.size.x * ((float)i / rays * 0.5f)
 				-(Vector3)_rayDir* rayGroundOffset;
 
-			//Logic Error : Ignore중인 땅까지 스캔하고 있음. RaycastAll을 사용?ㅉ
+			//Logic Error : Ignore중인 땅까지 스캔하고 있음. RaycastAll을 사용?
 			RaycastHit2D hit;
 			hit = Physics2D.Raycast(origin, _rayDir, (groundDist+ rayGroundOffset) * 2, groundLayer);
 			if (hit.collider != null) {
@@ -156,6 +193,61 @@ public class UnitCharacter : Unit
 	}
 	#endregion
 
+	#region Wall Detecting 관련
+
+	//해당 면의 노말이 벽인가?
+	public bool IsWallNormal(Vector2 normal) {
+		return Vector2.Angle(transform.up, normal) > groundDegree ? true : false;
+	}
+
+	//findTarget이 없는 기본형 : 앞에 벽(GroundLayer와 동일)이 있는지 검사
+	//findTarget이 존재 : Target과 마주하고있는지 검사 (PushBox용)
+	public bool WallCheck(int dir = 1, GameObject findTarget = null, float offsetSide = 0.1f) {
+		Vector2 pos, size, up, right, rayDir;
+		pos = body.transform.position;
+		size = body.size;
+		right = body.transform.right;
+		up = body.transform.up;
+		rayDir = right * dir;
+
+		float maxWallDist = 0.15f;
+		float dist = Mathf.Infinity;
+		isAllRayOverFoot = true;
+
+		//여러군데 검사
+		float iAdd = 1.0f/5.0f;
+		for (float i = -0.3f; i <= 0.5f; i += iAdd) {
+			Vector2 origin = pos
+				+ right * dir * (size.x * 0.5f - offsetSide)
+				+ up * (size.y * i);
+
+			RaycastHit2D[] hits = Physics2D.RaycastAll(origin, rayDir, maxWallDist + offsetSide, groundLayer);
+			foreach (RaycastHit2D hit in hits) {
+				//Ingore중인 One-Way 플랫폼은 무시
+				if (IgnoreColliders.Contains(hit.collider))
+					continue;
+				if (IsWallNormal(hit.normal)) {
+					//TargetFind모드.
+					if (findTarget == hit.transform.gameObject)
+						return true;
+					float thisDist = Mathf.Min(dist, hit.distance - offsetSide);
+					if (thisDist < dist) {
+						dist = thisDist;
+					}
+					//Debug.DrawLine(origin, hit.point, Color.green);
+				}
+			}
+		}
+
+		//TargetFind 모드가 아니면서, 벽이 감지되었다면
+		if (!findTarget && dist < maxWallDist) {
+			return true;
+		}
+		//Target을 발견하지 못했거나, 벽이 감지되지 않았다면
+		return false;
+	}
+
+	#endregion
 
 	#region 상호작용 오브젝트 관련
 	[HideInInspector] public InteractionObject interactionObject;
@@ -202,12 +294,6 @@ public class UnitCharacter : Unit
 
 		ret = targetPos - transform.position;
 		return ret;
-	}
-	#endregion
-
-	#region Wall Detecting 관련
-	public void WallCheck(int dir = 1) {
-
 	}
 	#endregion
 
