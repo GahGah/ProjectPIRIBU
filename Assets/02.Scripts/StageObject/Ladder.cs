@@ -7,7 +7,6 @@ public class Ladder : InteractionObject {
 
 	protected override void Awake() {
 		base.Awake();
-		rigid = GetComponent<Rigidbody2D>();
 		type = InteractionType.Ladder;
 		size = transform.localScale;
 	}

@@ -6,16 +6,13 @@ using UnityEngine;
 public enum InteractionType {
 	Ladder,PushBox
 }
-public class InteractionObject : MonoBehaviour { 
+public class InteractionObject : LiftObject { 
 	
-	public T GetChildObject<T>() where T : InteractionObject {
-		return (T)this;
-	}
 	[HideInInspector] public Vector2 size;
 	[HideInInspector] public InteractionType type;
 	[HideInInspector] public Joint2D joint;
-	[HideInInspector] public Rigidbody2D rigid;
-	protected virtual void Awake() {
+	protected override void Awake() {
+		base.Awake();
 		gameObject.tag = "InteractionObject";
 	}
 }

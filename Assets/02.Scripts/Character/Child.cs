@@ -38,7 +38,7 @@ public class ChildGround : ChildState {
 
 		Vector2 groundForward = Vector2.right;
 		//지형 부착
-		if (child.unit.RayAttachGround()) {
+		if (child.unit.AttachGround()) {
 			groundForward = child.unit.groundForward;
 		} else {
 		}
@@ -66,7 +66,9 @@ public class ChildGround : ChildState {
 		Vector2 vel = groundForward * charStat.sideMoveSpeed
 			+ Vector2.down*5f;
 		//Vector2 vel = new Vector2(charStat.sideMoveSpeed, 0);
-		child.unit.SetMovement(MovementType.SetVelocity, vel);
+		
+		//잠깐 정지
+		//child.unit.SetMovement(MovementType.SetVelocity, vel);
 
 	}
 }

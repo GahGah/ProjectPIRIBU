@@ -4,9 +4,7 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Platform
   - LinearPlatform
-  - generalPlatform
   - oneWayPlatform
   - TESTTAG
   - InteractionObject
@@ -25,10 +23,10 @@ TagManager:
   - 
   - Ground
   - OneWayPlatform
+  - DynamicProbs
   - 
-  - 
-  - StageRigidBody
-  - 
+  - InteractionObject
+  - NoCollision
   - 
   - 
   - 

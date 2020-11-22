@@ -24,7 +24,7 @@ public class Character : MonoBehaviour
 	}
 
 	protected virtual void FixedUpdate() {
-		unit.ManageFootCollider();
+		unit.ManageColliders();
 		stateMachine.Update();
 	}
 

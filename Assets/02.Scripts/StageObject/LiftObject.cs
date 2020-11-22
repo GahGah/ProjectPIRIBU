@@ -11,6 +11,10 @@ public enum MovementType {
 /// </summary>
 public class LiftObject : MonoBehaviour {
 
+	public T GetChildObject<T>() where T : LiftObject {
+		return (T)this;
+	}
+
 	[HideInInspector] public LiftObject parent;
 	[HideInInspector] public List<LiftObject> childs;//옮길 대상
 	[HideInInspector] public Collider2D coll;
