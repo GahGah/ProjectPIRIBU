@@ -16,11 +16,18 @@ public class InputManager : SingleTon<InputManager>
     public ButtonControl buttonCtrl = Keyboard.current.ctrlKey;
     public ButtonControl buttonPause = Keyboard.current.escapeKey;
     public ButtonControl buttonCatch = Keyboard.current.leftShiftKey;
+    public Vector2Control buttonScroll = Mouse.current.scroll;
 
-    //protected override void Init()
-    //{
-    //    base.Init();
-    //}
+    private Vector2 mouseCurrentPosition = Vector2.zero;
+
+    private void Awake()
+    {
+        base.Awake();
+    }
+    protected override void Init()
+    {
+        base.Init();
+    }
     /// <summary>
     /// 해당 버튼의 세팅을 변경합니다.
     /// </summary>
@@ -52,8 +59,23 @@ public class InputManager : SingleTon<InputManager>
         }
     }
 
+    public Vector2 GetMouseCurrentPosition()
+    {
+        mouseCurrentPosition = Mouse.current.position.ReadValue();
+        return mouseCurrentPosition;
+    }
 
+    public void TESTSCREENPOINTTORAY()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(GameManager.Instance.inputManager.mouseCurrentPosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, 10000f))
+        {
 
+            Vector3 velo = Vector3.zero;
+            Vector3 temp = new Vector3(hit.point.x, 20f, hit.point.z);
+        }
+    }
     //private Input input = null;
 
     //public bool isJumpKeyPressed = false;
@@ -66,7 +88,7 @@ public class InputManager : SingleTon<InputManager>
     //    {
     //        input = new Input();
     //    }
-       
+
     //}
 
     //public void OnMove(InputAction.CallbackContext _context)
@@ -84,4 +106,4 @@ public class InputManager : SingleTon<InputManager>
     //    }
     //}
 
-}   
+}
