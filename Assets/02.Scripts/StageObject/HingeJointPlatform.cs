@@ -14,11 +14,11 @@ public class HingeJointPlatform : MonoBehaviour
 	[FormerlySerializedAs("원래 각도")]
 	public float targetAngle = 0;//돌아올 앵글
 
-	[Range(0.1f,20)]
+	[Range(0.1f,100)]
 	[FormerlySerializedAs("탄성력")]
 	public float recoveryPower = 2f;
 
-	[Range(1, 100)]
+	[Range(1, 300)]
 	[FormerlySerializedAs("시소 중량")]
 	public float weight = 2f;
 
@@ -27,12 +27,13 @@ public class HingeJointPlatform : MonoBehaviour
 		rigid = GetComponent<Rigidbody2D>();
 	}
 	void Update()
-    {
+	{
 		rigid.mass = weight;
 
 		JointMotor2D motor = hinge.motor;
 		float currentAngle = getLoopedAngle(transform.eulerAngles.z);
 		motor.motorSpeed = -(targetAngle - currentAngle)* recoveryPower;
+		motor.maxMotorTorque = Mathf.Pow(recoveryPower,1.2f);
 		hinge.motor = motor;
 	}
 

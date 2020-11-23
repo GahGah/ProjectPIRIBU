@@ -276,6 +276,7 @@ public class HeroBox : HeroState {
 
 		Vector2 moveVec = Vector2.right * charStat.sideMoveSpeed * 0.5f*Time.deltaTime;
 		box.SetMovement(MovementType.AddPos, moveVec);
+		//Logic Error : MovePosition을 사용하면 뒤에 다른 박스들이 수십개 있어도 똑같은 강도로 민다.
 		hero.unit.SetMovement(MovementType.AddPos, moveVec);
 
 	}
