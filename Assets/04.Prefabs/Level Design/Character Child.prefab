@@ -501,7 +501,7 @@ MonoBehaviour:
   fixedUpdatePerSec: 0
   groundLayer:
     serializedVersion: 2
-    m_Bits: 77824
+    m_Bits: 28672
   character: {fileID: 0}
   IgnoreColliders: []
   foot: {fileID: 3358399037401994787}
@@ -509,18 +509,18 @@ MonoBehaviour:
   sensor: {fileID: 3358399038087711160}
   status:
     groundMoveSpeed:
-      accel: 0
-      brake: 0
-      max: 0
+      accel: 0.5
+      brake: 0.5
+      max: 7
     airMoveSpeed:
       accel: 0
-      brake: 0
-      max: 0
+      brake: 0.3
+      max: 7
     sideMoveSpeed: 0
     verticalSpeed: 0
     modelSide: 1
-    jumpSpeed: 17
-    fallSpeed: 1.2
+    jumpSpeed: 10
+    fallSpeed: 1
   groundDegree: 50
   groundForward: {x: 0, y: 0}
   groundDist: 0.5

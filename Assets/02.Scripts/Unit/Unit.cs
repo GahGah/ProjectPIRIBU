@@ -8,7 +8,7 @@ public class Unit : LiftObject {
 		return (T)this;
 	}
 
-	public virtual void Awake() {
-
+	protected override void Awake() {
+		base.Awake();
 	}
 }

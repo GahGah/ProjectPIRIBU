@@ -21,7 +21,7 @@ public class UnitCharacter : Unit
 		return moveDir;
 	}
 
-	public override void Awake() {
+	protected override void Awake() {
 		base.Awake();
 		IgnoreColliders = new List<Collider2D>();
 	}
@@ -176,8 +176,33 @@ public class UnitCharacter : Unit
 		return dist;
 	}
 
-	//발 밑바닥으로부터 offset만큼 떨어진 위치에서 지형까지의 거리 검사
-	//Child 인공지능이 사용한다
+	/// <summary>
+	/// 공중에서 밟을땅이 있는지 검사
+	/// </summary>
+	/// <returns>착지판정하는가?</returns>
+	public bool GroundCheckFromAir() {
+		//이동호출
+		Vector2 vel = new Vector2(status.sideMoveSpeed, status.verticalSpeed);
+		SetMovement(MovementType.SetVelocity, vel);
+
+		//착지판정 
+		float dist = RayGround(Vector2.down);
+		float groundYSpeed = 0;
+		if (raycastHitGround.rigidbody) {
+			groundYSpeed = raycastHitGround.rigidbody.velocity.y;
+		}
+
+		if (dist < 0.05f//지형에 가까이 있을때
+			&& status.verticalSpeed - groundYSpeed < 0//추락할때만 땅에 붙게 (지형 속도도 고려)
+			&& IsGroundNormal(raycastHitGround.normal)//지형 각도 범위일때
+			) {
+			//Logic Error : GroundDist와 Normal을 판정하는 영역이 달라서 착지가 좀 이상한 문제가 있다.
+			return true;
+		}
+
+		return false;
+	}
+	
 	public float CheckRayDistance(Vector2 offset) {
 		RaycastHit2D hit;
 		float dist = 50;
@@ -189,6 +214,16 @@ public class UnitCharacter : Unit
 			dist = hit.distance;
 			Debug.DrawLine(origin, hit.point, Color.red);
 		}
+		return dist;
+	}
+	/// <summary>
+	/// 해당 방향으로 절벽까지의 거리 검사
+	/// </summary>
+	/// <param name="moveDir"></param>
+	/// <returns></returns>
+	public float GetWalkableDistance(int moveDir = 1) {
+		float dist = 0;
+
 		return dist;
 	}
 	#endregion

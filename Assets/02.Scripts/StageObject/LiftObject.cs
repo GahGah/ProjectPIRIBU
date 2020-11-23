@@ -59,20 +59,17 @@ public class LiftObject : MonoBehaviour {
 		standardAngle = currAngle;
 		standardNormal = currNormal;
 
-		fixedUpdatePerSec = 1 / Time.fixedDeltaTime;
+		fixedUpdatePerSec = 1.0f / Time.fixedDeltaTime;
 	}
 	
 	private void FixedUpdate() {
 		UpdatePreTransforms();
-
 		UpdateNow();
 	}
 
 	private void UpdateNow() {
 		if (updatedTime == Time.time) return;
 		updatedTime = Time.time;
-		//bool isHero = gameObject.name == "Hero";
-		//if (isHero) Debug.Log(parent);
 
 		if (parent) {
 			SetMovement(MovementType.SetPos, parent.GetLiftPosition(this));
@@ -162,6 +159,8 @@ public class LiftObject : MonoBehaviour {
 		}
 
 		nextPos = movePos;
+
+		
 	}
 
 	//매프레임마다 LiftObject를 움직이는 방식은 사용자 지정

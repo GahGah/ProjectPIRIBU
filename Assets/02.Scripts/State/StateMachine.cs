@@ -38,6 +38,10 @@ public class StateMachine {
 		}
 	}
 
+
+	public string GetStateName() {
+		return currentState.ToString();
+	}
 }
 
 

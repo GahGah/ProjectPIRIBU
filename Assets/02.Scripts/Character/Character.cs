@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 
@@ -28,4 +29,13 @@ public class Character : MonoBehaviour
 		stateMachine.Update();
 	}
 
+	void OnDrawGizmos() {
+		if (Application.isPlaying) {
+			GUIStyle style = new GUIStyle();
+			style.alignment = TextAnchor.MiddleCenter;
+			style.fontSize = 10;
+			Handles.Label(transform.position+Vector3.up*1.5f, stateMachine.GetStateName());
+
+		}
+	}
 }
