@@ -134,7 +134,7 @@
 
             half4 setFog(half4 mainCol)
             {
-                float fogIntensity = (5-_FogLevel) * 0.12;
+                float fogIntensity = (5-_FogLevel) * 0.17;
                 
                 mainCol.rgb = lerp(mainCol.rgb, _FogColor.rgb, fogIntensity);
                 return mainCol;
