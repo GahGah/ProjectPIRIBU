@@ -14,6 +14,7 @@ public class ShaderManager : SingleTon<GameManager>
     [SerializeField] private int time_noonStart;
     [SerializeField] private int time_eveningStart;
     [SerializeField] private int time_nightStart;
+    [SerializeField] private int time_nightEnd;
 
     [SerializeField] private Color FogColor_morning;
     [SerializeField] private Color FogColor_noon;
@@ -24,9 +25,14 @@ public class ShaderManager : SingleTon<GameManager>
     [SerializeField] private Color LightColor_noon;
     [SerializeField] private Color LightColor_evening;
     [SerializeField] private Color LightColor_night;
-    //public Color AmbientColor;
 
-    public GameObject mainLight;
+    [SerializeField] private Gradient skyGradient_morning = new Gradient();
+    [SerializeField] private Gradient skyGradient_noon = new Gradient();
+    [SerializeField] private Gradient skyGradient_evening = new Gradient();
+    [SerializeField] private Gradient skyGradient_night = new Gradient();
+
+    [SerializeField] private GameObject skySprite;
+    [SerializeField] public GameObject mainLight;
     private Light2D mainLight_L2D;
 
     // Start is called before the first frame update
@@ -86,7 +92,7 @@ public class ShaderManager : SingleTon<GameManager>
     void changeLightAndFogColor()
     {
         Color fogCol;
-        Color LightCol;
+        Color lightCol;
         int timeInterval;
 
         //시간에 따른 색상 구함: Lerp를 사용해서
@@ -94,25 +100,30 @@ public class ShaderManager : SingleTon<GameManager>
         {
             timeInterval = Mathf.Abs(time_moringStart - time_noonStart);
             fogCol = Color.Lerp(FogColor_morning, FogColor_noon, (curTime - time_moringStart) / timeInterval);
-            LightCol = Color.Lerp(LightColor_morning, LightColor_noon, (curTime - time_moringStart) / timeInterval);
+            lightCol = Color.Lerp(LightColor_morning, LightColor_noon, (curTime - time_moringStart) / timeInterval);
         }
         else if (curTime <= time_eveningStart)
         {
             timeInterval = Mathf.Abs(time_noonStart - time_eveningStart);
             fogCol = Color.Lerp(FogColor_noon, FogColor_evening, (curTime - time_noonStart) / timeInterval);
-            LightCol = Color.Lerp(LightColor_noon, LightColor_evening, (curTime - time_noonStart) / timeInterval);
+            lightCol = Color.Lerp(LightColor_noon, LightColor_evening, (curTime - time_noonStart) / timeInterval);
         }
         else if (curTime <= time_nightStart)
         {
             timeInterval = Mathf.Abs(time_eveningStart - time_nightStart);
             fogCol = Color.Lerp(FogColor_evening, FogColor_night, (curTime - time_eveningStart) / timeInterval);
-            LightCol = Color.Lerp(LightColor_evening, LightColor_night, (curTime - time_eveningStart) / timeInterval);
+            lightCol = Color.Lerp(LightColor_evening, LightColor_night, (curTime - time_eveningStart) / timeInterval);
+        }
+        else if (curTime <= time_nightEnd)
+        {
+            fogCol = FogColor_night;
+            lightCol = LightColor_night;
         }
         else
         {
-            timeInterval = Mathf.Abs(time_nightStart - maxTime);
-            fogCol = Color.Lerp(FogColor_night, FogColor_morning, (curTime - time_nightStart) / timeInterval);
-            LightCol = Color.Lerp(LightColor_night, LightColor_morning, (curTime - time_nightStart) / timeInterval);
+            timeInterval = Mathf.Abs(time_nightEnd- maxTime);
+            fogCol = Color.Lerp(FogColor_night, FogColor_morning, (curTime - time_nightEnd) / timeInterval);
+            lightCol = Color.Lerp(LightColor_night, LightColor_morning, (curTime - time_nightEnd) / timeInterval);
 
         }
 
@@ -121,6 +132,6 @@ public class ShaderManager : SingleTon<GameManager>
         {
             sr.sharedMaterial.SetColor("_FogColor", fogCol);
         }
-        mainLight_L2D.color = LightCol;
+        mainLight_L2D.color = lightCol;
     }
 }

@@ -5,9 +5,9 @@
         _MainTex("Diffuse", 2D) = "white" {}
         _MaskTex("Mask", 2D) = "white" {}
         _NormalMap("Normal Map", 2D) = "bump" {}
-        _LUT("LUT", 2D) = "white" {}
+        //_LUT("LUT", 2D) = "white" {}
         _ContributionLUT("Contribution LUT", Range(0, 1)) = 1
-        _AmbientColor("AmbientColor", Color) = (1,1,1,1)
+        //_AmbientColor("AmbientColor", Color) = (1,1,1,1)
         _FogColor("FogColor", Color) = (1,1,1,1)
         _FogLevel("FogLevel", Range(0, 5)) = 0
 
