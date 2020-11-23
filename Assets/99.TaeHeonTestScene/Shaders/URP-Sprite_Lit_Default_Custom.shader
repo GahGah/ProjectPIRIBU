@@ -7,6 +7,9 @@
         _NormalMap("Normal Map", 2D) = "bump" {}
         _LUT("LUT", 2D) = "white" {}
         _ContributionLUT("Contribution LUT", Range(0, 1)) = 1
+        _AmbientColor("AmbientColor", Color) = (1,1,1,1)
+        _FogColor("FogColor", Color) = (1,1,1,1)
+        _FogLevel("FogLevel", Range(0, 5)) = 0
 
         // Legacy properties. They're here so that materials using this shader can gracefully fallback to the legacy sprite shader.
         [HideInInspector] _Color("Tint", Color) = (1,1,1,1)
@@ -80,6 +83,10 @@
             half4 _LUT_ST;
             uniform half4 _LUT_TexelSize;
 
+            half4 _AmbientColor;
+            half4 _FogColor;
+            int _FogLevel;
+
             float _ContributionLUT;
             //---------------
 
@@ -122,7 +129,14 @@
                 float4 gradedCol = SAMPLE_TEXTURE2D(_LUT, sampler_LUT, lutPos);
                 float lightingValue = saturate(SAMPLE_TEXTURE2D(_WhiteMap, sampler_WhiteMap, lightingUV.xy).r);
 
-                return lerp(col, gradedCol, _ContributionLUT*lightingValue);
+                return half4(lerp(col.rgb, gradedCol.rgb, _ContributionLUT), col.a);
+            }
+
+            half4 setFog(half4 mainCol)
+            {
+                float fogIntensity = (5-_FogLevel) * 0.12;
+                
+                return lerp(mainCol, _FogColor, fogIntensity);
             }
             //--------------
 
@@ -139,18 +153,20 @@
                 return o;
             }
 
-            
-
-            //frag 쉐이더
+            //frag 쉐이더.
             half4 CombinedShapeLightFragment(Varyings i) : SV_Target
             {
-                half4 main;
-                main = i.color * SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv);
-                main = applyLUT(main, i.lightingUV);
+                
 
+                half4 main = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv) * i.color;
+                //main = applyLUT(main, i.lightingUV);
                 half4 mask = SAMPLE_TEXTURE2D(_MaskTex, sampler_MaskTex, i.uv);
 
-                return CombinedShapeLightShared(main, mask, i.lightingUV);
+                half4 col;  //최종 색.
+                col = CombinedShapeLightShared(main, mask, i.lightingUV);
+                col = setFog(col);
+
+                return col;
             }
             ENDHLSL
         }

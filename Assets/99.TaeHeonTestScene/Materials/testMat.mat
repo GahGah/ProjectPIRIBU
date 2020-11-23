@@ -44,9 +44,12 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _ContributionLUT: 0.67
+    - _ContributionLUT: 0
     - _EnableExternalAlpha: 0
+    - _FogLevel: 0
     m_Colors:
+    - _AmbientColor: {r: 0.254717, g: 0.094918124, b: 0.094918124, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
+    - _FogColor: {r: 0.7830189, g: 0.49123356, b: 0.7373761, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
