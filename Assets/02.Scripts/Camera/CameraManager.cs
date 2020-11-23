@@ -8,6 +8,7 @@ enum eCameraState
     DEFAULT = 0,
     ZOOMIN = 1,
     ZOOMOUT,
+    STAY
 }
 
 internal static class YieldInstructionCache
@@ -26,8 +27,11 @@ public class CameraManager : MonoBehaviour
     public Transform target;
 
     [Header("기본 설정")]
-    [Tooltip("카메라의 기본 z값 입니다.")]
+    [Tooltip("카메라의 기본 z값 입니다. 줌과는 관련 없습니다.")]
     public float cameraDefaultPositionZ = -10f;
+
+    [Tooltip("카메라의 원래...그...원래 사이즈. 원래 줌?")]
+    public float cameraDefaultSize = 5f;
 
     [Tooltip("카메라 줌 인의 최대치")]
     public float cameraZoomInSize = 3f;
@@ -50,6 +54,8 @@ public class CameraManager : MonoBehaviour
     public float zoomTimer = 0f;
     public float currentZoomSpeed;
 
+    [SerializeField]
+    private eCameraState cameraState;
 
     [Header("카메라 제한영역 설정")]
     [Tooltip("제한 영역 설정을 할 것인가?")]
@@ -64,8 +70,6 @@ public class CameraManager : MonoBehaviour
     private float width;
 
 
-    [SerializeField]
-    private eCameraState cameraState;
 
     private IEnumerator currentCoroutine;
 
@@ -84,18 +88,19 @@ public class CameraManager : MonoBehaviour
         }
         if (zoomSpeed <= 0f)
         {
-            zoomSpeed = 3f;
+            zoomSpeed = 1f;
         }
 
         if (followSpeed <= 0f)
         {
             followSpeed = 5f;
         }
+
         #endregion
 
         limitCalSize = 0.03f;
         currentZoomSpeed = 1f / zoomSpeed;
-        cameraState = eCameraState.ZOOMIN;
+        cameraState = eCameraState.DEFAULT;
         isTimeMode = true;
 
         cameraDefaultPositionZ = -10f;
@@ -116,6 +121,16 @@ public class CameraManager : MonoBehaviour
     {
         //zoomSpeed가 변할...수도 있기 때문에.
         currentZoomSpeed = 1f / zoomSpeed;
+
+        if (InputManager.Instance.buttonScroll.ReadValue().y>0)
+        {
+            cameraState = eCameraState.ZOOMIN;
+        }
+
+        if (InputManager.Instance.buttonScroll.ReadValue().y < 0)
+        {
+            cameraState = eCameraState.ZOOMOUT;
+        }
     }
     private void LateUpdate()
     {
@@ -148,15 +163,30 @@ public class CameraManager : MonoBehaviour
             switch (cameraState)
             {
                 case eCameraState.DEFAULT:
-                    currentCoroutine = null;
+                    if (currentCamera.orthographicSize>cameraDefaultSize) 
+                    {
+                        currentCoroutine = CameraZoomIn(cameraDefaultSize);
+                    }
+                    else if(currentCamera.orthographicSize<cameraDefaultSize)
+                    {
+                        currentCoroutine = CameraZoomOut(cameraDefaultSize);
+                    }
+                    else
+                    {
+                        currentCoroutine = null;
+                    }
                     break;
 
                 case eCameraState.ZOOMIN:
-                    currentCoroutine = CameraZoomIn();
+                    currentCoroutine = CameraZoomIn(cameraZoomInSize);
                     break;
 
                 case eCameraState.ZOOMOUT:
-                    currentCoroutine = CameraZoomOut();
+                    currentCoroutine = CameraZoomOut(cameraZoomOutSize);
+                    break;
+
+                case eCameraState.STAY:
+                    currentCoroutine = null;
                     break;
 
                 default:
@@ -178,60 +208,59 @@ public class CameraManager : MonoBehaviour
 
 
     }
-    private IEnumerator CameraZoomOut()
+    private IEnumerator CameraZoomOut(float _size)
     {
         if (isTimeMode) //시간 모드일 경우
         {
             zoomTimer = 0f;
             float oldOrthographicSize = currentCamera.orthographicSize; // 원래 사이즈를 저장
 
-            while (Mathf.Abs(currentCamera.orthographicSize - cameraZoomOutSize) > limitCalSize)
+            while (Mathf.Abs(currentCamera.orthographicSize - _size) > limitCalSize)
             {
                 zoomTimer += Time.smoothDeltaTime * currentZoomSpeed;
-                currentCamera.orthographicSize = Mathf.Lerp(oldOrthographicSize, cameraZoomOutSize, zoomTimer);
+                currentCamera.orthographicSize = Mathf.Lerp(oldOrthographicSize, _size, zoomTimer);
                 yield return YieldInstructionCache.WaitForEndOfFrame;
             }
-
         }
         else //아닐 경우
         {
 
-            while (Mathf.Abs(currentCamera.orthographicSize - cameraZoomOutSize) > limitCalSize)
+            while (Mathf.Abs(currentCamera.orthographicSize - _size) > limitCalSize)
             {
                 //zoomTimer += Time.deltaTime;
-                currentCamera.orthographicSize = Mathf.SmoothDamp(currentCamera.orthographicSize, cameraZoomOutSize, ref velocity, zoomSpeed);
+                currentCamera.orthographicSize = Mathf.SmoothDamp(currentCamera.orthographicSize, _size, ref velocity, zoomSpeed);
                 yield return YieldInstructionCache.WaitForEndOfFrame;
             }
         }
-        currentCamera.orthographicSize = cameraZoomOutSize;
-        cameraState = eCameraState.DEFAULT;
+        currentCamera.orthographicSize = _size;
+        cameraState = eCameraState.STAY;
     }
-    private IEnumerator CameraZoomIn()
+    private IEnumerator CameraZoomIn(float _size)
     {
         if (isTimeMode) //시간 모드일 경우
         {
             zoomTimer = 0f;
             float oldOrthographicSize = currentCamera.orthographicSize; // 원래 사이즈를 저장
 
-            while (Mathf.Abs(currentCamera.orthographicSize - cameraZoomInSize) > limitCalSize)
+            while (Mathf.Abs(currentCamera.orthographicSize - _size) > limitCalSize)
             {
                 zoomTimer += Time.smoothDeltaTime * currentZoomSpeed;
-                currentCamera.orthographicSize = Mathf.Lerp(oldOrthographicSize, cameraZoomInSize, zoomTimer);
+                currentCamera.orthographicSize = Mathf.Lerp(oldOrthographicSize, _size, zoomTimer);
                 yield return YieldInstructionCache.WaitForEndOfFrame;
             }
         }
         else //아닐 경우
         {
-            while (Mathf.Abs(currentCamera.orthographicSize - cameraZoomInSize) > limitCalSize)
+            while (Mathf.Abs(currentCamera.orthographicSize - _size) > limitCalSize)
             {
                 // zoomTimer += Time.deltaTime;
-                currentCamera.orthographicSize = Mathf.SmoothDamp(currentCamera.orthographicSize, cameraZoomInSize, ref velocity, zoomSpeed);
+                currentCamera.orthographicSize = Mathf.SmoothDamp(currentCamera.orthographicSize, _size, ref velocity, zoomSpeed);
                 yield return YieldInstructionCache.WaitForEndOfFrame;
             }
         }
         
-        currentCamera.orthographicSize = cameraZoomInSize;
-        cameraState = eCameraState.DEFAULT;
+        currentCamera.orthographicSize = _size;
+        cameraState = eCameraState.STAY;
     }
     private Vector3 GetConfinePosition()
     {
