@@ -136,7 +136,8 @@
             {
                 float fogIntensity = (5-_FogLevel) * 0.12;
                 
-                return lerp(mainCol, _FogColor, fogIntensity);
+                mainCol.rgb = lerp(mainCol.rgb, _FogColor.rgb, fogIntensity);
+                return mainCol;
             }
             //--------------
 
