@@ -210,6 +210,11 @@ public class CameraManager : MonoBehaviour
     }
     private IEnumerator CameraZoomOut(float _size)
     {
+        if (NowCameraSize()==eCameraState.ZOOMIN)
+        {
+            _size = cameraDefaultSize;
+        }
+
         if (isTimeMode) //시간 모드일 경우
         {
             zoomTimer = 0f;
@@ -237,6 +242,11 @@ public class CameraManager : MonoBehaviour
     }
     private IEnumerator CameraZoomIn(float _size)
     {
+        if (NowCameraSize() == eCameraState.ZOOMOUT)
+        {
+            _size = cameraDefaultSize;
+        }
+
         if (isTimeMode) //시간 모드일 경우
         {
             zoomTimer = 0f;
@@ -273,6 +283,29 @@ public class CameraManager : MonoBehaviour
 
         Vector3 confinePosition = new Vector3(clampX, clampY, cameraDefaultPositionZ);
         return confinePosition;
+    }
+
+
+    private eCameraState NowCameraSize()
+    {
+        if (currentCamera.orthographicSize==cameraZoomOutSize)
+        {
+            return eCameraState.ZOOMOUT;
+        }
+        else if (currentCamera.orthographicSize==cameraZoomInSize)
+        {
+            return eCameraState.ZOOMIN;
+        }
+        else if (currentCamera.orthographicSize==cameraDefaultSize)
+        {
+            return eCameraState.DEFAULT;
+        }
+        else
+        {
+            return eCameraState.STAY;
+        }
+
+
     }
 
 
