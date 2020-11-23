@@ -2,9 +2,8 @@
 {
     Properties
     {
-        _BaseMap("Texture", 2D) = "black" {}
-        _BeginColor("BeginColor", Color) = (0, 0, 0, 1)
-        _EndColor("EndColor", Color) = (1, 1, 1, 1)
+        _BaseMap("Texture", 2D) = "wight" {}
+        _BaseColor("Color", Color) = (1, 1, 1, 1)
         _Cutoff("AlphaCutout", Range(0.0, 1.0)) = 0.5
 
         // BlendMode
@@ -23,13 +22,12 @@
         [HideInInspector] _MainTex("BaseMap", 2D) = "white" {}
         [HideInInspector] _Color("Base Color", Color) = (0.5, 0.5, 0.5, 1)
         [HideInInspector] _SampleGI("SampleGI", float) = 0.0 // needed from bakedlit
+
+
     }
     SubShader
     {
-        Tags 
-        { "RenderType" = "Opaque" "IgnoreProjector" = "True"
-        "Queue"="Background" "RenderPipeline" = "UniversalPipeline" }
-
+        Tags { "RenderType" = "Opaque" "IgnoreProjector" = "True" "RenderPipeline" = "UniversalPipeline" }
         LOD 100
 
         Blend [_SrcBlend][_DstBlend]
@@ -66,14 +64,19 @@
             struct Varyings
             {
                 float2 uv        : TEXCOORD0;
+                float fogCoord  : TEXCOORD1;
                 float4 vertex : SV_POSITION;
 
                 UNITY_VERTEX_INPUT_INSTANCE_ID
                 UNITY_VERTEX_OUTPUT_STEREO
             };
 
+            CBUFFER_START(UnityPerDraw)
+
             float4 _BeginColor;
             float4 _EndColor;
+
+            CBUFFER_END
 
             Varyings vert(Attributes input)
             {
@@ -84,8 +87,7 @@
 
                 VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
                 output.vertex = vertexInput.positionCS;
-                output.uv = input.uv;
-                //output.pos = UnityObjectToClipPos(input.vertex);
+                output.uv = TRANSFORM_TEX(input.uv, _BaseMap);
 
                 return output;
             }
@@ -95,9 +97,8 @@
                 UNITY_SETUP_INSTANCE_ID(input);
 
                 half2 uv = input.uv;
-                half4 col = lerp(_BeginColor, _EndColor, 0.5);
-                
-                return half4(col.rgb, 1);
+                half4 color = lerp(_BeginColor, _EndColor, uv.y);
+                return color*color;
             }
             ENDHLSL
         }
