@@ -132,11 +132,11 @@ public class CameraManager : MonoBehaviour
             cameraState = eCameraState.ZOOMOUT;
         }
     }
-    private void LateUpdate()
-    {
-        FollowTarget(); //항상 따라다님 
-    }
 
+    private void FixedUpdate() 
+    {
+        FollowTarget(); // 타겟 팔로잉
+    }
     private void FollowTarget() // 타겟 팔로잉
     {
 
