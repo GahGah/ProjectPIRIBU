@@ -13,6 +13,7 @@ public class CharacterStateMachine : StateMachine {
 	public Character GetCharacter() {
 		return character;
 	}
+
 }
 
 public class CharacterState : State {

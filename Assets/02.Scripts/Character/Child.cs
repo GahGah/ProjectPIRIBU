@@ -32,8 +32,7 @@ public class ChildGround : ChildState {
 		moveStat.verticalSpeed = 0;
 	}
 	public override void Execute() {
-
-
+		
 		Vector2 groundForward = Vector2.right;
 
 		//지형 부착
@@ -50,11 +49,14 @@ public class ChildGround : ChildState {
 		float safetyDistance = 1;
 		int moveDir = dist >= safetyDistance ? heroDir : 0;
 
+		//임시로 컨트롤 버튼 누르고 있을때만 follow
+		//if (!input.buttonCtrl.isPressed) moveDir = 0;
+
 		unit.HandleMoveSpeed(moveDir, moveStat.groundMoveSpeed);
+		
 
 		//이동호출
-		Vector2 vel = groundForward * moveStat.sideMoveSpeed
-			+ Vector2.down*5f;
+		Vector2 vel = groundForward * moveStat.sideMoveSpeed + Vector2.down*5f;
 		vel = new Vector2(moveStat.sideMoveSpeed, 0);
 		
 		unit.SetMovement(MovementType.SetVelocity, vel);

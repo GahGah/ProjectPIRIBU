@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class State {
@@ -18,7 +19,11 @@ public class State {
 	public virtual void Enter() { }
 	public virtual void Execute() { }
 	public virtual void Exit() { }
-	public virtual void HandleInput(Input _input) { }
-	public virtual void HandleEvent(Event _event) { }
+	public virtual void HandleInput(InputType type, object value) {
+	}
+
+	public enum InputType {
+		Input, Select
+	}
 }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum MovementType {
-	None, SetPos, AddPos, SetVelocity, AddVelocity
+	None, SetPos, AddPos, SetVelocity, AddVelocity, ForceAt
 }
 
 /// <summary>
@@ -123,11 +123,28 @@ public class LiftObject : MonoBehaviour {
 	struct MovementInput {
 		public MovementType type;
 		public Vector2 vector;
+		public Vector2 vector2;
 		public MovementInput(MovementType _type, Vector2 _vec) {
 			type = _type;
 			vector = _vec;
+			vector2 = Vector2.zero;
+		}
+
+		public MovementInput(MovementType _type, Vector2 _vec, Vector2 _vec2) {
+			type = _type;
+			vector = _vec;
+			vector2 = _vec2;
 		}
 	}
+
+	//매프레임마다 LiftObject를 움직이는 방식은 사용자 지정
+	public void SetMovement(MovementType inputType, Vector2 inputVec) {
+		movementInputs.Add(new MovementInput(inputType, inputVec));
+	}
+	public void SetMovement(MovementType inputType, Vector2 inputVec, Vector2 inputVec2) {
+		movementInputs.Add(new MovementInput(inputType, inputVec, inputVec2));
+	}
+
 	private List<MovementInput> movementInputs = new List<MovementInput>();
 
 	protected virtual void UpdateRigidbody() {
@@ -158,6 +175,10 @@ public class LiftObject : MonoBehaviour {
 				case MovementType.AddVelocity:
 					addVel += input.vector;
 					break;
+				//AddForceAtPosition 사용. 캐릭터가 착지해있는 parent에 중력힘 가할때 사용
+				case MovementType.ForceAt:
+					rigid.AddForceAtPosition(input.vector,input.vector2);
+					break;
 			}
 		}
 
@@ -184,10 +205,6 @@ public class LiftObject : MonoBehaviour {
 		
 	}
 
-	//매프레임마다 LiftObject를 움직이는 방식은 사용자 지정
-	public void SetMovement(MovementType inputType, Vector2 inputVec) {
-		movementInputs.Add(new MovementInput(inputType, inputVec));
-	}
 	public Vector2 GetVelocity() {
 		return rigid.velocity;
 	}

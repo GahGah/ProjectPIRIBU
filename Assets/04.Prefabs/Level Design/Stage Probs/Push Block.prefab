@@ -535,9 +535,11 @@ MonoBehaviour:
   preScale: {x: 0, y: 0, z: 0}
   currScale: {x: 0, y: 0, z: 0}
   standardScale: {x: 0, y: 0, z: 0}
+  deltaScale: {x: 0, y: 0, z: 0}
   preAngle: {x: 0, y: 0, z: 0}
   currAngle: {x: 0, y: 0, z: 0}
   standardAngle: {x: 0, y: 0, z: 0}
+  deltaAngle: {x: 0, y: 0, z: 0}
   preNormal: {x: 0, y: 0, z: 0}
   currNormal: {x: 0, y: 0, z: 0}
   standardNormal: {x: 0, y: 0, z: 0}
@@ -592,7 +594,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 50
+  m_Mass: 100
   m_LinearDrag: 3
   m_AngularDrag: 0.1
   m_GravityScale: 2

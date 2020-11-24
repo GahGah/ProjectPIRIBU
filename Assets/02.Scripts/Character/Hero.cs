@@ -28,23 +28,18 @@ public class HeroState : CharacterState {
 
 //지형 상태
 public class HeroGround : HeroState {
-	float tick;
-	float rayDist;//지형 레이 거리
-	Vector2 groundNormal;//지형 노말
+
 	Vector2 groundForward;//GroundNormal의 직교벡터
 	public override void Enter() {
-		tick = 0f;
 		moveStat.verticalSpeed = 0;
-		groundNormal = Vector2.up;
 	}
 	public override void Execute() {
-		tick += Time.deltaTime;
 
 		//지형 부착
 		if (unit.AttachGround()) {
 			groundForward = unit.groundForward;
 		} else {
-			//땅과 거리차가 날시 공중상태
+			//땅이 아닐시 공중상태
 			sm.SetState(States.Hero_Air);
 			return;
 		}
