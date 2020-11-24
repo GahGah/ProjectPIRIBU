@@ -230,7 +230,8 @@ public class HeroBox : HeroState {
 	int pushSide;
 	public override void Enter() {
 		box = unit.interactionObject.GetChildObject<PushBox>();
-
+		box.isPushingMode = true;
+		
 		//미는방향
 		pushSide = box.currPos.x-unit.currPos.x > 0 ? 1 : -1;
 
@@ -250,21 +251,26 @@ public class HeroBox : HeroState {
 			return;
 		}
 
-		//박스 밀기 ()
+		//박스 밀기
 		int moveDir = unit.GetSideMoveDirection();
 		
+
+		//움직이지 않는동안 박스 정지
+		box.isPushingMode = Mathf.Abs(moveStat.sideMoveSpeed) <= 1 ? false : true;
+
 		//밀때는 앞의 박스를 벽으로 인식하지 않고, 당길때는 뒤의 벽을 인식하게
 		bool considerWall = moveDir == pushSide ? false : true;
-
 		unit.HandleMoveSpeed(moveDir, moveStat.groundMoveSpeed, considerWall);
 
-		Vector2 moveVec = Vector2.right * moveStat.sideMoveSpeed * 0.5f*Time.deltaTime;
-		box.SetMovement(MovementType.AddPos, moveVec);
+
 		//Logic Error : MovePosition을 사용하면 뒤에 다른 박스들이 수십개 있어도 똑같은 강도로 민다.
+		Vector2 moveVec = unit.groundForward * moveStat.sideMoveSpeed * 0.5f*Time.deltaTime;
+		box.SetMovement(MovementType.AddPos, moveVec);
 		unit.SetMovement(MovementType.AddPos, moveVec);
 
 	}
 
-	public override void Exit() {	
+	public override void Exit() {
+		box.isPushingMode = false;
 	}
 }

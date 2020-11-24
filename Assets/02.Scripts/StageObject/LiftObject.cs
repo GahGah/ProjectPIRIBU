@@ -62,7 +62,7 @@ public class LiftObject : MonoBehaviour {
 		fixedUpdatePerSec = 1.0f / Time.fixedDeltaTime;
 	}
 	
-	private void FixedUpdate() {
+	protected virtual void FixedUpdate() {
 		UpdatePreTransforms();
 		UpdateNow();
 	}
