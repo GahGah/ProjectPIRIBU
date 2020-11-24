@@ -99,12 +99,12 @@ public class UnitCharacter : Unit
 		//if (parent) parent.Draw();
 	}
 
-	[HideInInspector] public float groundDegree = 50;//지형으로 판정되는 각도
 	#region Ground Detecting 관련
 
 	[HideInInspector] public RaycastHit2D raycastHitGround;
 	[HideInInspector] public Vector2 groundForward;
 	[HideInInspector] public float groundDist = 0.3f;//최소 지형 이격거리
+	[HideInInspector] public float groundDegree = 50;//지형으로 판정되는 각도
 
 	//해당 면의 노말이 땅인가?
 	public bool IsGroundNormal(Vector2 normal) {
@@ -259,9 +259,42 @@ public class UnitCharacter : Unit
 	/// </summary>
 	/// <param name="moveDir"></param>
 	/// <returns></returns>
-	public float GetWalkableDistance(int moveDir = 1) {
-		float dist = 10;
+	public float GetWalkableDistance(int moveDir = 1, float maxDistance = 4f) {
+		float dist = 0;
+		if (moveDir == 0) return dist;
+		moveDir = moveDir > 0 ? 1 : -1;
 
+		float xStep = 0.08f;
+
+		float startX = transform.position.x;
+		float distX = 0;
+		float currY = transform.position.y;
+
+		float airSpace = 0;//판별되는 공중간격
+		float allowedSpace = foot.size.x*0.8f;//허용되는 최대 공중간격. 이 크기 이내의 허공은 절벽으로 인식하지 않음.
+
+		//캐릭터 중앙점에서 발 밑까지의 거리 (회전 고려)
+		float verticalDist = Vector3.Magnitude(transform.position - (foot.transform.position + -transform.up *foot.size.y * 0.5f));
+
+		for (; distX * moveDir < maxDistance; distX += xStep * moveDir) {
+			Vector2 origin = new Vector2(startX + distX, currY);
+			RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, verticalDist + groundDist * 2, groundLayer);
+			float distNow = hit.distance;
+			if (hit.collider && distNow <= verticalDist+groundDist) {
+				Debug.DrawLine(new Vector3(startX+distX, currY), hit.point, Color.magenta);
+				currY = hit.point.y + verticalDist;
+				airSpace = 0;
+			} else {
+				//닿은게 아예 없단 것은 공중이란 것
+				Debug.DrawLine(new Vector3(startX + distX, currY), new Vector3(startX + distX, currY-verticalDist), Color.cyan);
+				airSpace += xStep;
+				if (airSpace >= allowedSpace) {
+					break;
+				}
+			}
+		}
+
+		dist = distX*moveDir;
 		return dist;
 	}
 	#endregion

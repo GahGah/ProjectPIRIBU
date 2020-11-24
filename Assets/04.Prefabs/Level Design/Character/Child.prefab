@@ -179,6 +179,16 @@ PrefabInstance:
       propertyPath: m_Size.y
       value: 0.66
       objectReference: {fileID: 0}
+    - target: {fileID: 1818470571671186696, guid: b1bdc0bb03758b5418c99b2d9b65e13e,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1818470571671186699, guid: b1bdc0bb03758b5418c99b2d9b65e13e,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 0.7
+      objectReference: {fileID: 0}
     - target: {fileID: 1818470571671186711, guid: b1bdc0bb03758b5418c99b2d9b65e13e,
         type: 3}
       propertyPath: m_LocalPosition.y
@@ -307,17 +317,17 @@ PrefabInstance:
     - target: {fileID: 3657937132967851561, guid: b1bdc0bb03758b5418c99b2d9b65e13e,
         type: 3}
       propertyPath: status.groundMoveSpeed.accel
-      value: 0.5
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 3657937132967851561, guid: b1bdc0bb03758b5418c99b2d9b65e13e,
         type: 3}
       propertyPath: status.groundMoveSpeed.brake
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3657937132967851561, guid: b1bdc0bb03758b5418c99b2d9b65e13e,
         type: 3}
       propertyPath: status.groundMoveSpeed.max
-      value: 7
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3657937132967851561, guid: b1bdc0bb03758b5418c99b2d9b65e13e,
         type: 3}

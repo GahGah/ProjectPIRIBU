@@ -43,10 +43,12 @@ public class ChildGround : ChildState {
 		}
 
 		//좌우이동 인공지능
-		int heroDir = hero.unit.transform.position.x - unit.transform.position.x > 0 ? 1 : -1;
-		float dist = unit.GetWalkableDistance(heroDir);
+		float followStartDist = 1f;//이동 시작하는 최소값
+		float safetyDistance = 1.5f;//추락지점 이격거리
 
-		float safetyDistance = 1;
+		float heroXDist = hero.unit.transform.position.x - unit.transform.position.x;
+		int heroDir = Mathf.Abs(heroXDist) >= followStartDist ? (heroXDist > 0 ? 1 : -1) : 0;
+		float dist = unit.GetWalkableDistance(heroDir, safetyDistance*1.5f);
 		int moveDir = dist >= safetyDistance ? heroDir : 0;
 
 		//임시로 컨트롤 버튼 누르고 있을때만 follow
@@ -54,10 +56,8 @@ public class ChildGround : ChildState {
 
 		unit.HandleMoveSpeed(moveDir, moveStat.groundMoveSpeed);
 		
-
 		//이동호출
-		Vector2 vel = groundForward * moveStat.sideMoveSpeed + Vector2.down*5f;
-		vel = new Vector2(moveStat.sideMoveSpeed, 0);
+		Vector2 vel = groundForward * moveStat.sideMoveSpeed;
 		
 		unit.SetMovement(MovementType.SetVelocity, vel);
 
