@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 1612932178285927804}
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
   m_LocalPosition: {x: -0.5, y: 0, z: 0}
-  m_LocalScale: {x: 1.01, y: 0.01, z: 1}
+  m_LocalScale: {x: 1.01, y: 0.005, z: 1}
   m_Children: []
   m_Father: {fileID: 8893630281688878041}
   m_RootOrder: 2
@@ -134,7 +134,7 @@ Transform:
   m_GameObject: {fileID: 2769741754554197084}
   m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0.5, y: 0, z: 0}
-  m_LocalScale: {x: 1.01, y: 0.01, z: 1}
+  m_LocalScale: {x: 1.01, y: 0.005, z: 1}
   m_Children: []
   m_Father: {fileID: 8893630281688878041}
   m_RootOrder: 3
@@ -240,7 +240,7 @@ Transform:
   m_GameObject: {fileID: 3743222088234811770}
   m_LocalRotation: {x: -0, y: -0, z: -1, w: 0}
   m_LocalPosition: {x: 0, y: -0.5, z: 0}
-  m_LocalScale: {x: 1.01, y: 0.01, z: 1}
+  m_LocalScale: {x: 1.01, y: 0.005, z: 1}
   m_Children: []
   m_Father: {fileID: 8893630281688878041}
   m_RootOrder: 1
@@ -346,7 +346,7 @@ Transform:
   m_GameObject: {fileID: 4676242930193291040}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.5, z: 0}
-  m_LocalScale: {x: 1.01, y: 0.01, z: 1}
+  m_LocalScale: {x: 1.01, y: 0.005, z: 1}
   m_Children: []
   m_Father: {fileID: 8893630281688878041}
   m_RootOrder: 0
@@ -594,7 +594,7 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 50
   m_LinearDrag: 3
-  m_AngularDrag: 0.2
+  m_AngularDrag: 0.1
   m_GravityScale: 2
   m_Material: {fileID: 6200000, guid: 5fa86295eda5dff4993a84caf885072b, type: 2}
   m_Interpolate: 0

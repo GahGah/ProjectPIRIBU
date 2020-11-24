@@ -23,8 +23,8 @@ public class LiftObject : MonoBehaviour {
 	[HideInInspector]
 	public Vector3
 		prePos, currPos, targetPos, standardPos, deltaPos, nextPos,
-		preScale, currScale, standardScale,
-		preAngle, currAngle, standardAngle,
+		preScale, currScale, standardScale, deltaScale,
+		preAngle, currAngle, standardAngle, deltaAngle,
 		preNormal, currNormal, standardNormal;
 	/* Previous : 이전 프레임의, Current : 현재 프레임의, Target : 목표의
 	 * Standard : 기준이 되는
@@ -67,6 +67,10 @@ public class LiftObject : MonoBehaviour {
 		UpdateNow();
 	}
 
+	protected virtual void Update() {
+
+	}
+
 	private void UpdateNow() {
 		if (updatedTime == Time.time) return;
 		updatedTime = Time.time;
@@ -77,7 +81,7 @@ public class LiftObject : MonoBehaviour {
 		
 		//현재 트랜스폼 정보 업데이트
 		UpdateCurrTransforms();
-		deltaPos = currPos - prePos;
+		UpdateDeltaTransforms();
 
 		//UpdateRigidbody에선 Transform이 변경되지 않는다.
 		//따라서 UpdateCurrTransforms가 먼저 와도 값의 차이가 없음.
@@ -89,7 +93,24 @@ public class LiftObject : MonoBehaviour {
 	public Vector3 GetLiftPosition(LiftObject child) {
 		//자신의 물리 업데이트 먼저!
 		UpdateNow();
-		return deltaPos + child.transform.position;
+
+		//자신이 원점인 child의 위치
+		Vector3 childDist = child.transform.position - currPos;
+
+		//Parenting Transform : Scale -> Rotation -> Position
+		
+		//Scale
+		childDist = new Vector2(childDist.x * (1 + deltaScale.x), childDist.y * (1 + deltaScale.y));
+
+		//Rotation
+		float sin, cos;
+		sin = Mathf.Sin(deltaAngle.z * Mathf.Deg2Rad);
+		cos = Mathf.Cos(deltaAngle.z * Mathf.Deg2Rad);
+		childDist = new Vector2(cos * childDist.x - sin * childDist.y, sin * childDist.x + cos * childDist.y);
+
+		//Position
+		childDist = childDist + deltaPos;
+		return currPos + childDist;
 	}
 
 	public Vector3 GetDeltaPos() {
@@ -172,7 +193,7 @@ public class LiftObject : MonoBehaviour {
 	}
 
 
-
+	#region UpdateTransforms
 	//1프레임 전 트랜스폼 업데이트
 	protected virtual void UpdatePreTransforms() {
 		prePos = currPos;
@@ -188,6 +209,14 @@ public class LiftObject : MonoBehaviour {
 		currScale = transform.localScale;
 		currNormal = transform.up;
 	}
+
+	//이전 프레임간의 차이 업데이트
+	protected virtual void UpdateDeltaTransforms() {
+		deltaPos = currPos - prePos;
+		deltaAngle = currAngle - preAngle;
+		deltaScale = currScale - preScale;
+	}
+	#endregion
 
 	//LiftParent 설정
 	public void SetLiftParent(LiftObject lift) {

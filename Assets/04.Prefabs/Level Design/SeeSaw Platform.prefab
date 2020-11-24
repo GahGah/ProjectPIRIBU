@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 6911262849646130790}
   - component: {fileID: 6911262849646130788}
   - component: {fileID: 6911262849646130792}
-  - component: {fileID: 6911262849646130799}
   m_Layer: 13
   m_Name: SeeSaw Platform
   m_TagString: LinearPlatform
@@ -167,21 +166,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f8d70a4a7c640f4983fbfd832603d62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetAngle: 0
-  recoveryPower: 40
-  weight: 15
---- !u!114 &6911262849646130799
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6911262849646130791}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9252b50dd7c69634fb9da22be8bf4872, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   parent: {fileID: 0}
   childs: []
   coll: {fileID: 0}
@@ -203,3 +187,6 @@ MonoBehaviour:
   standardNormal: {x: 0, y: 0, z: 0}
   fixedUpdatePerSec: 0
   isOneWay: 1
+  targetAngle: 0
+  recoveryPower: 40
+  weight: 15
