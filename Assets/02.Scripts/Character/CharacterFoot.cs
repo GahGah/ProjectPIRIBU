@@ -30,15 +30,14 @@ public class CharacterFoot : MonoBehaviour
 	//인접 부모 관리는 별도의 Trigger가 함 (조금만 떨어져도 Deparent 현상 일어나는것 방지)
 	private void OnTriggerEnter2D (Collider2D collision) {
 		LiftObject element = collision.gameObject.GetComponent<LiftObject>();
-		if (element != null) {
-			adjacentLiftObjects.Add(element);
-		}
+		if (element != null)
+			if (!adjacentLiftObjects.Contains(element))
+				adjacentLiftObjects.Add(element);
 	}
 
 	private void OnTriggerExit2D(Collider2D collision) {
 		LiftObject element = collision.gameObject.GetComponent<LiftObject>();
-		if (element != null) {
+		if (element != null)
 			adjacentLiftObjects.Remove(element);
-		}
 	}
 }

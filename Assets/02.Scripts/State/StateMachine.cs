@@ -42,6 +42,12 @@ public class StateMachine {
 	public string GetStateName() {
 		return currentState.ToString();
 	}
+
+
+	public virtual void HandleSelect() {
+		currentState.HandleInput(State.InputType.Select, false);
+	}
+
 }
 
 

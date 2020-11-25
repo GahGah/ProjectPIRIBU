@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Net;
+using System.Runtime.Serialization;
 using UnityEngine;
 
 public class UnitCharacter : Unit
@@ -81,8 +82,10 @@ public class UnitCharacter : Unit
 					isIgnore = platform.GetIsOneWayIgnore(footPos);
 					// One-Way 플랫폼 충돌무시 검사
 					foot.IgnoreWith(targetColl, isIgnore);
-					if (isIgnore) IgnoreColliders.Add(targetColl);
-					else IgnoreColliders.Remove(targetColl);
+					if (isIgnore) {
+						if (!IgnoreColliders.Contains(targetColl))
+							IgnoreColliders.Add(targetColl);
+					} else IgnoreColliders.Remove(targetColl);
 				}
 			}
 		}
@@ -96,12 +99,12 @@ public class UnitCharacter : Unit
 		//if (parent) parent.Draw();
 	}
 
-	[HideInInspector] public float groundDegree = 50;//지형으로 판정되는 각도
 	#region Ground Detecting 관련
 
 	[HideInInspector] public RaycastHit2D raycastHitGround;
 	[HideInInspector] public Vector2 groundForward;
-	[HideInInspector] public float groundDist = 0.5f;//최소 지형 이격거리
+	[HideInInspector] public float groundDist = 0.3f;//최소 지형 이격거리
+	[HideInInspector] public float groundDegree = 50;//지형으로 판정되는 각도
 
 	//해당 면의 노말이 땅인가?
 	public bool IsGroundNormal(Vector2 normal) {
@@ -111,18 +114,29 @@ public class UnitCharacter : Unit
 	//캐릭터를 땅에 붙임. groundForward가 업데이트됨. 붙이지 못했을시 false 반환
 	//Logic Error : Attach 과정 자체가 캐릭터를 내리는 행위라 mass가 더 붙은 듯한 문제가 있음.
 	public bool AttachGround() {
-		RayGround(Vector2.down);
+		float rayDist = RayGround(Vector2.down);
 		Vector2 groundNormal = raycastHitGround.normal;
 		groundForward = new Vector2(groundNormal.y, -groundNormal.x);
 
 		//발과 지형간의 최소거리인 rayDist값으로 지형부착 이동을 한다.
-		float rayDist = RayGround(-groundNormal);
-		
+		rayDist = RayGround(-groundNormal);
+		groundNormal = raycastHitGround.normal;
+		groundForward = new Vector2(groundNormal.y, -groundNormal.x);
+
 		//지형부착 성공
-		if (groundDist > rayDist) {
-			if (rayDist > 0) //일반적인 부착값
-				rayDist += 0.05f;
-			else {//Dist가 음수면 foot가 올라가게 되어있다.
+		if (groundDist > rayDist && IsGroundNormal(groundNormal)) {
+			//Parent에 아래힘 가하기
+			if (parent)
+				parent.SetMovement(
+					MovementType.ForceAt,
+					Vector2.down * rigid.mass * status.fallSpeed * fixedUpdatePerSec,
+					foot.transform.position
+				);
+
+			if (rayDist > 0) {//일반적인 부착값
+				rayDist += 0.02f;
+			} else {
+			//Dist가 음수면 foot가 올라가게 되어있다.
 				//모든 RayHit가 발 위라면 플랫폼에 끼였을 가능성이 높다.
 				if (isAllRayOverFoot)
 					rayDist *= 0.2f;
@@ -142,37 +156,61 @@ public class UnitCharacter : Unit
 	/// <summary>
 	/// 지형에 RayCast하고 거리가 가장 짧은 ray를 raycastHitGround에 저장 및 가장 짧은 거리를 반환
 	/// </summary>
-	public float RayGround(Vector2 _rayDir) {
+	public float RayGround(Vector2 _rayDir, bool isSetRayHit = true) {
 		float dist = Mathf.Infinity;
 		isAllRayOverFoot = true;
 
+		//평균노말
+		//Vector2 totalNormal = Vector2.zero;
 		//여러군데 검사
-		int rays = 1;
+		int rays = 2;
 		for (int i = -rays; i <= rays; i ++) {
+			//Vector2 currentNormal = Vector2.up;
+
 			Vector2 origin = foot.transform.position
 				- foot.transform.up * foot.size.y * 0.5f
 				+ foot.transform.right * foot.size.x * ((float)i / rays * 0.5f)
 				-(Vector3)_rayDir* rayGroundOffset;
 
-			//Logic Error : Ignore중인 땅까지 스캔하고 있음. RaycastAll을 사용?
-			RaycastHit2D hit;
-			hit = Physics2D.Raycast(origin, _rayDir, (groundDist+ rayGroundOffset) * 2, groundLayer);
-			if (hit.collider != null) {
-				if (hit.distance - rayGroundOffset * 0.5f > 0)
-					isAllRayOverFoot = false;
-				dist = Mathf.Min(dist,hit.distance- rayGroundOffset);
-				raycastHitGround = hit;
+			
+			RaycastHit2D[] hits;
+			hits = Physics2D.RaycastAll(origin, _rayDir, (groundDist + rayGroundOffset)*2, groundLayer);
+			foreach (RaycastHit2D hit in hits) {
+				//if (IgnoreColliders.Contains(hit.collider)) continue; //Logic Error : Ignore중인 땅까지 스캔함.
+				
+				//한 ray라도 발 아래에 쬐어지면
+				if (hit.distance - rayGroundOffset > -rayGroundOffset*0.5f)//논리적으로 우항은 0이어야 하지만 약간 완화
+						isAllRayOverFoot = false;
+
+				//dist값 업데이트
+				float distNow = hit.distance - rayGroundOffset;
+				if (distNow < dist) {
+					dist = distNow;
+					if (isSetRayHit) raycastHitGround = hit;
+				}
+
+				//땅에 닿는 hit의 노말을 currentNormal에 업데이트
+				//if (distNow <= groundDist) currentNormal = hit.normal;
+
+				/*	
 				Color color;
-				if (dist < 0)
-					color = Color.blue;
-				else
-					color = Color.red;
+				if (dist < 0) color = Color.blue;
+				else color = Color.red;
 				Debug.DrawLine(origin, hit.point, color);
-				//Debug.DrawLine(hit.point, hit.point+ hit.normal, Color.cyan);
-			} else {
-				isAllRayOverFoot = false;
+				*/
+				
 			}
+			if (hits.Length == 0)
+				isAllRayOverFoot = false;
+
+			//각 ray로 본 지형의 노말을 중첩
+			//totalNormal += currentNormal;
 		}
+
+		//지형 평균 각도 구하기 (뭔가 잘 안됨)
+		//if (isSetRayHit) raycastHitGround.normal = totalNormal / (rays * 2 + 1);
+		//Debug.DrawLine(foot.transform.position, foot.transform.position + (Vector3)(totalNormal / (rays * 2 + 1)),Color.cyan);
+
 		return dist;
 	}
 
@@ -221,9 +259,42 @@ public class UnitCharacter : Unit
 	/// </summary>
 	/// <param name="moveDir"></param>
 	/// <returns></returns>
-	public float GetWalkableDistance(int moveDir = 1) {
+	public float GetWalkableDistance(int moveDir = 1, float maxDistance = 4f) {
 		float dist = 0;
+		if (moveDir == 0) return dist;
+		moveDir = moveDir > 0 ? 1 : -1;
 
+		float xStep = 0.08f;
+
+		float startX = transform.position.x;
+		float distX = 0;
+		float currY = transform.position.y;
+
+		float airSpace = 0;//판별되는 공중간격
+		float allowedSpace = foot.size.x*0.8f;//허용되는 최대 공중간격. 이 크기 이내의 허공은 절벽으로 인식하지 않음.
+
+		//캐릭터 중앙점에서 발 밑까지의 거리 (회전 고려)
+		float verticalDist = Vector3.Magnitude(transform.position - (foot.transform.position + -transform.up *foot.size.y * 0.5f));
+
+		for (; distX * moveDir < maxDistance; distX += xStep * moveDir) {
+			Vector2 origin = new Vector2(startX + distX, currY);
+			RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, verticalDist + groundDist * 2, groundLayer);
+			float distNow = hit.distance;
+			if (hit.collider && distNow <= verticalDist+groundDist) {
+				Debug.DrawLine(new Vector3(startX+distX, currY), hit.point, Color.magenta);
+				currY = hit.point.y + verticalDist;
+				airSpace = 0;
+			} else {
+				//닿은게 아예 없단 것은 공중이란 것
+				Debug.DrawLine(new Vector3(startX + distX, currY), new Vector3(startX + distX, currY-verticalDist), Color.cyan);
+				airSpace += xStep;
+				if (airSpace >= allowedSpace) {
+					break;
+				}
+			}
+		}
+
+		dist = distX*moveDir;
 		return dist;
 	}
 	#endregion
@@ -237,7 +308,7 @@ public class UnitCharacter : Unit
 
 	//findTarget이 없는 기본형 : 앞에 벽(GroundLayer와 동일)이 있는지 검사
 	//findTarget이 존재 : Target과 마주하고있는지 검사 (PushBox용)
-	public bool WallCheck(int dir = 1, GameObject findTarget = null, float offsetSide = 0.1f) {
+	public bool WallCheck(int dir = 1, GameObject findTarget = null, float maxWallDist = 0.1f) {
 		Vector2 pos, size, up, right, rayDir;
 		pos = body.transform.position;
 		size = body.size;
@@ -245,32 +316,39 @@ public class UnitCharacter : Unit
 		up = body.transform.up;
 		rayDir = right * dir;
 
-		float maxWallDist = 0.15f;
+		float offsetSide = 0.1f;
 		float dist = Mathf.Infinity;
-		isAllRayOverFoot = true;
 
 		//여러군데 검사
-		float iAdd = 1.0f/5.0f;
+		float iAdd = 0.2f;//1.0f/5.0f;
+		List<RaycastHit2D> rayHits = new List<RaycastHit2D>();
+		
 		for (float i = -0.3f; i <= 0.5f; i += iAdd) {
 			Vector2 origin = pos
 				+ right * dir * (size.x * 0.5f - offsetSide)
 				+ up * (size.y * i);
 
 			RaycastHit2D[] hits = Physics2D.RaycastAll(origin, rayDir, maxWallDist + offsetSide, groundLayer);
-			foreach (RaycastHit2D hit in hits) {
-				//Ingore중인 One-Way 플랫폼은 무시
-				if (IgnoreColliders.Contains(hit.collider))
-					continue;
-				if (IsWallNormal(hit.normal)) {
-					//TargetFind모드.
-					if (findTarget == hit.transform.gameObject)
-						return true;
-					float thisDist = Mathf.Min(dist, hit.distance - offsetSide);
-					if (thisDist < dist) {
-						dist = thisDist;
-					}
-					//Debug.DrawLine(origin, hit.point, Color.green);
+			for (int j = 0; j < hits.Length; j++) {
+				RaycastHit2D hit = hits[j];			
+				if (!rayHits.Contains(hit))
+					rayHits.Add(hit);
+			}
+		}
+
+		foreach (RaycastHit2D hit in rayHits) {
+			//Ingore중인 One-Way 플랫폼은 무시
+			if (IgnoreColliders.Contains(hit.collider)) continue;
+
+			if (IsWallNormal(hit.normal)) {
+				//TargetFind모드.
+				if (findTarget == hit.transform.gameObject)
+					return true;
+				float thisDist = Mathf.Min(dist, hit.distance - offsetSide);
+				if (thisDist < dist) {
+					dist = thisDist;
 				}
+				//Debug.DrawLine(origin, hit.point, Color.green);
 			}
 		}
 

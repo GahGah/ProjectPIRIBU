@@ -5,10 +5,8 @@ using UnityEngine.Serialization;
 
 [RequireComponent(typeof(HingeJoint2D))]
 [RequireComponent(typeof(Rigidbody2D))]
-public class HingeJointPlatform : MonoBehaviour
-{
+public class HingeJointPlatform : LinearPlatform {
 	private HingeJoint2D hinge;
-	private Rigidbody2D rigid;
 
 	[Range(-45, 45)]
 	[FormerlySerializedAs("원래 각도")]
@@ -22,12 +20,13 @@ public class HingeJointPlatform : MonoBehaviour
 	[FormerlySerializedAs("시소 중량")]
 	public float weight = 2f;
 
-	private void Start() {
+	protected override void Awake() {
+		base.Awake();
 		hinge = GetComponent<HingeJoint2D>();
-		rigid = GetComponent<Rigidbody2D>();
 	}
-	void Update()
+	protected override void Update()
 	{
+		base.Update();
 		rigid.mass = weight;
 
 		JointMotor2D motor = hinge.motor;

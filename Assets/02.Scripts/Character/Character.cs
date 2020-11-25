@@ -38,4 +38,8 @@ public class Character : MonoBehaviour
 
 		}
 	}
+
+	public void SelectByPiri(object value) {
+		stateMachine.HandleSelect();
+	}
 }

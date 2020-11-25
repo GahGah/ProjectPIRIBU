@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Net.Security;
 using UnityEngine;
 
 /// <summary>
@@ -21,7 +22,9 @@ public class LinearPlatform : LiftObject {
 		
 	}
 
-	protected virtual void Update() {}
+	protected override void Update() {
+		base.Update();
+	}
 
 	public bool GetIsOneWayIgnore(Vector3 charPos) {
 
