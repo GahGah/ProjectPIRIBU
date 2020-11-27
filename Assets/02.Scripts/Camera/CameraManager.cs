@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
 enum eCameraState
 {
     DEFAULT = 0,
@@ -25,6 +24,15 @@ public class CameraManager : MonoBehaviour
 
     [Tooltip("팔로우, 줌인, 줌아웃 대상")]
     public Transform target;
+
+    [Tooltip("size에 따라서 스케일을 변화시킬 오브젝트...")]
+    public GameObject scaleChangeObject;
+
+    //위 오브젝트의 스케일 x,y값.
+    private float scObjX = 0f;
+    private float scObjY = 0f;
+
+    private Vector3 scObjVel = Vector3.zero;
 
     [Header("기본 설정")]
     [Tooltip("카메라의 기본 z값 입니다. 줌과는 관련 없습니다.")]
@@ -96,6 +104,11 @@ public class CameraManager : MonoBehaviour
             followSpeed = 5f;
         }
 
+        if (scaleChangeObject == null)
+        {
+            scaleChangeObject = new GameObject();
+            //그냥 오류 방지를 위해 빈깡 하나 넣기.
+        }
         #endregion
 
         limitCalSize = 0.03f;
@@ -103,7 +116,11 @@ public class CameraManager : MonoBehaviour
         cameraState = eCameraState.DEFAULT;
         isTimeMode = true;
 
-        cameraDefaultPositionZ = -10f;
+        scObjX = scaleChangeObject.transform.localScale.x;
+        scObjY = scaleChangeObject.transform.localScale.y;
+        //cameraDefaultPositionZ = -10f;
+
+
     }
 
     private void Awake()
@@ -119,10 +136,18 @@ public class CameraManager : MonoBehaviour
 
     private void Update()
     {
+
+        if (cameraState != eCameraState.STAY)
+        {
+            ChangeScaleThisObject();
+        }
+
         //zoomSpeed가 변할...수도 있기 때문에.
         currentZoomSpeed = 1f / zoomSpeed;
 
-        if (InputManager.Instance.buttonScroll.ReadValue().y>0)
+
+
+        if (InputManager.Instance.buttonScroll.ReadValue().y > 0)
         {
             cameraState = eCameraState.ZOOMIN;
         }
@@ -131,16 +156,20 @@ public class CameraManager : MonoBehaviour
         {
             cameraState = eCameraState.ZOOMOUT;
         }
+
+
+       
     }
 
-    private void FixedUpdate() 
+    private void FixedUpdate()
     {
         FollowTarget(); // 타겟 팔로잉
     }
+
     private void FollowTarget() // 타겟 팔로잉
     {
 
-        currentCamera.transform.position = Vector3.Lerp(currentCamera.transform.position, target.position, Time.deltaTime * followSpeed);
+        currentCamera.transform.position = Vector3.Lerp(currentCamera.transform.position, target.position, Time.smoothDeltaTime * followSpeed);
 
 
         if (isConfine) //제한 설정이 되어있으면 
@@ -163,11 +192,11 @@ public class CameraManager : MonoBehaviour
             switch (cameraState)
             {
                 case eCameraState.DEFAULT:
-                    if (currentCamera.orthographicSize>cameraDefaultSize) 
+                    if (currentCamera.orthographicSize > cameraDefaultSize)
                     {
                         currentCoroutine = CameraZoomIn(cameraDefaultSize);
                     }
-                    else if(currentCamera.orthographicSize<cameraDefaultSize)
+                    else if (currentCamera.orthographicSize < cameraDefaultSize)
                     {
                         currentCoroutine = CameraZoomOut(cameraDefaultSize);
                     }
@@ -210,7 +239,7 @@ public class CameraManager : MonoBehaviour
     }
     private IEnumerator CameraZoomOut(float _size)
     {
-        if (NowCameraSize()==eCameraState.ZOOMIN)
+        if (NowCameraState() == eCameraState.ZOOMIN)
         {
             _size = cameraDefaultSize;
         }
@@ -224,6 +253,9 @@ public class CameraManager : MonoBehaviour
             {
                 zoomTimer += Time.smoothDeltaTime * currentZoomSpeed;
                 currentCamera.orthographicSize = Mathf.Lerp(oldOrthographicSize, _size, zoomTimer);
+                //스케일 변경 하고싶은 오브젝트의 스케일을...뭐 그 퍼센트만큼으로 변경시킨다. 되려나...
+                //ChangeScaleThisObject();
+
                 yield return YieldInstructionCache.WaitForEndOfFrame;
             }
         }
@@ -234,6 +266,7 @@ public class CameraManager : MonoBehaviour
             {
                 //zoomTimer += Time.deltaTime;
                 currentCamera.orthographicSize = Mathf.SmoothDamp(currentCamera.orthographicSize, _size, ref velocity, zoomSpeed);
+                //ChangeScaleThisObject();
                 yield return YieldInstructionCache.WaitForEndOfFrame;
             }
         }
@@ -242,7 +275,7 @@ public class CameraManager : MonoBehaviour
     }
     private IEnumerator CameraZoomIn(float _size)
     {
-        if (NowCameraSize() == eCameraState.ZOOMOUT)
+        if (NowCameraState() == eCameraState.ZOOMOUT)
         {
             _size = cameraDefaultSize;
         }
@@ -256,6 +289,12 @@ public class CameraManager : MonoBehaviour
             {
                 zoomTimer += Time.smoothDeltaTime * currentZoomSpeed;
                 currentCamera.orthographicSize = Mathf.Lerp(oldOrthographicSize, _size, zoomTimer);
+
+                //테스트용 배경 줄이기. 
+                //먼저 현재 오쏘사이즈가 몇퍼센트 정도인지 구함. 
+                //스케일 변경 하고싶은 오브젝트의 스케일을...뭐 그 퍼센트만큼으로 변경시킨다. 되려나...
+                //ChangeScaleThisObject();
+
                 yield return YieldInstructionCache.WaitForEndOfFrame;
             }
         }
@@ -265,10 +304,12 @@ public class CameraManager : MonoBehaviour
             {
                 // zoomTimer += Time.deltaTime;
                 currentCamera.orthographicSize = Mathf.SmoothDamp(currentCamera.orthographicSize, _size, ref velocity, zoomSpeed);
+
+                //ChangeScaleThisObject();
                 yield return YieldInstructionCache.WaitForEndOfFrame;
             }
         }
-        
+
         currentCamera.orthographicSize = _size;
         cameraState = eCameraState.STAY;
     }
@@ -286,17 +327,17 @@ public class CameraManager : MonoBehaviour
     }
 
 
-    private eCameraState NowCameraSize()
+    private eCameraState NowCameraState()
     {
-        if (currentCamera.orthographicSize==cameraZoomOutSize)
+        if (currentCamera.orthographicSize == cameraZoomOutSize)
         {
             return eCameraState.ZOOMOUT;
         }
-        else if (currentCamera.orthographicSize==cameraZoomInSize)
+        else if (currentCamera.orthographicSize == cameraZoomInSize)
         {
             return eCameraState.ZOOMIN;
         }
-        else if (currentCamera.orthographicSize==cameraDefaultSize)
+        else if (currentCamera.orthographicSize == cameraDefaultSize)
         {
             return eCameraState.DEFAULT;
         }
@@ -307,8 +348,34 @@ public class CameraManager : MonoBehaviour
 
 
     }
+    private void ChangeScaleThisObject()
+    {
+        float _sizePer = currentCamera.orthographicSize / cameraDefaultSize * 100;
 
+        if (Mathf.Abs(_sizePer-100)<limitCalSize)
+        {
+            _sizePer = 100f;
+        }
 
+        if (isTimeMode)
+        {
+            scaleChangeObject.transform.localScale = Vector3.Lerp(scaleChangeObject.transform.localScale,
+              new Vector3(
+                 (scObjX / 100) * _sizePer,
+                 (scObjY / 100) * _sizePer,
+                 scaleChangeObject.transform.localScale.z //z는 뭐 그대로 놔두기로 하고,,,
+                  ), zoomTimer);
+        }
+        else
+        {
+            scaleChangeObject.transform.localScale = Vector3.SmoothDamp(scaleChangeObject.transform.localScale,
+            new Vector3(
+            (scObjX / 100) * _sizePer,
+            (scObjY / 100) * _sizePer,
+            scaleChangeObject.transform.localScale.z //z는 뭐 그대로 놔두기로 하고,,,
+             ), ref scObjVel, zoomSpeed);
+        }
+    }
     private void OnDrawGizmos()
     {
         if (isConfine)
