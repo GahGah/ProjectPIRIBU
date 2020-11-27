@@ -16,6 +16,8 @@ public class PiriManager : SingleTon<PiriManager>
     [Tooltip("피리 능력 총 사용 횟수")]
     private int totalPiriUseCount;
 
+    [Tooltip("컨트롤키 꾹 누르는 시간")]
+    public float ctrlInputTime;
     private bool isReadyToUse; //사용 준비 됨?
 
     float pressTimer;
@@ -35,10 +37,10 @@ public class PiriManager : SingleTon<PiriManager>
 
     }
 
-    private void Start()
-    {
-        StartCoroutine(ProcessPiriEnergy());
-    }
+    //private void Start()
+    //{
+    //   // StartCoroutine(ProcessPiriEnergy());
+    //}
     private void Update()
     {
         if (InputManager.instance.buttonCtrl.isPressed)
@@ -53,8 +55,27 @@ public class PiriManager : SingleTon<PiriManager>
             pressTimer = 0f;
         }
 
+        if (pressTimer>=ctrlInputTime)
+        {
+            Debug.Log("OK");
+            if (InputManager.instance.buttonMouseLeft.wasPressedThisFrame)
+            {
+                Ray ray = Camera.main.ScreenPointToRay(InputManager.instance.GetMouseCurrentPosition());
+                Debug.Log("POS :" + InputManager.instance.GetMouseCurrentPosition());
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit, 10000f))
+                {
+                    if (hit.collider.GetComponent<PulleyPlatform>() != null)
+                    {
+                        Debug.Log("PulleyPlatform");
+                    }
 
-        
+                }
+            }
+
+
+        }
+
     }
     protected override void Init()
     {
@@ -93,30 +114,33 @@ public class PiriManager : SingleTon<PiriManager>
             return true;
         }
     }
-
     private IEnumerator ProcessPiriEnergy()
     {
         while (true)
         {
 
-            if (isReadyToUse&&InputManager.instance.buttonMouseLeft.wasPressedThisFrame // and 꾹누르는 시간이 있다면 pressTimer >시간 
+            if (isReadyToUse && InputManager.instance.buttonMouseLeft.wasPressedThisFrame // and 꾹누르는 시간이 있다면 pressTimer >시간 
                 )
             {
                 Debug.Log(InputManager.instance.GetMouseCurrentPosition());
 
                 //use 피리능력.       
-                
+
                 Ray ray = Camera.main.ScreenPointToRay(InputManager.instance.GetMouseCurrentPosition());
                 RaycastHit hit;
                 if (Physics.Raycast(ray, out hit, 10000f))
                 {
+                    if (hit.collider.gameObject.GetComponent<PulleyPlatform>() != null)
+                    {
+                        Debug.Log("Yeah~");
+                    }
                     /*
                      * if hit.콜라이더.컴페어태그(무언가의...그...가능한 태그들)
                      * { 능력사용.}
                      * 
                      */
 
-                    
+
                 }
             }
             yield return null;

@@ -224,7 +224,7 @@ GameObject:
   - component: {fileID: 188637810}
   - component: {fileID: 188637809}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: primaneg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -245,6 +245,7 @@ MonoBehaviour:
   defaultPiriEnergy: 3
   currentPiriEnergy: 0
   maxPiriEnergy: 10
+  ctrlInputTime: 3
 --- !u!4 &188637810
 Transform:
   m_ObjectHideFlags: 0
@@ -886,7 +887,7 @@ GameObject:
   - component: {fileID: 805501943}
   - component: {fileID: 805501942}
   m_Layer: 0
-  m_Name: GameObject (2)
+  m_Name: gmGameObject (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1156,6 +1157,7 @@ GameObject:
   - component: {fileID: 1378295155}
   - component: {fileID: 1378295154}
   - component: {fileID: 1378295153}
+  - component: {fileID: 1378295157}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -1232,11 +1234,47 @@ Transform:
   m_GameObject: {fileID: 1378295152}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -7.25}
-  m_LocalScale: {x: 11.93005, y: 6.9831433, z: 1}
+  m_LocalScale: {x: 1.4132295, y: 0.8272207, z: 0.11845964}
   m_Children: []
   m_Father: {fileID: 589927581}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1378295157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1378295152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0114a4b175d72ad4a9a436c1bacdf616, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parent: {fileID: 0}
+  childs: []
+  coll: {fileID: 0}
+  rigid: {fileID: 0}
+  prePos: {x: 0, y: 0, z: 0}
+  currPos: {x: 0, y: 0, z: 0}
+  targetPos: {x: 0, y: 0, z: 0}
+  standardPos: {x: 0, y: 0, z: 0}
+  deltaPos: {x: 0, y: 0, z: 0}
+  nextPos: {x: 0, y: 0, z: 0}
+  preScale: {x: 0, y: 0, z: 0}
+  currScale: {x: 0, y: 0, z: 0}
+  standardScale: {x: 0, y: 0, z: 0}
+  deltaScale: {x: 0, y: 0, z: 0}
+  preAngle: {x: 0, y: 0, z: 0}
+  currAngle: {x: 0, y: 0, z: 0}
+  standardAngle: {x: 0, y: 0, z: 0}
+  deltaAngle: {x: 0, y: 0, z: 0}
+  preNormal: {x: 0, y: 0, z: 0}
+  currNormal: {x: 0, y: 0, z: 0}
+  standardNormal: {x: 0, y: 0, z: 0}
+  fixedUpdatePerSec: 0
+  routeList: []
+  isOneRoute: 0
 --- !u!1 &1813982156
 GameObject:
   m_ObjectHideFlags: 0

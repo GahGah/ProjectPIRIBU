@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-enum eCameraState
+enum ECameraState
 {
     DEFAULT = 0,
     ZOOMIN = 1,
@@ -63,7 +63,7 @@ public class CameraManager : MonoBehaviour
     public float currentZoomSpeed;
 
     [SerializeField]
-    private eCameraState cameraState;
+    private ECameraState cameraState;
 
     [Header("카메라 제한영역 설정")]
     [Tooltip("제한 영역 설정을 할 것인가?")]
@@ -113,7 +113,7 @@ public class CameraManager : MonoBehaviour
 
         limitCalSize = 0.03f;
         currentZoomSpeed = 1f / zoomSpeed;
-        cameraState = eCameraState.DEFAULT;
+        cameraState = ECameraState.DEFAULT;
         isTimeMode = true;
 
         scObjX = scaleChangeObject.transform.localScale.x;
@@ -137,7 +137,7 @@ public class CameraManager : MonoBehaviour
     private void Update()
     {
 
-        if (cameraState != eCameraState.STAY)
+        if (cameraState != ECameraState.STAY)
         {
             ChangeScaleThisObject();
         }
@@ -149,12 +149,12 @@ public class CameraManager : MonoBehaviour
 
         if (InputManager.Instance.buttonScroll.ReadValue().y > 0)
         {
-            cameraState = eCameraState.ZOOMIN;
+            cameraState = ECameraState.ZOOMIN;
         }
 
         if (InputManager.Instance.buttonScroll.ReadValue().y < 0)
         {
-            cameraState = eCameraState.ZOOMOUT;
+            cameraState = ECameraState.ZOOMOUT;
         }
 
 
@@ -191,7 +191,7 @@ public class CameraManager : MonoBehaviour
         {
             switch (cameraState)
             {
-                case eCameraState.DEFAULT:
+                case ECameraState.DEFAULT:
                     if (currentCamera.orthographicSize > cameraDefaultSize)
                     {
                         currentCoroutine = CameraZoomIn(cameraDefaultSize);
@@ -206,15 +206,15 @@ public class CameraManager : MonoBehaviour
                     }
                     break;
 
-                case eCameraState.ZOOMIN:
+                case ECameraState.ZOOMIN:
                     currentCoroutine = CameraZoomIn(cameraZoomInSize);
                     break;
 
-                case eCameraState.ZOOMOUT:
+                case ECameraState.ZOOMOUT:
                     currentCoroutine = CameraZoomOut(cameraZoomOutSize);
                     break;
 
-                case eCameraState.STAY:
+                case ECameraState.STAY:
                     currentCoroutine = null;
                     break;
 
@@ -239,7 +239,7 @@ public class CameraManager : MonoBehaviour
     }
     private IEnumerator CameraZoomOut(float _size)
     {
-        if (NowCameraState() == eCameraState.ZOOMIN)
+        if (NowCameraState() == ECameraState.ZOOMIN)
         {
             _size = cameraDefaultSize;
         }
@@ -271,11 +271,11 @@ public class CameraManager : MonoBehaviour
             }
         }
         currentCamera.orthographicSize = _size;
-        cameraState = eCameraState.STAY;
+        cameraState = ECameraState.STAY;
     }
     private IEnumerator CameraZoomIn(float _size)
     {
-        if (NowCameraState() == eCameraState.ZOOMOUT)
+        if (NowCameraState() == ECameraState.ZOOMOUT)
         {
             _size = cameraDefaultSize;
         }
@@ -311,7 +311,7 @@ public class CameraManager : MonoBehaviour
         }
 
         currentCamera.orthographicSize = _size;
-        cameraState = eCameraState.STAY;
+        cameraState = ECameraState.STAY;
     }
     private Vector3 GetConfinePosition()
     {
@@ -327,23 +327,23 @@ public class CameraManager : MonoBehaviour
     }
 
 
-    private eCameraState NowCameraState()
+    private ECameraState NowCameraState()
     {
         if (currentCamera.orthographicSize == cameraZoomOutSize)
         {
-            return eCameraState.ZOOMOUT;
+            return ECameraState.ZOOMOUT;
         }
         else if (currentCamera.orthographicSize == cameraZoomInSize)
         {
-            return eCameraState.ZOOMIN;
+            return ECameraState.ZOOMIN;
         }
         else if (currentCamera.orthographicSize == cameraDefaultSize)
         {
-            return eCameraState.DEFAULT;
+            return ECameraState.DEFAULT;
         }
         else
         {
-            return eCameraState.STAY;
+            return ECameraState.STAY;
         }
 
 
