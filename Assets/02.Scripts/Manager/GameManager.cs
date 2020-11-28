@@ -3,6 +3,41 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+internal static class YieldInstructionCache
+{
+
+    class FloatComparer : IEqualityComparer<float>
+    {
+        bool IEqualityComparer<float>.Equals(float x, float y)
+        {
+            return x == y;
+        }
+        int IEqualityComparer<float>.GetHashCode(float obj)
+        {
+            return obj.GetHashCode();
+        }
+
+    }
+    public static readonly WaitForEndOfFrame WaitForEndOfFrame = new WaitForEndOfFrame();
+    public static readonly WaitForFixedUpdate WaitForFixedUpdate = new WaitForFixedUpdate();
+
+    //private static readonly Dictionary<float, WaitForSeconds> _timeInterval = new Dictionary<float, WaitForSeconds>(new FloatComparer());
+
+    //public static WaitForSeconds WaitForSeconds(float _seconds)
+    //{
+    //    WaitForSeconds _waitForSeconds;
+    //    if (!_timeInterval.TryGetValue(_seconds, out _waitForSeconds))
+    //    {
+    //        _timeInterval.Add(_seconds, _waitForSeconds = new WaitForSeconds(_seconds));
+    //        return _waitForSeconds;
+    //    }
+    //    else
+    //    {
+    //        return null;
+    //    }
+
+    //}
+}
 public class GameManager : SingleTon<GameManager>
 {
     /* 

@@ -9,7 +9,7 @@ using UnityEngine;
 public class PulleyPlatform : LinearPlatform, ISelectable
 {
 
-    ESelectState selectState;
+    public ESelectState selectState;
 
     public SpriteRenderer spriteRenderer;
 
@@ -26,28 +26,40 @@ public class PulleyPlatform : LinearPlatform, ISelectable
 
     //[SerializeField]
     //private bool isOneRoute; // 경로가 하나 뿐인가?
-    [Tooltip("움직일 경로의 인덱스. -99일 경우 시작위치.")]
+    [HideInInspector, Tooltip("갈(가 있는?) 경로 번호.")]
     public int currentRouteIndex;
 
+    [Tooltip("정답 경로의 번호. 피리를 사용하면 해당 경로로 이동한 뒤 멈춥니다.")]
+    public int answerRouteIndex;
 
     [Tooltip("움직여도 되는 상태인가? (발판이 눌렸을 때나 레버가 당겨졌을 때 true여야함)")]
     public bool isCanMove;
+
+
+    [Tooltip("정지한(해야할) 상태인가?")]
+    public bool isStopped;
+
+    [Tooltip("지정 경로로 도착하였는가?")]
+    public bool isArrive;
 
     [Tooltip("움직이고 있는 상태인가?")]
     public bool isMoving;
 
     private Vector2 oldPosition;
 
-
     private Rigidbody2D rigidBody;
 
     private float limitDis;
 
+    private Color debugColor;
+
     public void Init()
     {
-
+        debugColor = Color.white;
         selectState = ESelectState.DEFAULT;
 
+        isArrive = false;
+        isStopped = false;
         isCanMove = true;
         isMoving = false;
 
@@ -65,23 +77,29 @@ public class PulleyPlatform : LinearPlatform, ISelectable
 
         routeStart = rigidBody.position;
 
-        if (pulleyStartIndex != 0) // 시작ㅇ ㅟ치가 정해져있으면???
+        if (pulleyStartIndex >= 0) // 시작ㅇ ㅟ치가 정해져있으면???
         {
-            gameObject.transform.position = routeList[pulleyStartIndex].transform.position; //위치 설정 
+            currentRouteIndex = ClampRouteIndex(pulleyStartIndex);
+            gameObject.transform.position = routeList[currentRouteIndex].transform.position; //위치 설정 
 
-            currentRouteIndex = pulleyStartIndex;
+        }
+        else if (pulleyStartIndex == 0)
+        {
 
+            currentRouteIndex = 0;
+            gameObject.transform.position = routeList[0].transform.position;
+        }
+        else if (pulleyStartIndex < 0)
+        {
+
+            currentRouteIndex = 0;
+            gameObject.transform.position = routeList[0].transform.position;
         }
         else
         {
-            gameObject.transform.position = routeList[0].transform.position;
-            currentRouteIndex = 0;
+
         }
 
-
-
-
-        //rigidBody.position = routeStart.transform.position;
     }
     protected override void Awake()
     {
@@ -92,12 +110,17 @@ public class PulleyPlatform : LinearPlatform, ISelectable
 
     private void Start()
     {
+        rigidBody.position = routeList[currentRouteIndex].transform.position;
         StartCoroutine(MovePlatformThisRoute());
         ClampRouteIndex(7);
     }
     protected override void Update()
     {
         base.Update();
+
+
+        HandleSelectState(selectState);
+        spriteRenderer.color = debugColor;
 
     }
 
@@ -119,12 +142,22 @@ public class PulleyPlatform : LinearPlatform, ISelectable
         switch (selectState)
         {
             case ESelectState.DEFAULT:
+                debugColor = Color.white;
                 break;
 
             case ESelectState.SELECT:
+                debugColor = Color.yellow;
                 break;
 
             case ESelectState.CANCLE:
+                debugColor = Color.white;
+                break;
+
+            case ESelectState.SOLVED:
+                debugColor = Color.blue;
+                isCanMove = true;
+                isStopped = false;
+                currentRouteIndex = answerRouteIndex;
                 break;
 
             default:
@@ -139,27 +172,33 @@ public class PulleyPlatform : LinearPlatform, ISelectable
     {
         while (true)
         {
+            if (Mathf.Abs(Vector2.Distance(gameObject.transform.position, routeList[ClampRouteIndex(currentRouteIndex)].transform.position)) <= 0.03f)
+            {
+                isArrive = true;
+            }
+            else
+            {
+                isArrive = false;
+            }
             currentRouteIndex = ClampRouteIndex(currentRouteIndex);
             oldPosition = rigidBody.position;
             if (isCanMove) //레버가 간섭하고 있지 않으면
             {
-                if (GameManager.Instance.isDebugMode)
-                {
-                    spriteRenderer.color = Color.blue;
+                if (!isStopped)// 정지해야할 상태라면
+                {                    //지정된 경로로 이동.
+                    PlatformMovePosition(routeList[ClampRouteIndex(currentRouteIndex)].transform.position);
+                    //움직이지 않는다.
                 }
-
-                PlatformMovePosition(routeList[ClampRouteIndex(currentRouteIndex)].transform.position);
 
             }
             else
             {
-                if (GameManager.Instance.isDebugMode)
+                if (!isStopped)
                 {
-                    spriteRenderer.color = Color.red;
+                    currentRouteIndex = 0;
+                    PlatformMovePosition(routeList[0].transform.position);
                 }
-                currentRouteIndex = 0;
-                PlatformMovePosition(routeList[0].transform.position);
-               
+
 
             }
 
@@ -173,24 +212,45 @@ public class PulleyPlatform : LinearPlatform, ISelectable
             {
                 isMoving = false;
             }
+
+
         }
 
 
-        
+
     }
 
     public int ClampRouteIndex(int _index)
     {
-        Debug.Log(Mathf.Clamp(_index, 0, routeList.Count - 1));
+        //Debug.Log(Mathf.Clamp(_index, 0, routeList.Count - 1));
         return Mathf.Clamp(_index, 0, routeList.Count - 1);
 
     }
     private void PlatformMovePosition(Vector2 _movePosition)
     {
-        SetMovement(MovementType.SetPos, Vector2.MoveTowards(rigidBody.position, _movePosition, pulleyDownSpeed * Time.smoothDeltaTime));
-
+        if (!isStopped)
+        {
+            SetMovement(MovementType.SetPos, Vector2.MoveTowards(rigidBody.position, _movePosition, pulleyDownSpeed * Time.smoothDeltaTime));
+        }
+       
         //rigidBody.MovePosition(Vector2.MoveTowards(rigidBody.position, _movePosition, pulleyDownSpeed * Time.smoothDeltaTime));
         //rigidBody.position = Vector2.MoveTowards(rigidBody.position, _movePosition, pulleyDownSpeed * Time.smoothDeltaTime);
+    }
+
+    /// <summary>
+    /// 레버나 발판으로 조종할 수 있는 상태라면 true를 리턴~
+    /// </summary>
+    /// <returns></returns>
+    public bool IsCanControl()
+    {
+        if (selectState == ESelectState.SOLVED)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
     //// Start is called before the first frame update
     //void Start()

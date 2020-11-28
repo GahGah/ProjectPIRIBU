@@ -10,7 +10,6 @@ public class PlatformController : MonoBehaviour
     [Tooltip("작동되어있는 상태인가?")]
     public bool isActive;
 
-
     [Tooltip("컨트롤 할 오브젝트가 하나뿐인가?")]
     public bool isControlOneObject;
 
@@ -26,10 +25,17 @@ public class PlatformController : MonoBehaviour
     public void ToggleIsActive()
     {
         isActive = !isActive;
+        
     }
     public void SetIsActive(bool _isActive)
     {
         isActive = _isActive;
     }
-
+    public void UpdateActiveImage()
+    {
+        if (isActive)
+        {
+                  
+        }
+    }
 }
