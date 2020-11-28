@@ -28,6 +28,12 @@ public class StateFactory : SingleTon<StateFactory> {
 			case States.Child_Air:
 				retState = new ChildAir();
 				break;
+			case States.Enemy_Ground:
+				retState = new EnemyGround();
+				break;
+			case States.Enemy_Air:
+				retState = new EnemyAir();
+				break;
 			default:
 				Debug.LogWarning("StateFactory : " + _state.ToString() + "객체를 생성하지 못했습니다.");
 				break;
@@ -44,5 +50,5 @@ public class StateFactory : SingleTon<StateFactory> {
 public enum States { 
 	Hero_Ground, Hero_Air, Hero_Jump, Hero_Ladder, Hero_Box,
 	Child_Ground,Child_Air,
-	Enemy_Idle, Enemy_Walk
+	Enemy_Ground, Enemy_Air
 }

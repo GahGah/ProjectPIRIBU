@@ -74,7 +74,7 @@ public class UnitCharacter : Unit
 			if (platform.isOneWay) {
 				bool isIgnore = false;
 				//부모는 밟고있어야 한다.
-				if (platform == parent) {
+				if (platform == liftParent) {
 					foot.IgnoreWith(targetColl, isIgnore);
 					IgnoreColliders.Remove(targetColl);
 					continue;
@@ -126,8 +126,8 @@ public class UnitCharacter : Unit
 		//지형부착 성공
 		if (groundDist > rayDist && IsGroundNormal(groundNormal)) {
 			//Parent에 아래힘 가하기
-			if (parent)
-				parent.SetMovement(
+			if (liftParent)
+				liftParent.SetMovement(
 					MovementType.ForceAt,
 					Vector2.down * rigid.mass * status.fallSpeed * fixedUpdatePerSec,
 					foot.transform.position
