@@ -15,10 +15,10 @@ public class LiftObject : MonoBehaviour {
 		return (T)this;
 	}
 
-	[HideInInspector] public LiftObject parent;
+	[HideInInspector] public LiftObject liftParent;
 	[HideInInspector] public List<LiftObject> childs;//옮길 대상
-	[HideInInspector] public Collider2D coll;
-	[HideInInspector] public Rigidbody2D rigid;
+	public Collider2D coll;
+	public Rigidbody2D rigid;
 
 	[HideInInspector]
 	public Vector3
@@ -44,13 +44,13 @@ public class LiftObject : MonoBehaviour {
 	}
 
 	protected virtual void Awake() {
-		parent = null;
+		liftParent = null;
 		childs = new List<LiftObject>();
 		if (!coll) coll = GetComponent<Collider2D>();
 
 		//리짓바디 2D 컴포넌트 검색
 		if (!rigid) rigid = GetComponent<Rigidbody2D>();
-		if (!rigid && parent) parent.GetComponent<Rigidbody2D>();
+		if (!rigid && transform.parent) rigid = transform.parent.GetComponent<Rigidbody2D>();
 
 		UpdateCurrTransforms();
 		UpdatePreTransforms();
@@ -75,8 +75,8 @@ public class LiftObject : MonoBehaviour {
 		if (updatedTime == Time.time) return;
 		updatedTime = Time.time;
 
-		if (parent) {
-			SetMovement(MovementType.SetPos, parent.GetLiftPosition(this));
+		if (liftParent) {
+			SetMovement(MovementType.SetPos, liftParent.GetLiftPosition(this));
 		}
 		
 		//현재 트랜스폼 정보 업데이트
@@ -237,11 +237,11 @@ public class LiftObject : MonoBehaviour {
 
 	//LiftParent 설정
 	public void SetLiftParent(LiftObject lift) {
-		parent = lift;
+		liftParent = lift;
 	}
 
 	public void ResetLiftParent() {
-		parent = null;
+		liftParent = null;
 	}
 
 	public void Draw() {
