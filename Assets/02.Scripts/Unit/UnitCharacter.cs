@@ -115,12 +115,12 @@ public class UnitCharacter : Unit
 	//캐릭터를 땅에 붙임. groundForward가 업데이트됨. 붙이지 못했을시 false 반환
 	//Logic Error : Attach 과정 자체가 캐릭터를 내리는 행위라 mass가 더 붙은 듯한 문제가 있음.
 	public bool AttachGround() {
-		float rayDist = RayGround(Vector2.down);
+		float rayDist = RayGroundFromFoot(Vector2.down);
 		Vector2 groundNormal = raycastHitGround.normal;
 		groundForward = new Vector2(groundNormal.y, -groundNormal.x);
 
 		//발과 지형간의 최소거리인 rayDist값으로 지형부착 이동을 한다.
-		rayDist = RayGround(-groundNormal);
+		rayDist = RayGroundFromFoot(-groundNormal);
 		groundNormal = raycastHitGround.normal;
 		groundForward = new Vector2(groundNormal.y, -groundNormal.x);
 
@@ -159,7 +159,7 @@ public class UnitCharacter : Unit
 	/// <summary>
 	/// 지형에 RayCast하고 거리가 가장 짧은 ray를 raycastHitGround에 저장 및 가장 짧은 거리를 반환
 	/// </summary>
-	public float RayGround(Vector2 _rayDir, bool isSetRayHit = true) {
+	public float RayGroundFromFoot(Vector2 _rayDir, bool isSetRayHit = true) {
 		float dist = Mathf.Infinity;
 		isAllRayOverFoot = true;
 
@@ -218,6 +218,33 @@ public class UnitCharacter : Unit
 	}
 
 	/// <summary>
+	/// 발 곳곳에서 RayCastAll한 Hit들을 반환
+	/// </summary>
+	public List<RaycastHit2D> GetRayHitsFromFoot(Vector2 _rayDir) {
+		isAllRayOverFoot = true;
+		List<RaycastHit2D> ret = new List<RaycastHit2D>();
+
+		//여러군데 검사
+		int rays = 2;
+		for (int i = -rays; i <= rays; i++) {
+
+			Vector2 origin = foot.transform.position
+				- foot.transform.up * foot.size.y * 0.5f
+				+ foot.transform.right * foot.size.x * ((float)i / rays * 0.5f)
+				- (Vector3)_rayDir * rayGroundOffset;
+
+
+			RaycastHit2D[] hits = Physics2D.RaycastAll(origin, _rayDir, (groundDist + rayGroundOffset) * 2, groundLayer);
+			foreach (RaycastHit2D hit in hits) {
+				ret.Add(hit);
+			}
+		}
+
+		return ret;
+	}
+
+
+	/// <summary>
 	/// 공중에서 밟을땅이 있는지 검사
 	/// </summary>
 	/// <returns>착지판정하는가?</returns>
@@ -227,7 +254,7 @@ public class UnitCharacter : Unit
 		SetMovement(MovementType.SetVelocity, vel);
 
 		//착지판정 
-		float dist = RayGround(Vector2.down);
+		float dist = RayGroundFromFoot(Vector2.down);
 		float groundYSpeed = 0;
 		if (raycastHitGround.rigidbody) {
 			groundYSpeed = raycastHitGround.rigidbody.velocity.y;
@@ -245,19 +272,6 @@ public class UnitCharacter : Unit
 		return false;
 	}
 	
-	public float CheckRayDistance(Vector2 offset) {
-		RaycastHit2D hit;
-		float dist = 50;
-		Vector2 origin = foot.transform.position
-				- foot.transform.up * foot.size.y * 0.5f
-				+ (Vector3)offset;
-		hit = Physics2D.Raycast(origin, Vector2.down, dist, groundLayer);
-		if (hit.collider != null) {
-			dist = hit.distance;
-			Debug.DrawLine(origin, hit.point, Color.red);
-		}
-		return dist;
-	}
 	/// <summary>
 	/// 해당 방향으로 절벽까지의 거리 검사
 	/// </summary>
@@ -325,7 +339,6 @@ public class UnitCharacter : Unit
 
 		//여러군데 검사
 		float iAdd = 0.2f;//1.0f/5.0f;
-		List<RaycastHit2D> rayHits = new List<RaycastHit2D>();
 		
 		for (float i = -0.3f; i <= 0.5f; i += iAdd) {
 			Vector2 origin = pos
@@ -334,28 +347,22 @@ public class UnitCharacter : Unit
 
 			RaycastHit2D[] hits = Physics2D.RaycastAll(origin, rayDir, maxWallDist + offsetSide, groundLayer);
 			for (int j = 0; j < hits.Length; j++) {
-				RaycastHit2D hit = hits[j];			
-				if (!rayHits.Contains(hit))
-					rayHits.Add(hit);
-			}
-		}
+				RaycastHit2D hit = hits[j];
+				//Ingore중인 One-Way 플랫폼은 무시
+				if (IgnoreColliders.Contains(hit.collider)) continue;
 
-		foreach (RaycastHit2D hit in rayHits) {
-			//Ingore중인 One-Way 플랫폼은 무시
-			if (IgnoreColliders.Contains(hit.collider)) continue;
-
-			if (IsWallNormal(hit.normal)) {
-				//TargetFind모드.
-				if (findTarget == hit.transform.gameObject)
-					return true;
-				float thisDist = Mathf.Min(dist, hit.distance - offsetSide);
-				if (thisDist < dist) {
-					dist = thisDist;
+				if (IsWallNormal(hit.normal)) {
+					//TargetFind모드.
+					if (findTarget == hit.transform.gameObject)
+						return true;
+					float thisDist = Mathf.Min(dist, hit.distance - offsetSide);
+					if (thisDist < dist) {
+						dist = thisDist;
+					}
+					//Debug.DrawLine(origin, hit.point, Color.green);
 				}
-				//Debug.DrawLine(origin, hit.point, Color.green);
 			}
 		}
-
 		//TargetFind 모드가 아니면서, 벽이 감지되었다면
 		if (!findTarget && dist < maxWallDist) {
 			return true;
@@ -370,16 +377,15 @@ public class UnitCharacter : Unit
 	[HideInInspector] public InteractionObject interactionObject;
 
 	//사다리 안에 있는지 판별
-	public bool IsInLadder(float offset = 0, InteractionObject ladder = null) {
+	public bool IsInLadder(Vector3 currPos, float offset = 0, InteractionObject ladder = null) {
 		if (ladder == null) ladder = interactionObject;
 		if (ladder == null) return false;
 
-		Vector3 ladderBottom, ladderTop, CurrPos;
+		Vector3 ladderBottom, ladderTop;
 		//offset만큼 양쪽 범위 늘리기
 		ladderBottom = ladder.transform.position - ladder.transform.up * (ladder.size.y * 0.5f + offset);
 		ladderTop = ladderBottom + ladder.transform.up * (ladder.size.y + offset*2);
-		CurrPos = transform.position;
-		if (Vector3.Dot(ladderBottom - CurrPos, ladderTop - CurrPos) <= 0) {
+		if (Vector3.Dot(ladderBottom - currPos, ladderTop - currPos) <= 0) {
 			return true;
 		}
 		return false;
@@ -396,20 +402,20 @@ public class UnitCharacter : Unit
 	}
 
 	//투영벡터로 캐릭터 중점에서 사다리까지 가는 벡터 구하기
-	public Vector3 GetDirectionToLadder(InteractionObject ladder = null) {
-		Vector3 ret = Vector3.zero;
+	public Vector2 GetDirectionToLadder(InteractionObject ladder = null) {
+		Vector2 ret = Vector2.zero;
 		if (ladder == null) ladder = interactionObject;
 		if (ladder == null) return ret;
 
-		Vector3 ladderBottom, ladderTop;
+		Vector2 ladderBottom, ladderTop;
 		ladderBottom = ladder.transform.position - ladder.transform.up * ladder.size.y * 0.5f;
-		ladderTop = ladderBottom + ladder.transform.up * ladder.size.y;
+		ladderTop = ladderBottom + (Vector2)ladder.transform.up * ladder.size.y;
 		//Debug.DrawLine(ladderBottom, ladderTop, Color.red);
 
-		Vector3 targetPos = GetProjectionPoint(ladderBottom, ladderTop, transform.position);
+		Vector2 targetPos = GetProjectionPoint(ladderBottom, ladderTop, transform.position);
 		//Debug.DrawLine(transform.position, targetPos, Color.red);
 
-		ret = targetPos - transform.position;
+		ret = targetPos - (Vector2)transform.position;
 		return ret;
 	}
 	#endregion

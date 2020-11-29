@@ -67,8 +67,8 @@ public class HeroGround : HeroState {
 				//사다리
 				case InteractionType.Ladder:
 					if ((input.buttonUp.isPressed || input.buttonDown.isPressed)//위아래 키를 누를때만
-						&& unit.GetDistanceToLadder(interaction) <= 1.5f //사다리 근처에 있을때만
-						&& unit.IsInLadder(0, interaction)//사다리 범위 내에 있을 시에만
+						&& unit.GetDistanceToLadder(interaction) <= 0.6f //사다리 근처에 있을때만
+						&& unit.IsInLadder(unit.transform.position, 0, interaction)//사다리 범위 내에 있을 시에만
 						) {
 						unit.interactionObject = interaction;
 						sm.SetState(States.Hero_Ladder);
@@ -124,8 +124,8 @@ public class HeroAir : HeroState {
 				//사다리
 				case InteractionType.Ladder:
 					if ((input.buttonUp.isPressed || input.buttonDown.isPressed)//위아래 키를 누를때만
-						&& unit.GetDistanceToLadder(interaction) <= 1.5f //사다리 근처에 있을때만
-						&& unit.IsInLadder(0,interaction)//사다리 범위 내에 있을 시에만
+						&& unit.GetDistanceToLadder(interaction) <= 0.6f //사다리 근처에 있을때만
+						&& unit.IsInLadder(unit.transform.position,0,interaction)//사다리 범위 내에 있을 시에만
 						) {
 							unit.interactionObject = interaction;
 							sm.SetState(States.Hero_Ladder);
@@ -184,32 +184,37 @@ public class HeroLadder : HeroState {
 		Vector3 newAnchor = joint.connectedAnchor;
 		
 		//사다리에 달라붙기
-		Vector3 dirToLadder = unit.GetDirectionToLadder();
-		newAnchor -= dirToLadder*attachSpeed;
+		Vector2 dirToLadder = unit.GetDirectionToLadder();
+		newAnchor -= (Vector3)dirToLadder*attachSpeed;
 		attachSpeed += (1-attachSpeed)*0.1f;
 
 
 		Vector3 ladderDir = ladder.transform.up;
 		//위아래 이동
-		if (input.buttonUp.isPressed) {
-			newAnchor -= ladderDir*0.15f;
-		}
-		if (input.buttonDown.isPressed) {
-			newAnchor += ladderDir*0.15f;
+		if (Vector3.Magnitude(dirToLadder) <= 0.2f) {//사다리에 붙어있을때만
+			if (input.buttonUp.isPressed) {
+				newAnchor -= ladderDir*0.15f;
+			}
+			if (input.buttonDown.isPressed) {
+				newAnchor += ladderDir*0.15f;
+			}
 		}
 		joint.connectedAnchor = newAnchor;
 
 		//사다리를 벗어났는가?
-		if (!unit.IsInLadder(0.8f)) {
+		if (!unit.IsInLadder(ladder.transform.position-newAnchor,0.1f)) {
 			sm.SetState(States.Hero_Air);
 			return;
 		}
 
 
-		//점프로 끊기
+		//점프로 끊기 (점프력을 낮게)
 		time += Time.deltaTime;
 		if (input.buttonJump.isPressed && time > 0.5f) {
-			sm.SetState(States.Hero_Jump);
+			unit.ResetLiftParent();
+			unit.foot.adjacentLiftObjects.Clear();
+			moveStat.verticalSpeed = moveStat.jumpSpeed*0.5f;
+			sm.SetState(States.Hero_Air);
 			return;
 		}
 	}
