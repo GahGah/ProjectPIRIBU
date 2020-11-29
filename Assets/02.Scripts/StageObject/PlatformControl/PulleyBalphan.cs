@@ -41,12 +41,6 @@ public class PulleyBalphan : PlatformController
         Init();
     }
 
-    //private void Start()
-    //{
-    //    //isActive = true;
-    //}
-
-
     private void Update()
     {
 
@@ -67,9 +61,18 @@ public class PulleyBalphan : PlatformController
             {
                 if (pulleyPlatformList[0].IsCanControl() == true)
                 {
-                    pulleyPlatformList[0].isCanMove = true;
-                    pulleyPlatformList[0].isStopped = false;
-                    pulleyPlatformList[0].currentRouteIndex += pulleyRouteList[0]; //할당량만큼 더하기.
+                    if (pulleyPlatformList[0].isCanMove == true)
+                    {
+
+                    }
+                    else
+                    {
+                        pulleyPlatformList[0].isCanMove = true;
+                        pulleyPlatformList[0].isStopped = false;
+                        pulleyPlatformList[0].currentRouteIndex += pulleyRouteList[0]; //할당량만큼 더하기.
+                    }
+
+                   
                 }
 
             }
@@ -79,9 +82,19 @@ public class PulleyBalphan : PlatformController
                 {
                     if (pulleyPlatformList[i].IsCanControl() == true) //조종할 수 있는 상태라면
                     {
-                        pulleyPlatformList[i].isCanMove = true;
-                        pulleyPlatformList[i].isStopped = false;
-                        pulleyPlatformList[i].currentRouteIndex += pulleyRouteList[i];
+
+                        if (pulleyPlatformList[i].isCanMove == true)
+                        {
+
+                        }
+                        else
+                        {
+                            pulleyPlatformList[i].isCanMove = true;
+                            pulleyPlatformList[i].isStopped = false;
+
+                            pulleyPlatformList[i].currentRouteIndex += pulleyRouteList[i];
+                        }
+
 
                     }
 

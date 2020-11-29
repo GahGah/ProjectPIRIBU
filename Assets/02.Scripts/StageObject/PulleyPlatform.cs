@@ -26,7 +26,7 @@ public class PulleyPlatform : LinearPlatform, ISelectable
 
     //[SerializeField]
     //private bool isOneRoute; // 경로가 하나 뿐인가?
-    [HideInInspector, Tooltip("갈(가 있는?) 경로 번호.")]
+    [Tooltip("갈(가 있는?) 경로 번호.")]
     public int currentRouteIndex;
 
     [Tooltip("정답 경로의 번호. 피리를 사용하면 해당 경로로 이동한 뒤 멈춥니다.")]
