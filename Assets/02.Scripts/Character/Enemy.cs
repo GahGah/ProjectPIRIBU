@@ -42,10 +42,12 @@ public class EnemyGround : EnemyState {
 		}
 
 		//좌우이동 인공지능
+		int heroDir = 0;
 		float followStartDist = 0f;//이동 시작하는 최소값
-
-		float heroXDist = hero.unit.transform.position.x - unit.transform.position.x;
-		int heroDir = Mathf.Abs(heroXDist) >= followStartDist ? (heroXDist > 0 ? 1 : -1) : 0;
+		if (unit.IsInSensor(hero.unit.transform.position)) {
+			float heroXDist = hero.unit.transform.position.x - unit.transform.position.x;
+			heroDir = Mathf.Abs(heroXDist) >= followStartDist ? (heroXDist > 0 ? 1 : -1) : 0;
+		}
 		
 
 		//임시로 컨트롤 버튼 누르고 있을때만 follow

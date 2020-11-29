@@ -429,4 +429,12 @@ public class UnitCharacter : Unit
 		Vector3 ret = Start + dir * Vector3.Dot(Point - Start, dir);
 		return ret;
 	}
+
+	//대상 위치가 센서안에 있는가?
+	public bool IsInSensor(Vector2 target) {
+		if (Vector2.Distance(target,transform.position) <= sensor.radious) {
+			return true;
+		}
+		return false;
+	}
 }

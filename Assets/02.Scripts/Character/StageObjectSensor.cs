@@ -6,13 +6,19 @@ using UnityEngine;
 public class StageObjectSensor : MonoBehaviour
 {
 	[HideInInspector]
+	public float radious = 1;
+	[HideInInspector]
 	public List<LinearPlatform> linearPlatforms;
 	[HideInInspector]
 	public List<InteractionObject> InteractionObjects;
+	[HideInInspector]
+	public List<Character> characters;
 	void Awake()
-    {
+	{
 		linearPlatforms = new List<LinearPlatform>();
 		InteractionObjects = new List<InteractionObject>();
+		characters = new List<Character>();
+		radious = GetComponent<CircleCollider2D>().radius * transform.localScale.x;
 	}
 
 	private void OnTriggerEnter2D(Collider2D collision) {
@@ -28,6 +34,11 @@ public class StageObjectSensor : MonoBehaviour
 			} catch {
 				Debug.LogError("InteractionObject Not Found!!", collision.gameObject);
 			}
+		}
+		try {
+			characters.Add(collision.gameObject.GetComponent<Character>());
+		} catch {
+			Debug.LogError("InteractionObject Not Found!!", collision.gameObject);
 		}
 	}
 
