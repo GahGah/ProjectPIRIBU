@@ -16,6 +16,5 @@ public enum ESelectState
 {
     DEFAULT = 0,
     SELECT,
-    CANCLE,
-    SOLVED //해결되었을 때.
+    CANCLE
 }

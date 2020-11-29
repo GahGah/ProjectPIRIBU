@@ -60,7 +60,15 @@ public class PulleyLever : PlatformController
             {
                 return;
             }
+            //for (int i = 0; i < pulleyPlatformList.Count; i++)
+            //{
+            //    if (pulleyPlatformList[i].isMoving == true)
+            //    {
 
+            //        return;
+            //    }
+
+            //}
             ToggleIsActive();
             Debug.Log("toggle! : " + isActive);
 
@@ -69,28 +77,19 @@ public class PulleyLever : PlatformController
                 spriteRenderer.sprite = leverOnImage;
                 if (isControlOneObject) //컨트롤 할게 한 오브젝트 뿐일경우
                 {
-                    if (pulleyPlatformList[0].IsCanControl() == true)
-                    {
-                        pulleyPlatformList[0].isCanMove = true;
+                    pulleyPlatformList[0].isCanMove = true;
 
-                        pulleyPlatformList[0].currentRouteIndex += pulleyRouteList[0]; //할당량만큼 더하기.
-                    }
-
+                    pulleyPlatformList[0].currentRouteIndex += pulleyRouteList[0]; //할당량만큼 더하기.
 
                 }
                 else //아니면...
                 {
                     for (int i = 0; i < pulleyPlatformList.Count; i++)
                     {
-                        if (pulleyPlatformList[i].IsCanControl() == true) //조종할 수 있는 상태라면
-                        {
-                            pulleyPlatformList[i].isCanMove = true;
+                        pulleyPlatformList[i].isCanMove = true;
 
-                            pulleyPlatformList[i].currentRouteIndex += pulleyRouteList[i];
-
-                        }
-
-
+                        pulleyPlatformList[i].currentRouteIndex += pulleyRouteList[i];
+                        Debug.Log(i + "번째 도르래 인덱스 : " + pulleyPlatformList[i].currentRouteIndex);
                     }
                 }
             }
@@ -99,24 +98,21 @@ public class PulleyLever : PlatformController
                 spriteRenderer.sprite = leverOffImage;
                 if (isControlOneObject) //컨트롤 할게 한 오브젝트 뿐일경우
                 {
-                    if (pulleyPlatformList[0].IsCanControl() == true)
-                    {
-                        pulleyPlatformList[0].isCanMove = false;
-                        pulleyPlatformList[0].currentRouteIndex += -1 * pulleyRouteList[0];
-                    }
+                    pulleyPlatformList[0].isCanMove = false;
+                    pulleyPlatformList[0].currentRouteIndex += -1 * pulleyRouteList[0];
+
                 }
                 else //아니면...
                 {
                     for (int i = 0; i < pulleyPlatformList.Count; i++)
                     {
-                        if (pulleyPlatformList[i].IsCanControl() == true) //조종할 수 있는 상태라면
-                        {
-                            pulleyPlatformList[i].isCanMove = false;
+
+                        pulleyPlatformList[i].isCanMove = false;
 
 
-                            pulleyPlatformList[i].currentRouteIndex += -1 * pulleyRouteList[i];
-                            Debug.Log(i + "번째 도르래 인덱스 : " + pulleyPlatformList[i].currentRouteIndex);
-                        }
+                        pulleyPlatformList[i].currentRouteIndex += -1 * pulleyRouteList[i];
+                        Debug.Log(i + "번째 도르래 인덱스 : " + pulleyPlatformList[i].currentRouteIndex);
+
                     }
                 }
             }
