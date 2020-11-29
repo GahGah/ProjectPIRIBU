@@ -561,6 +561,7 @@ MonoBehaviour:
   standardPos: {x: 0, y: 0, z: 0}
   deltaPos: {x: 0, y: 0, z: 0}
   nextPos: {x: 0, y: 0, z: 0}
+  deltaPosFromParent: {x: 0, y: 0, z: 0}
   preScale: {x: 0, y: 0, z: 0}
   currScale: {x: 0, y: 0, z: 0}
   standardScale: {x: 0, y: 0, z: 0}
@@ -899,6 +900,7 @@ MonoBehaviour:
   standardPos: {x: 0, y: 0, z: 0}
   deltaPos: {x: 0, y: 0, z: 0}
   nextPos: {x: 0, y: 0, z: 0}
+  deltaPosFromParent: {x: 0, y: 0, z: 0}
   preScale: {x: 0, y: 0, z: 0}
   currScale: {x: 0, y: 0, z: 0}
   standardScale: {x: 0, y: 0, z: 0}
@@ -1288,6 +1290,7 @@ MonoBehaviour:
   standardPos: {x: 0, y: 0, z: 0}
   deltaPos: {x: 0, y: 0, z: 0}
   nextPos: {x: 0, y: 0, z: 0}
+  deltaPosFromParent: {x: 0, y: 0, z: 0}
   preScale: {x: 0, y: 0, z: 0}
   currScale: {x: 0, y: 0, z: 0}
   standardScale: {x: 0, y: 0, z: 0}
@@ -2324,6 +2327,7 @@ MonoBehaviour:
   standardPos: {x: 0, y: 0, z: 0}
   deltaPos: {x: 0, y: 0, z: 0}
   nextPos: {x: 0, y: 0, z: 0}
+  deltaPosFromParent: {x: 0, y: 0, z: 0}
   preScale: {x: 0, y: 0, z: 0}
   currScale: {x: 0, y: 0, z: 0}
   standardScale: {x: 0, y: 0, z: 0}
@@ -2513,6 +2517,7 @@ MonoBehaviour:
   standardPos: {x: 0, y: 0, z: 0}
   deltaPos: {x: 0, y: 0, z: 0}
   nextPos: {x: 0, y: 0, z: 0}
+  deltaPosFromParent: {x: 0, y: 0, z: 0}
   preScale: {x: 0, y: 0, z: 0}
   currScale: {x: 0, y: 0, z: 0}
   standardScale: {x: 0, y: 0, z: 0}
@@ -2702,6 +2707,7 @@ MonoBehaviour:
   standardPos: {x: 0, y: 0, z: 0}
   deltaPos: {x: 0, y: 0, z: 0}
   nextPos: {x: 0, y: 0, z: 0}
+  deltaPosFromParent: {x: 0, y: 0, z: 0}
   preScale: {x: 0, y: 0, z: 0}
   currScale: {x: 0, y: 0, z: 0}
   standardScale: {x: 0, y: 0, z: 0}
@@ -3180,6 +3186,13 @@ MonoBehaviour:
   timer: 0
   inputManager: {fileID: 0}
   hero: {fileID: 592912995}
+  childs: []
+  childsRange:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
 --- !u!4 &1805811647
 Transform:
   m_ObjectHideFlags: 0
