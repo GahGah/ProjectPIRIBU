@@ -272,12 +272,13 @@ public class UnitCharacter : Unit
 		return false;
 	}
 	
+
 	/// <summary>
 	/// 해당 방향으로 절벽까지의 거리 검사
 	/// </summary>
 	/// <param name="moveDir"></param>
 	/// <returns></returns>
-	public float GetWalkableDistance(int moveDir = 1, float maxDistance = 4f) {
+	public float GetWalkableDistance(int moveDir = 1, float maxDistance = 4f, float allowedSpace = -1) {
 		float dist = 0;
 		if (moveDir == 0) return dist;
 		moveDir = moveDir > 0 ? 1 : -1;
@@ -289,7 +290,9 @@ public class UnitCharacter : Unit
 		float currY = transform.position.y;
 
 		float airSpace = 0;//판별되는 공중간격
-		float allowedSpace = foot.size.x*0.8f;//허용되는 최대 공중간격. 이 크기 이내의 허공은 절벽으로 인식하지 않음.
+		//허용되는 최대 공중간격. 이 크기 이내의 허공은 절벽으로 인식하지 않음.
+		if (allowedSpace < 0) { allowedSpace = foot.size.x * 0.8f; }
+
 
 		//캐릭터 중앙점에서 발 밑까지의 거리 (회전 고려)
 		float verticalDist = Vector3.Magnitude(transform.position - (foot.transform.position + -transform.up *foot.size.y * 0.5f));

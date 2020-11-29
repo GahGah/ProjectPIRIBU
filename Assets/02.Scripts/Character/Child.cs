@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Child : Character {
+	public float allowedCliffSpace = 0.1f;
 	protected override void Start() {
 		base.Start();
 		stateMachine = new CharacterStateMachine(this, States.Child_Air);
@@ -48,7 +49,7 @@ public class ChildGround : ChildState {
 
 		float heroXDist = hero.unit.transform.position.x - unit.transform.position.x;
 		int heroDir = Mathf.Abs(heroXDist) >= followStartDist ? (heroXDist > 0 ? 1 : -1) : 0;
-		float dist = unit.GetWalkableDistance(heroDir, safetyDistance*1.5f);
+		float dist = unit.GetWalkableDistance(heroDir, safetyDistance*1.5f, child.allowedCliffSpace);
 		int moveDir = dist >= safetyDistance ? heroDir : 0;
 
 		//임시로 컨트롤 버튼 누르고 있을때만 follow
