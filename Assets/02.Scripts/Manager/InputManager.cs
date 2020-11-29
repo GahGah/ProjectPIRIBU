@@ -67,7 +67,7 @@ public class InputManager : SingleTon<InputManager>
 
     public void TESTSCREENPOINTTORAY()
     {
-        Ray ray = Camera.main.ScreenPointToRay(GameManager.Instance.inputManager.mouseCurrentPosition);
+        Ray ray = Camera.main.ScreenPointToRay(InputManager.instance.mouseCurrentPosition);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, 10000f))
         {

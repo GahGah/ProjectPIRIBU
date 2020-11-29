@@ -6,37 +6,37 @@ using UnityEngine.SceneManagement;
 internal static class YieldInstructionCache
 {
 
-    class FloatComparer : IEqualityComparer<float>
-    {
-        bool IEqualityComparer<float>.Equals(float x, float y)
-        {
-            return x == y;
-        }
-        int IEqualityComparer<float>.GetHashCode(float obj)
-        {
-            return obj.GetHashCode();
-        }
+	class FloatComparer : IEqualityComparer<float>
+	{
+		bool IEqualityComparer<float>.Equals(float x, float y)
+		{
+			return x == y;
+		}
+		int IEqualityComparer<float>.GetHashCode(float obj)
+		{
+			return obj.GetHashCode();
+		}
 
-    }
-    public static readonly WaitForEndOfFrame WaitForEndOfFrame = new WaitForEndOfFrame();
-    public static readonly WaitForFixedUpdate WaitForFixedUpdate = new WaitForFixedUpdate();
+	}
+	public static readonly WaitForEndOfFrame WaitForEndOfFrame = new WaitForEndOfFrame();
+	public static readonly WaitForFixedUpdate WaitForFixedUpdate = new WaitForFixedUpdate();
 
-    //private static readonly Dictionary<float, WaitForSeconds> _timeInterval = new Dictionary<float, WaitForSeconds>(new FloatComparer());
+	//private static readonly Dictionary<float, WaitForSeconds> _timeInterval = new Dictionary<float, WaitForSeconds>(new FloatComparer());
 
-    //public static WaitForSeconds WaitForSeconds(float _seconds)
-    //{
-    //    WaitForSeconds _waitForSeconds;
-    //    if (!_timeInterval.TryGetValue(_seconds, out _waitForSeconds))
-    //    {
-    //        _timeInterval.Add(_seconds, _waitForSeconds = new WaitForSeconds(_seconds));
-    //        return _waitForSeconds;
-    //    }
-    //    else
-    //    {
-    //        return null;
-    //    }
+	//public static WaitForSeconds WaitForSeconds(float _seconds)
+	//{
+	//    WaitForSeconds _waitForSeconds;
+	//    if (!_timeInterval.TryGetValue(_seconds, out _waitForSeconds))
+	//    {
+	//        _timeInterval.Add(_seconds, _waitForSeconds = new WaitForSeconds(_seconds));
+	//        return _waitForSeconds;
+	//    }
+	//    else
+	//    {
+	//        return null;
+	//    }
 
-    //}
+	//}
 }
 public class GameManager : SingleTon<GameManager>
 {
@@ -48,13 +48,11 @@ public class GameManager : SingleTon<GameManager>
 	 * [기능 플랫폼].Renderer.enabled = false; [그래픽 리소스].Rnderer.enabled = true;
 	 */
 
-	public bool isDebugMode = false;   
+	public bool isDebugMode = false;
 
-	public float timer = 0f;
-
-	public InputManager inputManager;
-	public Hero hero;
-	public List<Child> childs;
+	[HideInInspector] public InputManager inputManager;
+	[HideInInspector] public List<Child> childs;
+	[HideInInspector] public Hero hero;
 	[HideInInspector] public Rect childsRange;
 
 	protected override void Awake() {
@@ -66,6 +64,8 @@ public class GameManager : SingleTon<GameManager>
 		base.Init();
 		inputManager = InputManager.Instance;
 
+		//히어로 관련
+		hero = FindObjectOfType<Hero>();
 		//아이들 관련
 		Child[] children = FindObjectsOfType<Child>();
 		foreach (Child child in children) {
