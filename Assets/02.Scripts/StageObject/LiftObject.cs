@@ -22,7 +22,7 @@ public class LiftObject : MonoBehaviour {
 
 	[HideInInspector]
 	public Vector3
-		prePos, currPos, targetPos, standardPos, deltaPos, nextPos,
+		prePos, currPos, targetPos, standardPos, deltaPos, nextPos, deltaPosFromParent,
 		preScale, currScale, standardScale, deltaScale,
 		preAngle, currAngle, standardAngle, deltaAngle,
 		preNormal, currNormal, standardNormal;
@@ -30,6 +30,7 @@ public class LiftObject : MonoBehaviour {
 	 * Standard : 기준이 되는
 	 * Delta : 이전 프레임과 얼마나 차이나는지
 	 * Next : 다음에 어디에 있는지 (추론적, 확실하지 않음.)
+	 * Delta Position From Parent : 부모로부터 이동된 양
 	 */
 
 	[HideInInspector]
@@ -58,6 +59,7 @@ public class LiftObject : MonoBehaviour {
 		standardScale = currScale;
 		standardAngle = currAngle;
 		standardNormal = currNormal;
+		deltaPosFromParent = Vector2.zero;
 
 		fixedUpdatePerSec = 1.0f / Time.fixedDeltaTime;
 	}
@@ -76,7 +78,10 @@ public class LiftObject : MonoBehaviour {
 		updatedTime = Time.time;
 
 		if (liftParent) {
-			SetMovement(MovementType.SetPos, liftParent.GetLiftPosition(this));
+			deltaPosFromParent = liftParent.GetLiftPosition(this) - transform.position;
+			SetMovement(MovementType.AddPos, deltaPosFromParent);
+		} else {
+			deltaPosFromParent = Vector2.zero;
 		}
 		
 		//현재 트랜스폼 정보 업데이트

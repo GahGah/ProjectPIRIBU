@@ -9,6 +9,7 @@ public class UnitCharacter : Unit
 	[SerializeField] protected LayerMask groundLayer;
 	[HideInInspector] public Character character;
 	[HideInInspector] public List<Collider2D> IgnoreColliders;//무시하는 지형들
+	[HideInInspector] public bool isGrounded = false;
 	public CharacterFoot foot;
 	public CapsuleCollider2D body;
 	public StageObjectSensor sensor;
@@ -90,9 +91,9 @@ public class UnitCharacter : Unit
 			}
 		}
 
-		//Lifting Platform을 Parent로
+		//Lifting Platform을 Parent로 (땅에 붙어있는 상태에서만)
 		LiftObject lift = null;
-		if (foot.adjacentLiftObjects.Count > 0) {
+		if (foot.adjacentLiftObjects.Count > 0 && isGrounded) {
 			lift = foot.adjacentLiftObjects[0];
 		}
 		SetLiftParent(lift);
@@ -144,10 +145,12 @@ public class UnitCharacter : Unit
 					rayDist *= 0.1f;
 			}
 			SetMovement(MovementType.AddPos, -groundNormal * rayDist);
+			isGrounded = true;
 			return true;
 		}
 
 		//지형부착 실패
+		isGrounded = false;
 		return false;
 	}
 
@@ -235,9 +238,10 @@ public class UnitCharacter : Unit
 			&& IsGroundNormal(raycastHitGround.normal)//지형 각도 범위일때
 			) {
 			//Logic Error : GroundDist와 Normal을 판정하는 영역이 달라서 착지가 좀 이상한 문제가 있다.
+			isGrounded = true;
 			return true;
 		}
-
+		isGrounded = false;
 		return false;
 	}
 	

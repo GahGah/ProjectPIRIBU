@@ -41,6 +41,8 @@ public class HeroGround : HeroState {
 		} else {
 			//땅이 아닐시 공중상태
 			sm.SetState(States.Hero_Air);
+			//Logic Error Colplete : 이 프레임에선 이동호출이 안되어서 끊기는 현상 발생했음
+			unit.SetMovement(MovementType.SetVelocity, groundForward * moveStat.sideMoveSpeed);
 			return;
 		}
 
@@ -90,21 +92,14 @@ public class HeroGround : HeroState {
 
 }
 
-//점프
-public class HeroJump : HeroState {
-	public override void Enter() {
-		unit.ResetLiftParent();
-		unit.foot.adjacentLiftObjects.Clear();
-		moveStat.verticalSpeed = moveStat.jumpSpeed;
-		sm.SetState(States.Hero_Air);
-	}
-	public override void Execute() {
-	}
-}
+
 
 //공중 상태
 public class HeroAir : HeroState {
 	public override void Enter() {
+		//관성 구현
+		unit.SetMovement(MovementType.AddVelocity, unit.deltaPosFromParent);
+
 	}
 	public override void Execute() {
 		//좌우이동
@@ -143,6 +138,18 @@ public class HeroAir : HeroState {
 					break;
 			}
 		}
+	}
+}
+
+//점프
+public class HeroJump : HeroState {
+	public override void Enter() {
+		unit.ResetLiftParent();
+		unit.foot.adjacentLiftObjects.Clear();
+		moveStat.verticalSpeed = moveStat.jumpSpeed;
+		sm.SetState(States.Hero_Air);
+	}
+	public override void Execute() {
 	}
 }
 
