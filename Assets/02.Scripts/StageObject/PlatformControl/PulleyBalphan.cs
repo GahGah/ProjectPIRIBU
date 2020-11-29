@@ -16,7 +16,6 @@ public class PulleyBalphan : PlatformController
     public Sprite balphanOnImage;
     public Sprite balphanOffImage;
 
-
     public void Init()
     {
         isActive = false;
