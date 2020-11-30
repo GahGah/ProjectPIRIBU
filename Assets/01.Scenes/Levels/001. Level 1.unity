@@ -2538,6 +2538,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: SeeSaw Platform
       objectReference: {fileID: 0}
+    - target: {fileID: 6911262849646130791, guid: fd7cdabe53999d74f91848fb2747d7da,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6911262849646130792, guid: fd7cdabe53999d74f91848fb2747d7da,
         type: 3}
       propertyPath: recoveryPower
