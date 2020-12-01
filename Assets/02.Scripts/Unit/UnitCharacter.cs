@@ -28,14 +28,16 @@ public class UnitCharacter : Unit
 		IgnoreColliders = new List<Collider2D>();
 	}
 
-	//이동속도 처리 함수
-	public void HandleMoveSpeed(int moveDir, MoveSpeed moveSpeed, bool wallCheck = true) {
+	//이동속도 처리 함수 (bool값으로 벽이 앞에있는지 반환)
+	public bool HandleMoveSpeed(int moveDir, MoveSpeed moveSpeed, bool wallCheck = true) {
 		float speed = status.sideMoveSpeed;
 		int speedDir = (speed > 0 ? 1 : -1);
-		
+
 		//벽 충돌체크
+		bool isWallForward = false;
 		if (wallCheck) {
 			if (WallCheck(moveDir)) {
+				isWallForward = true;
 				moveDir = 0;
 				//브레이크
 				if (speed * speedDir < moveSpeed.brake)
@@ -62,6 +64,8 @@ public class UnitCharacter : Unit
 
 		status.sideMoveSpeed = speed;
 		if (moveDir != 0) status.modelSide = moveDir;
+
+		return isWallForward;
 	}
 
 	//OneWay 플랫폼 관련 충돌처리 및 Parenting

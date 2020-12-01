@@ -66,19 +66,20 @@ public class ChildGround : ChildState {
 			moveDir = dist >= safetyDistance ? heroDir : 0;
 		}
 
+
+		
+		//이동호출
+		bool isWallForward = unit.HandleMoveSpeed(moveDir, moveStat.groundMoveSpeed);
+		Vector2 vel = groundForward * moveStat.sideMoveSpeed;		
+		unit.SetMovement(MovementType.SetVelocity, vel);
+
 		//애니메이션
-		if(moveDir != 0) {
+		if(moveDir != 0 && !isWallForward) {
 			child.animator.SetBool("IsWalking", true);
 			child.animator.GetComponent<SpriteRenderer>().flipX = moveDir > 0 ? false : true;
 		} else {
 			child.animator.SetBool("IsWalking", false);
 		}
-
-		unit.HandleMoveSpeed(moveDir, moveStat.groundMoveSpeed);
-		
-		//이동호출
-		Vector2 vel = groundForward * moveStat.sideMoveSpeed;		
-		unit.SetMovement(MovementType.SetVelocity, vel);
 
 	}
 }

@@ -103,7 +103,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 3
+  m_Constraints: 0
 --- !u!233 &6911262849646130790
 HingeJoint2D:
   m_ObjectHideFlags: 0
@@ -166,7 +166,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f8d70a4a7c640f4983fbfd832603d62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parent: {fileID: 0}
+  liftParent: {fileID: 0}
   childs: []
   coll: {fileID: 0}
   rigid: {fileID: 0}
@@ -176,12 +176,15 @@ MonoBehaviour:
   standardPos: {x: 0, y: 0, z: 0}
   deltaPos: {x: 0, y: 0, z: 0}
   nextPos: {x: 0, y: 0, z: 0}
+  deltaPosFromParent: {x: 0, y: 0, z: 0}
   preScale: {x: 0, y: 0, z: 0}
   currScale: {x: 0, y: 0, z: 0}
   standardScale: {x: 0, y: 0, z: 0}
+  deltaScale: {x: 0, y: 0, z: 0}
   preAngle: {x: 0, y: 0, z: 0}
   currAngle: {x: 0, y: 0, z: 0}
   standardAngle: {x: 0, y: 0, z: 0}
+  deltaAngle: {x: 0, y: 0, z: 0}
   preNormal: {x: 0, y: 0, z: 0}
   currNormal: {x: 0, y: 0, z: 0}
   standardNormal: {x: 0, y: 0, z: 0}
