@@ -18,9 +18,10 @@ public class PiriManager : SingleTon<PiriManager>
 
     [Tooltip("컨트롤키 꾹 누르는 시간")]
     public float ctrlInputTime;
-    private bool isReadyToUse; //사용 준비 됨?
 
-    float pressTimer;
+    public bool isReadyToUse; //사용 준비 됨?
+    [SerializeField]
+    private float pressTimer;
     public int getTotalPiriUseCount
     {
         get
@@ -41,39 +42,47 @@ public class PiriManager : SingleTon<PiriManager>
     //{
     //   // StartCoroutine(ProcessPiriEnergy());
     //}
+
+
     private void Update()
     {
         if (InputManager.instance.buttonCtrl.isPressed)
         {
             //Debug.Log("isTrue");
-            isReadyToUse = true;
+
             pressTimer += Time.smoothDeltaTime;
         }
         else
         {
-            isReadyToUse = false;
+
             pressTimer = 0f;
         }
 
         if (pressTimer>=ctrlInputTime)
         {
-            Debug.Log("OK");
+            isReadyToUse = true;
             if (InputManager.instance.buttonMouseLeft.wasPressedThisFrame)
             {
-                Ray ray = Camera.main.ScreenPointToRay(InputManager.instance.GetMouseCurrentPosition());
+                
+                Vector2 _tempPos = Camera.main.ScreenToWorldPoint(InputManager.instance.GetMouseCurrentPosition());
+                //Ray2D ray = Camera.main.ScreenToWorldPoint(InputManager.instance.GetMouseCurrentPosition());
                 Debug.Log("POS :" + InputManager.instance.GetMouseCurrentPosition());
-                RaycastHit hit;
-                if (Physics.Raycast(ray, out hit, 10000f))
-                {
-                    if (hit.collider.GetComponent<PulleyPlatform>() != null)
-                    {
-                        Debug.Log("PulleyPlatform");
-                    }
 
+                RaycastHit2D hit = Physics2D.Raycast(_tempPos, Vector2.zero, 0f);
+
+
+                if (hit.collider !=null) 
+                {
+                    SolveThisObject(hit.collider.gameObject);
                 }
+
             }
 
 
+        }
+        else
+        {
+            isReadyToUse = false;
         }
 
     }
@@ -114,6 +123,8 @@ public class PiriManager : SingleTon<PiriManager>
             return true;
         }
     }
+
+    
     private IEnumerator ProcessPiriEnergy()
     {
         while (true)
@@ -146,4 +157,26 @@ public class PiriManager : SingleTon<PiriManager>
             yield return null;
         }
     }
+
+
+    public void SolveThisObject(GameObject _solveObj)
+    {
+
+        if (_solveObj.GetComponent<PulleyPlatform>() != null)
+        {
+            var _test = _solveObj.GetComponent<PulleyPlatform>();
+            _test.selectState = ESelectState.SOLVED;
+        }
+        else if (_solveObj.GetComponent<WindmillPlatform>() != null)
+        {
+            var _test = _solveObj.GetComponent<WindmillPlatform>();
+            _test.selectState = ESelectState.SOLVED;
+        }
+        else
+        {
+            Debug.Log("yeah");
+        }
+
+    }
+
 }
