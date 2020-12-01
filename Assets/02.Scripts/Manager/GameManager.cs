@@ -86,6 +86,12 @@ public class GameManager : SingleTon<GameManager>
 		DrawChildRange();
 	}
 
+	public void SetChildFollow(bool isFollow) {
+		foreach(Child child in childs) {
+			child.SetFollow(isFollow);
+		}
+	}
+
 	public void DrawChildRange() {
 		Debug.DrawLine(new Vector2(childsRange.xMin, childsRange.yMin), new Vector2(childsRange.xMax, childsRange.yMin));
 		Debug.DrawLine(new Vector2(childsRange.xMin, childsRange.yMax), new Vector2(childsRange.xMax, childsRange.yMax));
