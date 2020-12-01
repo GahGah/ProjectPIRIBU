@@ -49,6 +49,7 @@ public class EnemyGround : EnemyState {
 			heroDir = Mathf.Abs(heroXDist) >= followStartDist ? (heroXDist > 0 ? 1 : -1) : 0;
 		}
 		
+		
 
 		//임시로 컨트롤 버튼 누르고 있을때만 follow
 		//if (!input.buttonCtrl.isPressed) moveDir = 0;

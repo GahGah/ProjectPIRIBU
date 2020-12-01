@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class Child : Character {
@@ -7,12 +8,21 @@ public class Child : Character {
 	protected override void Start() {
 		base.Start();
 		stateMachine = new CharacterStateMachine(this, States.Child_Air);
+		isFollowHero = true;
 	}
 
 	protected override void FixedUpdate() {
 		base.FixedUpdate();
 	}
 
+
+	[HideInInspector] public bool isFollowHero;
+	/// <summary>
+	/// true를 넣으면 따라가고, false는 정지합니다.
+	/// </summary>
+	public void SetFollow(bool isFollow) {
+		isFollowHero = isFollow;
+	}
 }
 public class ChildState : CharacterState {
 	public Child child;
@@ -48,11 +58,20 @@ public class ChildGround : ChildState {
 		float followStartDist = 1f;//이동 시작하는 최소값
 		float safetyDistance = 1.5f;//추락지점 이격거리
 
-		if (unit.IsInSensor(hero.unit.transform.position)) {
+		//범위 안에 들어와있고 캐릭터 추적모드일때만 이동
+		if (unit.IsInSensor(hero.unit.transform.position) && child.isFollowHero) {
 			float heroXDist = hero.unit.transform.position.x - unit.transform.position.x;
 			int heroDir = Mathf.Abs(heroXDist) >= followStartDist ? (heroXDist > 0 ? 1 : -1) : 0;
 			float dist = unit.GetWalkableDistance(heroDir, safetyDistance*1.5f, child.allowedCliffSpace);
 			moveDir = dist >= safetyDistance ? heroDir : 0;
+		}
+
+		//애니메이션
+		if(moveDir != 0) {
+			child.animator.SetBool("IsWalking", true);
+			child.animator.GetComponent<SpriteRenderer>().flipX = moveDir > 0 ? false : true;
+		} else {
+			child.animator.SetBool("IsWalking", false);
 		}
 
 		unit.HandleMoveSpeed(moveDir, moveStat.groundMoveSpeed);
@@ -66,6 +85,7 @@ public class ChildGround : ChildState {
 
 public class ChildAir : ChildState {
 	public override void Enter() {
+		child.animator.SetBool("IsWalking", false);
 	}
 	public override void Execute() {
 
