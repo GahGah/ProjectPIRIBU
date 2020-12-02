@@ -160,7 +160,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0114a4b175d72ad4a9a436c1bacdf616, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parent: {fileID: 0}
+  liftParent: {fileID: 0}
   childs: []
   coll: {fileID: 0}
   rigid: {fileID: 0}
@@ -170,6 +170,7 @@ MonoBehaviour:
   standardPos: {x: 0, y: 0, z: 0}
   deltaPos: {x: 0, y: 0, z: 0}
   nextPos: {x: 0, y: 0, z: 0}
+  deltaPosFromParent: {x: 0, y: 0, z: 0}
   preScale: {x: 0, y: 0, z: 0}
   currScale: {x: 0, y: 0, z: 0}
   standardScale: {x: 0, y: 0, z: 0}
