@@ -47,7 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isActive: 0
   isControlOneObject: 0
-  rangeDistance: 0.5
+  rangeDistance: 1
   isCanActive: 0
   spriteRenderer: {fileID: 809277444839874113}
   pulleyPlatformList:
