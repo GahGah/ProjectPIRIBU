@@ -86,10 +86,10 @@ public class ChildGround : ChildState {
 
 		//애니메이션
 		if(moveDir != 0 && !isWallForward) {
-			child.animator.SetBool("IsWalking", true);
-			child.animator.GetComponent<SpriteRenderer>().flipX = moveDir > 0 ? false : true;
+			animator.SetBool("IsWalking", true);
+			animator.GetComponent<SpriteRenderer>().flipX = moveDir > 0 ? false : true;
 		} else {
-			child.animator.SetBool("IsWalking", false);
+			animator.SetBool("IsWalking", false);
 		}
 
 	}
@@ -97,7 +97,7 @@ public class ChildGround : ChildState {
 
 public class ChildAir : ChildState {
 	public override void Enter() {
-		child.animator.SetBool("IsWalking", false);
+		animator.SetBool("IsWalking", false);
 	}
 	public override void Execute() {
 
