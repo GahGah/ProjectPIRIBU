@@ -35,6 +35,7 @@ public class PulleyLever : PlatformController
             rangeDistance = 1f;
         }
         isCanActive = true;
+        spriteRenderer.sprite = leverOffImage;
     }
     private void Awake()
     {
@@ -49,14 +50,13 @@ public class PulleyLever : PlatformController
 
     private void Update()
     {
-
         if (InputManager.Instance.buttonCatch.wasPressedThisFrame)
         {
             if (!isCanActive)
             {
                 return;
             }
-            if (!(Vector2.Distance(GameManager.Instance.hero.transform.position, gameObject.transform.position) <= rangeDistance))
+            if (!(Vector2.Distance(GameManager.Instance.hero.transform.position, gameObject.transform.position) < rangeDistance))
             {
                 return;
             }

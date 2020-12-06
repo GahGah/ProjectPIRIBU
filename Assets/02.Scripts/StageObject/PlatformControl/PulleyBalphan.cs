@@ -42,8 +42,8 @@ public class PulleyBalphan : PlatformController
 
     private void Update()
     {
-
-        if (Vector2.Distance(GameManager.Instance.hero.transform.position, gameObject.transform.position) <= rangeDistance)
+        
+        if (Vector2.Distance(GameManager.Instance.hero.transform.position, gameObject.transform.position) < rangeDistance)
         {
 
             if (!isCanActive)
