@@ -193,7 +193,8 @@ public class UnitCharacter : Unit
 				float distNow = hit.distance - rayGroundOffset;
 				if (distNow < dist) {
 					dist = distNow;
-					if (isSetRayHit) raycastHitGround = hit;
+					//지형에 닿은 Ray만 groundRay로 쳐줌
+					if (isSetRayHit && IsGroundNormal(hit.normal)) raycastHitGround = hit;
 				}
 
 				//땅에 닿는 hit의 노말을 currentNormal에 업데이트
@@ -258,20 +259,46 @@ public class UnitCharacter : Unit
 		SetMovement(MovementType.SetVelocity, vel);
 
 		//착지판정 
-		float dist = RayGroundFromFoot(Vector2.down);
-		float groundYSpeed = 0;
-		if (raycastHitGround.rigidbody) {
-			groundYSpeed = raycastHitGround.rigidbody.velocity.y;
+		Vector2 _rayDir = Vector2.down;
+
+		isAllRayOverFoot = true;
+
+		//여러군데 검사
+		int rays = 2;
+		for (int i = -rays; i <= rays; i++) {
+
+			Vector2 origin = foot.transform.position
+				- foot.transform.up * foot.size.y * 0.5f
+				+ foot.transform.right * foot.size.x * ((float)i / rays * 0.5f)
+				- (Vector3)_rayDir * rayGroundOffset;
+
+
+			RaycastHit2D[] hits = Physics2D.RaycastAll(origin, _rayDir, (groundDist + rayGroundOffset) * 2, groundLayer);
+			foreach (RaycastHit2D hit in hits) {
+
+				//한 ray라도 발 아래에 쬐어지면
+				if (hit.distance - rayGroundOffset > -rayGroundOffset * 0.5f)//논리적으로 우항은 0이어야 하지만 약간 완화
+					isAllRayOverFoot = false;
+
+				//dist값 업데이트
+				float groundYSpeed = 0;
+				if (hit.rigidbody)
+					groundYSpeed = hit.rigidbody.velocity.y;
+
+				float distNow = hit.distance - rayGroundOffset;
+				if (distNow <= 0.05f //땅에 가까이 붙었을때
+					&& status.verticalSpeed - groundYSpeed <= 0//추락할때만 땅에 붙게 (지형 속도도 고려)
+					&& IsGroundNormal(hit.normal)) {//지형 각도 범위일때
+					isGrounded = true;
+					return true;
+				}
+			}
+
+			if (hits.Length == 0)
+				isAllRayOverFoot = false;
 		}
 
-		if (dist < 0.05f//지형에 가까이 있을때
-			&& status.verticalSpeed - groundYSpeed < 0//추락할때만 땅에 붙게 (지형 속도도 고려)
-			&& IsGroundNormal(raycastHitGround.normal)//지형 각도 범위일때
-			) {
-			//Logic Error : GroundDist와 Normal을 판정하는 영역이 달라서 착지가 좀 이상한 문제가 있다.
-			isGrounded = true;
-			return true;
-		}
+
 		isGrounded = false;
 		return false;
 	}
@@ -306,12 +333,12 @@ public class UnitCharacter : Unit
 			RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, verticalDist + groundDist * 2, groundLayer);
 			float distNow = hit.distance;
 			if (hit.collider && distNow <= verticalDist+groundDist) {
-				Debug.DrawLine(new Vector3(startX+distX, currY), hit.point, Color.magenta);
+				//Debug.DrawLine(new Vector3(startX+distX, currY), hit.point, Color.magenta);
 				currY = hit.point.y + verticalDist;
 				airSpace = 0;
 			} else {
 				//닿은게 아예 없단 것은 공중이란 것
-				Debug.DrawLine(new Vector3(startX + distX, currY), new Vector3(startX + distX, currY-verticalDist), Color.cyan);
+				//Debug.DrawLine(new Vector3(startX + distX, currY), new Vector3(startX + distX, currY-verticalDist), Color.cyan);
 				airSpace += xStep;
 				if (airSpace >= allowedSpace) {
 					break;

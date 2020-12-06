@@ -79,6 +79,7 @@ MonoBehaviour:
   unit: {fileID: 3608487998561999138}
   animator: {fileID: 5470783979760401754}
   allowedCliffSpace: 0.1
+  isFollowHero: 0
 --- !u!1 &3530669823811892136
 GameObject:
   m_ObjectHideFlags: 0
@@ -181,7 +182,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 7
-  m_Sprite: {fileID: 21300000, guid: 06956163df3a4a94a955396f46466d9d, type: 3}
+  m_Sprite: {fileID: -3134486039252796352, guid: 2166432c2c1903e4f8425d8704e5e555,
+    type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
