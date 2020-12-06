@@ -60,6 +60,20 @@ public class HeroGround : HeroState {
 			return;
 		}
 
+		//애니메이션
+
+		animator.SetBool("IsGround", true);
+		float moveSpeedWeight = Mathf.Abs(moveStat.sideMoveSpeed / moveStat.groundMoveSpeed.max);
+		if (moveSpeedWeight <= 0.1f) {//서있기 모션
+			animator.SetFloat("GroundSpeed", 0);
+			animator.speed = 1;
+		} else {//움직이기 모션
+			moveSpeedWeight = Mathf.Clamp(moveSpeedWeight, 0.5f, 1);
+			animator.SetFloat("GroundSpeed", moveSpeedWeight);
+			animator.speed = moveSpeedWeight;
+			animator.GetComponent<SpriteRenderer>().flipX = moveStat.sideMoveSpeed > 0 ? false : true;
+		}
+
 		//상호작용 오브젝트
 		List<InteractionObject> interactions = unit.sensor.InteractionObjects;
 		foreach (InteractionObject interaction in interactions) {
@@ -97,6 +111,8 @@ public class HeroGround : HeroState {
 //공중 상태
 public class HeroAir : HeroState {
 	public override void Enter() {
+		animator.SetBool("IsGround", false);
+		animator.speed = 1;
 		//관성 구현
 		unit.SetMovement(MovementType.AddVelocity, unit.deltaPosFromParent);
 
@@ -104,6 +120,13 @@ public class HeroAir : HeroState {
 	public override void Execute() {
 		//좌우이동
 		unit.HandleMoveSpeed(unit.GetSideMoveDirection(), moveStat.airMoveSpeed);
+
+		//애니메이션 flip
+		if (moveStat.sideMoveSpeed > 0) {
+			animator.GetComponent<SpriteRenderer>().flipX = false ;
+		} else if (moveStat.sideMoveSpeed < 0) {
+			animator.GetComponent<SpriteRenderer>().flipX = true;
+		}
 
 		//추락
 		moveStat.verticalSpeed -= moveStat.fallSpeed;
@@ -144,6 +167,9 @@ public class HeroAir : HeroState {
 //점프
 public class HeroJump : HeroState {
 	public override void Enter() {
+		animator.SetTrigger("Jump");
+		animator.SetBool("IsGround", false);
+
 		unit.ResetLiftParent();
 		unit.foot.adjacentLiftObjects.Clear();
 		moveStat.verticalSpeed = moveStat.jumpSpeed;
@@ -174,6 +200,11 @@ public class HeroLadder : HeroState {
 		attachSpeed = 0.1f;
 
 		time = 0;
+
+		animator.SetTrigger("GrabLadder");
+		animator.SetBool("IsLadder", true);
+
+
 	}
 
 	public override void Execute() {
@@ -190,13 +221,16 @@ public class HeroLadder : HeroState {
 
 
 		Vector3 ladderDir = ladder.transform.up;
+		animator.speed = 0;
 		//위아래 이동
 		if (Vector3.Magnitude(dirToLadder) <= 0.2f) {//사다리에 붙어있을때만
 			if (input.buttonUp.isPressed) {
 				newAnchor -= ladderDir*0.15f;
+				animator.speed = 1;
 			}
-			if (input.buttonDown.isPressed) {
+			else if (input.buttonDown.isPressed) {
 				newAnchor += ladderDir*0.15f;
+				animator.speed = 1;
 			}
 		}
 		joint.connectedAnchor = newAnchor;
@@ -214,6 +248,8 @@ public class HeroLadder : HeroState {
 			unit.ResetLiftParent();
 			unit.foot.adjacentLiftObjects.Clear();
 			moveStat.verticalSpeed = moveStat.jumpSpeed*0.5f;
+			animator.SetTrigger("Jump");
+			animator.SetBool("IsGround", false);
 			sm.SetState(States.Hero_Air);
 			return;
 		}
@@ -221,6 +257,7 @@ public class HeroLadder : HeroState {
 	public override void Exit() {
 		unit.foot.gameObject.SetActive(true);
 		BreakJoint();
+		animator.SetBool("IsLadder",false);
 	}
 
 	void BreakJoint() {
@@ -236,11 +273,18 @@ public class HeroBox : HeroState {
 	PushBox box;
 	int pushSide;
 	public override void Enter() {
+		animator.SetBool("IsPushing", true);
 		box = unit.interactionObject.GetChildObject<PushBox>();
 		box.isPushingMode = true;
 		
 		//미는방향
 		pushSide = box.currPos.x-unit.currPos.x > 0 ? 1 : -1;
+
+
+		//애니메이션
+		animator.GetComponent<SpriteRenderer>().flipX = pushSide == 1 ? false : true;
+		//Hard Coding : 박스 푸쉬 손위치 어느정도 맞추기 (근데안되네)
+		animator.transform.position += Vector3.right*-pushSide*0.4f;
 
 	}
 
@@ -261,7 +305,6 @@ public class HeroBox : HeroState {
 		//박스 밀기
 		int moveDir = unit.GetSideMoveDirection();
 		
-
 		//움직이지 않는동안 박스 정지
 		box.isPushingMode = Mathf.Abs(moveStat.sideMoveSpeed) <= 1 ? false : true;
 
@@ -275,9 +318,17 @@ public class HeroBox : HeroState {
 		box.SetMovement(MovementType.AddPos, moveVec);
 		unit.SetMovement(MovementType.AddPos, moveVec);
 
+		//애니메이션
+		float moveSpeedWeight = Mathf.Max(0.3f, Mathf.Abs(moveStat.sideMoveSpeed / moveStat.groundMoveSpeed.max));
+		animator.speed = moveSpeedWeight;
 	}
 
 	public override void Exit() {
+		//Hard Coding : 박스 푸쉬 손위치 되돌리기
+		animator.transform.position -= Vector3.right * -pushSide * 0.4f;
+
+		animator.speed = 1;
+		animator.SetBool("IsPushing", false);
 		box.isPushingMode = false;
 	}
 }

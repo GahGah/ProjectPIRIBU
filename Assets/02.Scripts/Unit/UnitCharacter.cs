@@ -415,11 +415,11 @@ public class UnitCharacter : Unit
 		if (ladder == null) ladder = interactionObject;
 		if (ladder == null) return false;
 
-		Vector3 ladderBottom, ladderTop;
+		Vector2 ladderBottom, ladderTop;
 		//offset만큼 양쪽 범위 늘리기
 		ladderBottom = ladder.transform.position - ladder.transform.up * (ladder.size.y * 0.5f + offset);
-		ladderTop = ladderBottom + ladder.transform.up * (ladder.size.y + offset*2);
-		if (Vector3.Dot(ladderBottom - currPos, ladderTop - currPos) <= 0) {
+		ladderTop = ladderBottom + (Vector2)ladder.transform.up * (ladder.size.y + offset*2);
+		if (Vector2.Dot(ladderBottom - (Vector2)currPos, ladderTop - (Vector2)currPos) <= 0) {
 			return true;
 		}
 		return false;

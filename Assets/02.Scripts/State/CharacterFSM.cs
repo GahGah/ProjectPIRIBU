@@ -20,12 +20,14 @@ public class CharacterState : State {
 	protected Character character;
 	protected CharacterStatus moveStat;
 	protected UnitCharacter unit;
+	protected Animator animator;
 
 	public override void Init() {
 		base.Init();
 		character = sm.GetChildClass<CharacterStateMachine>().GetCharacter();
 		moveStat = character.unit.status;
 		unit = character.unit;
+		animator = character.animator;
 	}
 
 }
