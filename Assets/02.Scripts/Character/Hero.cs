@@ -32,8 +32,6 @@ public class HeroGround : HeroState {
 	Vector2 groundForward;//GroundNormal의 직교벡터
 	public override void Enter() {
 		moveStat.verticalSpeed = 0;
-		animator.SetBool("IsGround",true);
-
 	}
 	public override void Execute() {
 
@@ -63,8 +61,8 @@ public class HeroGround : HeroState {
 		}
 
 		//애니메이션
-		
 
+		animator.SetBool("IsGround", true);
 		float moveSpeedWeight = Mathf.Abs(moveStat.sideMoveSpeed / moveStat.groundMoveSpeed.max);
 		if (moveSpeedWeight <= 0.1f) {//서있기 모션
 			animator.SetFloat("GroundSpeed", 0);
@@ -204,8 +202,9 @@ public class HeroLadder : HeroState {
 		time = 0;
 
 		animator.SetTrigger("GrabLadder");
-		
-		
+		animator.SetBool("IsLadder", true);
+
+
 	}
 
 	public override void Execute() {
@@ -258,7 +257,7 @@ public class HeroLadder : HeroState {
 	public override void Exit() {
 		unit.foot.gameObject.SetActive(true);
 		BreakJoint();
-		animator.SetTrigger("ExitLadder");
+		animator.SetBool("IsLadder",false);
 	}
 
 	void BreakJoint() {
@@ -284,7 +283,7 @@ public class HeroBox : HeroState {
 
 		//애니메이션
 		animator.GetComponent<SpriteRenderer>().flipX = pushSide == 1 ? false : true;
-		//Hard Coding : 박스 푸쉬 손위치 어느정도 맞추기
+		//Hard Coding : 박스 푸쉬 손위치 어느정도 맞추기 (근데안되네)
 		animator.transform.position += Vector3.right*-pushSide*0.4f;
 
 	}
