@@ -50,13 +50,10 @@ public class PulleyLever : PlatformController
 
     private void Update()
     {
-        if (InputManager.Instance.buttonCatch.wasPressedThisFrame)
+        if (InputManager.Instance.buttonCatch.wasPressedThisFrame&& 
+            Vector2.Distance(GameManager.Instance.hero.transform.position, gameObject.transform.position) < rangeDistance)
         {
             if (!isCanActive)
-            {
-                return;
-            }
-            if (!(Vector2.Distance(GameManager.Instance.hero.transform.position, gameObject.transform.position) < rangeDistance))
             {
                 return;
             }
