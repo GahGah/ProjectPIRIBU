@@ -9,7 +9,7 @@
         _ContributionLUT("Contribution LUT", Range(0, 1)) = 1
         //_AmbientColor("AmbientColor", Color) = (1,1,1,1)
         _FogColor("FogColor", Color) = (1,1,1,1)
-        _FogLevel("FogLevel", Range(0, 5)) = 0
+        _FogLevel("FogLevel", Range(0, 1)) = 0
 
         // Legacy properties. They're here so that materials using this shader can gracefully fallback to the legacy sprite shader.
         [HideInInspector] _Color("Tint", Color) = (1,1,1,1)
@@ -85,7 +85,7 @@
 
             half4 _AmbientColor;
             half4 _FogColor;
-            int _FogLevel;
+            float _FogLevel;
 
             float _ContributionLUT;
             //---------------
@@ -134,9 +134,7 @@
 
             half4 setFog(half4 mainCol)
             {
-                float fogIntensity = (5-_FogLevel) * 0.17;
-                
-                mainCol.rgb = lerp(mainCol.rgb, _FogColor.rgb, fogIntensity);
+                mainCol.rgb = lerp(mainCol.rgb, _FogColor.rgb, _FogLevel);
                 return mainCol;
             }
             //--------------

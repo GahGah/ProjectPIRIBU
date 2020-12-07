@@ -31,6 +31,8 @@ public class ShaderManager : SingleTon<GameManager>
     [SerializeField] private Gradient skyGradient_evening = new Gradient();
     [SerializeField] private Gradient skyGradient_night = new Gradient();
 
+    [SerializeField] private float fogIntensity;
+
     [SerializeField] private GameObject skySprite;
     [SerializeField] private GameObject skyStar;
     private Material skyStar_Material;
@@ -57,7 +59,7 @@ public class ShaderManager : SingleTon<GameManager>
         changeLightAndFogColor();
         changeSkyObjects();
 
-        //setSpritesFogLevel();
+        setSpritesFogLevel();
     }
 
     //------------------------------
@@ -81,8 +83,10 @@ public class ShaderManager : SingleTon<GameManager>
         //스프라이트의 Order in Layer에 따라 각 마테리얼의 FogLevel 값을 바꿔줌.
         foreach (GameObject gameObj in spriteObjects)
         {
-            int orderNum = gameObj.GetComponent<SpriteRenderer>().sortingOrder;
-            gameObj.GetComponent<SpriteRenderer>().material.SetInt("_FogLevel", orderNum);
+            if(gameObj.transform.position.z >= 15)
+            {
+                gameObj.GetComponent<SpriteRenderer>().material.SetFloat("_FogLevel", (gameObj.transform.position.z-15)/10f * fogIntensity);
+            }
         }
     }
 
