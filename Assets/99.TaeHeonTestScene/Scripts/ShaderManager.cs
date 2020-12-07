@@ -173,8 +173,8 @@ public class ShaderManager : SingleTon<GameManager>
 
     void setSkyObject()
     {
-        sun.transform.localPosition = P0;
-        moon.transform.localPosition = P0;
+        sun.transform.localPosition = new Vector3(P0.x, P0.y, sun.transform.localPosition.z);
+        moon.transform.localPosition = new Vector3(P0.x, P0.y, moon.transform.localPosition.z);
     }
 
     void changeSkyObjects()
@@ -216,8 +216,9 @@ public class ShaderManager : SingleTon<GameManager>
             Vector2 bezierCurvePos = (s * s * P0) +
                 (2 * t * s * P1) +
                 (t * t * P2);
+            Vector3 sunPos = new Vector3(bezierCurvePos.x, bezierCurvePos.y, sun.transform.localPosition.z);
 
-            sun.transform.localPosition = bezierCurvePos;
+            sun.transform.localPosition = sunPos;
         }
         else if (time_nightStart < curTime && curTime <= time_nightEnd)
         {
@@ -229,7 +230,9 @@ public class ShaderManager : SingleTon<GameManager>
                 (2 * t * s * P1) +
                 (t * t * P2);
 
-            moon.transform.localPosition = bezierCurvePos;
+            Vector3 moonPos = new Vector3(bezierCurvePos.x, bezierCurvePos.y, moon.transform.localPosition.z);
+
+            moon.transform.localPosition = moonPos;
         }
     }
 }
