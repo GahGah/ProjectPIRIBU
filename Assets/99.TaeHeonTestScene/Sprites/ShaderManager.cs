@@ -10,7 +10,7 @@ public class ShaderManager : SingleTon<GameManager>
     [SerializeField] private int maxTime;
     [SerializeField] private float timeMultiple;
 
-    [SerializeField] private int time_moringStart;
+    [SerializeField] private int time_morningStart;
     [SerializeField] private int time_noonStart;
     [SerializeField] private int time_eveningStart;
     [SerializeField] private int time_nightStart;
@@ -32,13 +32,17 @@ public class ShaderManager : SingleTon<GameManager>
     [SerializeField] private Gradient skyGradient_night = new Gradient();
 
     [SerializeField] private GameObject skySprite;
+    [SerializeField] private GameObject skyStar;
+    private Material skyStar_Material;
     [SerializeField] public GameObject mainLight;
     private Light2D mainLight_L2D;
 
+    
     // Start is called before the first frame update
     void Start()
     {
         mainLight_L2D = mainLight.GetComponent<Light2D>();
+        skyStar_Material = skyStar.GetComponent<MeshRenderer>().material;
         getSpriteList();
         setSpritesFogLevel();
     }
@@ -48,6 +52,7 @@ public class ShaderManager : SingleTon<GameManager>
     {
         timer();
         changeLightAndFogColor();
+        changeSunAndMoon();
 
         //setSpritesFogLevel();
     }
@@ -88,7 +93,6 @@ public class ShaderManager : SingleTon<GameManager>
         }
     }
 
-    //이거 최적화 어쩌냐 이거괜찮은건가 젠장
     void changeLightAndFogColor()
     {
         Color fogCol;
@@ -99,14 +103,14 @@ public class ShaderManager : SingleTon<GameManager>
         int timeInterval;
 
         //시간에 따른 색상 구함: Lerp를 사용해서
-        if (time_moringStart <= curTime && curTime <= time_noonStart)
+        if (time_morningStart <= curTime && curTime <= time_noonStart)
         {
-            timeInterval = Mathf.Abs(time_moringStart - time_noonStart);
-            fogCol = Color.Lerp(FogColor_morning, FogColor_noon, (curTime - time_moringStart) / timeInterval);
-            lightCol = Color.Lerp(LightColor_morning, LightColor_noon, (curTime - time_moringStart) / timeInterval);
+            timeInterval = Mathf.Abs(time_morningStart - time_noonStart);
+            fogCol = Color.Lerp(FogColor_morning, FogColor_noon, (curTime - time_morningStart) / timeInterval);
+            lightCol = Color.Lerp(LightColor_morning, LightColor_noon, (curTime - time_morningStart) / timeInterval);
 
-            gradientBegin = Color.Lerp(skyGradient_morning.colorKeys[0].color, skyGradient_noon.colorKeys[0].color, (curTime - time_moringStart) / timeInterval);
-            gradientEnd = Color.Lerp(skyGradient_morning.colorKeys[1].color, skyGradient_noon.colorKeys[1].color, (curTime - time_moringStart) / timeInterval);
+            gradientBegin = Color.Lerp(skyGradient_morning.colorKeys[0].color, skyGradient_noon.colorKeys[0].color, (curTime - time_morningStart) / timeInterval);
+            gradientEnd = Color.Lerp(skyGradient_morning.colorKeys[1].color, skyGradient_noon.colorKeys[1].color, (curTime - time_morningStart) / timeInterval);
         }
         else if (curTime <= time_eveningStart)
         {
@@ -153,5 +157,31 @@ public class ShaderManager : SingleTon<GameManager>
 
         skySprite.GetComponent<MeshRenderer>().material.SetColor("_BeginColor", gradientBegin);
         skySprite.GetComponent<MeshRenderer>().material.SetColor("_EndColor", gradientEnd);
+    }
+
+    void changeSunAndMoon()
+    {
+        int timeInterval;
+
+        if(time_morningStart <= curTime && curTime <= time_noonStart)
+        {
+            timeInterval = Mathf.Abs(time_morningStart - time_noonStart);
+            skyStar_Material.SetColor("_BaseColor", Color.Lerp(Color.gray, Color.black, (curTime - time_morningStart) / timeInterval));
+        }
+        else if (time_noonStart <= curTime && curTime <= time_eveningStart )
+        {
+            timeInterval = Mathf.Abs(time_noonStart - time_eveningStart);
+            skyStar_Material.SetColor("_BaseColor", Color.Lerp(Color.black, Color.gray, (curTime - time_noonStart) / timeInterval));
+        }
+        else if (time_eveningStart <= curTime && curTime <= time_nightStart)
+        {
+            timeInterval = Mathf.Abs(time_eveningStart - time_nightStart);
+            skyStar_Material.SetColor("_BaseColor", Color.Lerp(Color.gray, Color.white, (curTime - time_eveningStart) / timeInterval));
+        }
+        else if (time_nightEnd < curTime && curTime <= maxTime)
+        {
+            timeInterval = Mathf.Abs(time_nightEnd - maxTime);
+            skyStar_Material.SetColor("_BaseColor", Color.Lerp(Color.white, Color.gray, (curTime - time_nightEnd) / timeInterval));
+        }
     }
 }
