@@ -232,6 +232,11 @@ PrefabInstance:
       propertyPath: character
       value: 
       objectReference: {fileID: 2246656992615568732}
+    - target: {fileID: 3657937132967851561, guid: b1bdc0bb03758b5418c99b2d9b65e13e,
+        type: 3}
+      propertyPath: status.jumpSpeed
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 5722792225312363772, guid: b1bdc0bb03758b5418c99b2d9b65e13e,
         type: 3}
       propertyPath: m_Name

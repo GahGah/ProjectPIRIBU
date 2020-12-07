@@ -1,0 +1,182 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &23147071422587644
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 23147071422587642}
+  - component: {fileID: 23147071422587645}
+  m_Layer: 0
+  m_Name: ShaderManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &23147071422587642
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 23147071422587644}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -17.142086, y: 3.3387837, z: -48.186916}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &23147071422587645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 23147071422587644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efbbe4ff6b6517f44a41fcc1501da1f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  curTime: 0
+  maxTime: 6000
+  timeMultiple: 500
+  time_morningStart: 0
+  time_noonStart: 1000
+  time_eveningStart: 2000
+  time_nightStart: 3000
+  time_nightEnd: 5000
+  FogColor_morning: {r: 0.5831653, g: 0.48235294, b: 0.58431375, a: 1}
+  FogColor_noon: {r: 0.74038804, g: 0.8867924, b: 0.87459993, a: 1}
+  FogColor_evening: {r: 0.5943396, g: 0.3704802, b: 0.2999733, a: 1}
+  FogColor_night: {r: 0.11258456, g: 0.11623694, b: 0.20754719, a: 1}
+  LightColor_morning: {r: 0.3018868, g: 0.15806337, b: 0.23648953, a: 1}
+  LightColor_noon: {r: 0.9245283, g: 0.90629405, b: 0.8416696, a: 1}
+  LightColor_evening: {r: 1, g: 0.6514852, b: 0.36320752, a: 1}
+  LightColor_night: {r: 0.093131006, g: 0.08330367, b: 0.1509434, a: 1}
+  skyGradient_morning:
+    serializedVersion: 2
+    key0: {r: 0.043137252, g: 0.18525775, b: 0.32156864, a: 1}
+    key1: {r: 0.8392157, g: 0.5057303, b: 0.27450985, a: 1}
+    key2: {r: 0, g: 0, b: 0, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 65535
+    ctime2: 0
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 2
+  skyGradient_noon:
+    serializedVersion: 2
+    key0: {r: 0.14618193, g: 0.51439214, b: 0.6886792, a: 1}
+    key1: {r: 0.70358664, g: 0.9150943, b: 0.86982197, a: 1}
+    key2: {r: 0, g: 0, b: 0, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 65535
+    ctime2: 0
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 2
+  skyGradient_evening:
+    serializedVersion: 2
+    key0: {r: 0.04387683, g: 0.12709735, b: 0.3207547, a: 1}
+    key1: {r: 0.8396226, g: 0.36758053, b: 0.2732734, a: 1}
+    key2: {r: 0, g: 0, b: 0, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 65535
+    ctime2: 0
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 2
+  skyGradient_night:
+    serializedVersion: 2
+    key0: {r: 0.03398613, g: 0.011836951, b: 0.13207549, a: 1}
+    key1: {r: 0.017621929, g: 0.09920089, b: 0.33962262, a: 1}
+    key2: {r: 0, g: 0, b: 0, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 65535
+    ctime2: 0
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 2
+  skySprite: {fileID: 0}
+  skyStar: {fileID: 0}
+  sun: {fileID: 0}
+  moon: {fileID: 0}
+  mainLight: {fileID: 0}
