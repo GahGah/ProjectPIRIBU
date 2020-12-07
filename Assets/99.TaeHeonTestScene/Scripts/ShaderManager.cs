@@ -162,8 +162,6 @@ public class ShaderManager : SingleTon<GameManager>
         skySprite.GetComponent<MeshRenderer>().material.SetColor("_EndColor", gradientEnd);
     }
 
-
-
     private Vector2 P0 = new Vector2(-55f, -8f);
     private Vector2 P1 = new Vector2(0f, 31f);
     private Vector2 P2 = new Vector2(55f, -8f);
