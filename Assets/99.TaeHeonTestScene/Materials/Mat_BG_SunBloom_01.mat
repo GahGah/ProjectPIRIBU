@@ -7,29 +7,25 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Mat_BG_SkyGradient
-  m_Shader: {fileID: 4800000, guid: 7d0cf9cbe9cf4f54e9512f9ff28d30a8, type: 3}
-  m_ShaderKeywords: _ALPHATEST_ON
+  m_Name: Mat_BG_SunBloom_01
+  m_Shader: {fileID: -6465566751694194690, guid: e63828f9094bb8c4598a85e22150532f,
+    type: 3}
+  m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2450
-  stringTagMap:
-    RenderType: TransparentCutout
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - Texture2D_D23B96BC:
+        m_Texture: {fileID: 2800000, guid: 1dc9ff02bb1d774469e5eeb895ae7983, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _AlphaTex:
         m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _BaseMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _LUT:
-        m_Texture: {fileID: 2800000, guid: 4264c24592a7bb64eafb509251a894d5, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -44,30 +40,12 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _WhiteMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _AlphaClip: 1
-    - _Blend: 0
-    - _ContributionLUT: 0
-    - _Cull: 2
-    - _Cutoff: 0.5
-    - _DstBlend: 0
+    - Boolean_7084CEFD: 0
     - _EnableExternalAlpha: 0
-    - _FogLevel: 5
-    - _QueueOffset: 0
-    - _SampleGI: 0
-    - _SrcBlend: 1
-    - _Surface: 0
-    - _ZWrite: 1
     m_Colors:
-    - _AmbientColor: {r: 0.254717, g: 0.094918124, b: 0.094918124, a: 1}
-    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _BeginColor: {r: 1, g: 1, b: 1, a: 1}
+    - Color_C3CC9AB: {r: 1.4980392, g: 0.9882353, b: 0.4627451, a: 0}
+    - Vector2_409FD572: {r: 0.8, g: 1, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _EndColor: {r: 1, g: 1, b: 1, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
-    - _FogColor: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}

@@ -34,6 +34,8 @@ public class ShaderManager : SingleTon<GameManager>
     [SerializeField] private GameObject skySprite;
     [SerializeField] private GameObject skyStar;
     private Material skyStar_Material;
+    [SerializeField] private GameObject sun;
+    [SerializeField] private GameObject moon;
     [SerializeField] public GameObject mainLight;
     private Light2D mainLight_L2D;
 
@@ -45,6 +47,7 @@ public class ShaderManager : SingleTon<GameManager>
         skyStar_Material = skyStar.GetComponent<MeshRenderer>().material;
         getSpriteList();
         setSpritesFogLevel();
+        setSkyObject();
     }
 
     // Update is called once per frame
@@ -52,7 +55,7 @@ public class ShaderManager : SingleTon<GameManager>
     {
         timer();
         changeLightAndFogColor();
-        changeSunAndMoon();
+        changeSkyObjects();
 
         //setSpritesFogLevel();
     }
@@ -159,29 +162,74 @@ public class ShaderManager : SingleTon<GameManager>
         skySprite.GetComponent<MeshRenderer>().material.SetColor("_EndColor", gradientEnd);
     }
 
-    void changeSunAndMoon()
+
+
+    private Vector2 P0 = new Vector2(-55f, -8f);
+    private Vector2 P1 = new Vector2(0f, 31f);
+    private Vector2 P2 = new Vector2(55f, -8f);
+
+    private Color WhiteGray = new Color(0.25f, 0.25f, 0.25f);
+    private Color GrayWhite = new Color(0.1f, 0.1f, 0.1f);
+
+    void setSkyObject()
+    {
+        sun.transform.localPosition = P0;
+        moon.transform.localPosition = P0;
+    }
+
+    void changeSkyObjects()
     {
         int timeInterval;
 
+        //별이 해가 뜰때는 져 있도록.
         if (time_morningStart <= curTime && curTime <= time_noonStart)
         {
             timeInterval = Mathf.Abs(time_morningStart - time_noonStart);
-            skyStar_Material.SetColor("_BaseColor", Color.Lerp(Color.gray, Color.black, (curTime - time_morningStart) / timeInterval));
+            skyStar_Material.SetColor("_BaseColor", Color.Lerp(GrayWhite, Color.black, (curTime - time_morningStart) / timeInterval));
         }
         else if (time_noonStart <= curTime && curTime <= time_eveningStart)
         {
             timeInterval = Mathf.Abs(time_noonStart - time_eveningStart);
-            skyStar_Material.SetColor("_BaseColor", Color.Lerp(Color.black, Color.gray, (curTime - time_noonStart) / timeInterval));
+            skyStar_Material.SetColor("_BaseColor", Color.Lerp(Color.black, WhiteGray, (curTime - time_noonStart) / timeInterval));
         }
         else if (time_eveningStart <= curTime && curTime <= time_nightStart)
         {
             timeInterval = Mathf.Abs(time_eveningStart - time_nightStart);
-            skyStar_Material.SetColor("_BaseColor", Color.Lerp(Color.gray, Color.white, (curTime - time_eveningStart) / timeInterval));
+            skyStar_Material.SetColor("_BaseColor", Color.Lerp(WhiteGray, Color.white, (curTime - time_eveningStart) / timeInterval));
         }
         else if (time_nightEnd < curTime && curTime <= maxTime)
         {
             timeInterval = Mathf.Abs(time_nightEnd - maxTime);
-            skyStar_Material.SetColor("_BaseColor", Color.Lerp(Color.white, Color.gray, (curTime - time_nightEnd) / timeInterval));
+            skyStar_Material.SetColor("_BaseColor", Color.Lerp(Color.white, GrayWhite, (curTime - time_nightEnd) / timeInterval));
+        }
+
+        //해와 달.
+        if (time_nightEnd < curTime && curTime <= maxTime || time_morningStart <= curTime && curTime <= time_nightStart)
+        {
+            // curTime이 4500~6000/0~3000까지의 범위이므로 예외처리를 해 주어야 함.
+            float tempTime = curTime >= time_nightEnd ? curTime : maxTime + curTime;    //4500~9000 까지의 범위.
+            timeInterval = (maxTime + time_nightStart) - time_nightEnd;                  //4500.
+            float t = (tempTime - time_nightEnd) / timeInterval; // 0부터 1까지의 범위로 변환.
+            float s = 1 - t;
+
+
+            Vector2 bezierCurvePos = (s * s * P0) +
+                (2 * t * s * P1) +
+                (t * t * P2);
+
+            sun.transform.localPosition = bezierCurvePos;
+        }
+        else if (time_nightStart < curTime && curTime <= time_nightEnd)
+        {
+            timeInterval = Mathf.Abs(time_nightStart - time_nightEnd);
+            float t = (curTime - time_nightStart) / timeInterval; // 0부터 1까지의 범위로 변환.
+            float s = 1 - t;
+
+            Vector2 bezierCurvePos = (s * s * P0) +
+                (2 * t * s * P1) +
+                (t * t * P2);
+
+            moon.transform.localPosition = bezierCurvePos;
         }
     }
 }

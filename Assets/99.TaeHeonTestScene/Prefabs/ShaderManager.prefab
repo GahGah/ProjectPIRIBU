@@ -46,11 +46,11 @@ MonoBehaviour:
   curTime: 0
   maxTime: 6000
   timeMultiple: 500
-  time_moringStart: 0
+  time_morningStart: 0
   time_noonStart: 1000
   time_eveningStart: 2000
   time_nightStart: 3000
-  time_nightEnd: 4500
+  time_nightEnd: 5000
   FogColor_morning: {r: 0.5831653, g: 0.48235294, b: 0.58431375, a: 1}
   FogColor_noon: {r: 0.74038804, g: 0.8867924, b: 0.87459993, a: 1}
   FogColor_evening: {r: 0.5943396, g: 0.3704802, b: 0.2999733, a: 1}
@@ -61,8 +61,8 @@ MonoBehaviour:
   LightColor_night: {r: 0.093131006, g: 0.08330367, b: 0.1509434, a: 1}
   skyGradient_morning:
     serializedVersion: 2
-    key0: {r: 0.021583783, g: 0.019446427, b: 0.1792453, a: 1}
-    key1: {r: 0.4433962, g: 0.24470451, b: 0.27147034, a: 1}
+    key0: {r: 0.043137252, g: 0.18525775, b: 0.32156864, a: 1}
+    key1: {r: 0.8392157, g: 0.5057303, b: 0.27450985, a: 1}
     key2: {r: 0, g: 0, b: 0, a: 0}
     key3: {r: 0, g: 0, b: 0, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
@@ -176,4 +176,7 @@ MonoBehaviour:
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
   skySprite: {fileID: 0}
+  skyStar: {fileID: 0}
+  sun: {fileID: 0}
+  moon: {fileID: 0}
   mainLight: {fileID: 0}
