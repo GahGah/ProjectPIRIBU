@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.XR.WSA.Input;
 using UnityEngine.U2D;
 
+[ExecuteInEditMode]
 public class Ladder : InteractionObject {
 
 	public SpriteShapeController ladderShape;
@@ -22,5 +23,7 @@ public class Ladder : InteractionObject {
 
 	}
 
-
+	private void OnDrawGizmos() {
+		Awake();
+	}
 }
