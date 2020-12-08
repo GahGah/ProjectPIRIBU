@@ -108,7 +108,7 @@ public class UnitCharacter : Unit
 
 	[HideInInspector] public RaycastHit2D raycastHitGround;
 	[HideInInspector] public Vector2 groundForward;
-	[HideInInspector] public float groundDist = 0.3f;//최소 지형 이격거리
+	[HideInInspector] public float groundDist = 0.2f;//최소 지형 이격거리
 	[HideInInspector] public float groundDegree = 50;//지형으로 판정되는 각도
 
 	//해당 면의 노말이 땅인가?
@@ -189,24 +189,26 @@ public class UnitCharacter : Unit
 				if (hit.distance - rayGroundOffset > -rayGroundOffset*0.5f)//논리적으로 우항은 0이어야 하지만 약간 완화
 						isAllRayOverFoot = false;
 
-				//dist값 업데이트
+				//dist값 업데이트, 지형 노말인 Ray만 groundRay로 쳐줌
 				float distNow = hit.distance - rayGroundOffset;
-				if (distNow < dist) {
+				if (distNow < dist && IsGroundNormal(hit.normal)) {
 					dist = distNow;
-					//지형에 닿은 Ray만 groundRay로 쳐줌
-					if (isSetRayHit && IsGroundNormal(hit.normal)) raycastHitGround = hit;
+					
+					if (isSetRayHit) raycastHitGround = hit;
 				}
 
 				//땅에 닿는 hit의 노말을 currentNormal에 업데이트
 				//if (distNow <= groundDist) currentNormal = hit.normal;
 
-				/*	
+				/*
 				Color color;
 				if (dist < 0) color = Color.blue;
 				else color = Color.red;
 				Debug.DrawLine(origin, hit.point, color);
 				*/
-				
+
+
+
 			}
 			if (hits.Length == 0)
 				isAllRayOverFoot = false;

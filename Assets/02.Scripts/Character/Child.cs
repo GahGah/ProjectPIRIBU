@@ -41,9 +41,11 @@ public class ChildGround : ChildState {
 
 	float heroXRand;
 	float timer;
+	float safetyDistance;
 	public override void Enter() {
 		moveStat.verticalSpeed = 0;
 		timer = 0;
+		safetyDistance = Random.RandomRange(0.5f, 1.5f);//추락지점 이격거리
 	}
 	public override void Execute() {
 		
@@ -66,7 +68,6 @@ public class ChildGround : ChildState {
 		//좌우이동 인공지능
 		int moveDir = 0;
 		float followStartDist = 0.3f;//이동 시작하는 최소값
-		float safetyDistance = 1.5f;//추락지점 이격거리
 
 		//범위 안에 들어와있고 캐릭터 추적모드일때만 이동
 		if (unit.IsInSensor(hero.unit.transform.position) && child.isFollowHero) {

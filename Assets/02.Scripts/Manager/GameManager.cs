@@ -75,6 +75,13 @@ public class GameManager : SingleTon<GameManager>
 		childsRange = new Rect();
 	}
 
+	//임시 배경음 재생
+	private void Start() {
+		AudioSource audioSource = GetComponent<AudioSource>();
+		if (!audioSource.isPlaying)
+			audioSource.Play();
+	}
+
 
 	private void Update() {
 		//ESC키 누르면 임의 리셋
