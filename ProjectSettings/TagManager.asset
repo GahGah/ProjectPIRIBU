@@ -27,7 +27,7 @@ TagManager:
   - OneWayForDynamics
   - InteractionObject
   - NoCollision
-  - 
+  - Sensor
   - 
   - 
   - 

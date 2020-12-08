@@ -22,6 +22,10 @@ public class PiriManager : SingleTon<PiriManager>
     public bool isReadyToUse; //사용 준비 됨?
     [SerializeField]
     private float pressTimer;
+
+    [Tooltip("Sensor레이어 제외를 위한 layerMask ")]
+    int layerMask;
+    private bool isChildFollow;
     public int getTotalPiriUseCount
     {
         get
@@ -33,9 +37,21 @@ public class PiriManager : SingleTon<PiriManager>
     protected override void Awake()
     {
         base.Awake();
-        //Init();
+        Init();
         pressTimer = 0f;
 
+    }
+    protected override void Init()
+    {
+        //base.Init();
+
+
+        //defaultPiriEnergy = 3;
+        //totalPiriUseCount = 0;
+
+        layerMask= (1 << LayerMask.NameToLayer("Sensor"));
+        layerMask = ~layerMask;
+        isChildFollow = true;
     }
 
     //private void Start()
@@ -52,10 +68,17 @@ public class PiriManager : SingleTon<PiriManager>
 
             pressTimer += Time.smoothDeltaTime;
         }
-        else
+        if (InputManager.instance.buttonCtrl.wasReleasedThisFrame)
         {
 
             pressTimer = 0f;
+        }
+
+        if (InputManager.instance.buttonChildFollow.wasPressedThisFrame)
+        {
+            isChildFollow = !isChildFollow;
+            Debug.Log("일단 아이들 따라오기 : " + isChildFollow);
+            GameManager.instance.SetChildFollow(isChildFollow);
         }
 
         if (pressTimer>=ctrlInputTime)
@@ -68,7 +91,7 @@ public class PiriManager : SingleTon<PiriManager>
                 //Ray2D ray = Camera.main.ScreenToWorldPoint(InputManager.instance.GetMouseCurrentPosition());
                 Debug.Log("POS :" + InputManager.instance.GetMouseCurrentPosition());
 
-                RaycastHit2D hit = Physics2D.Raycast(_tempPos, Vector2.zero, 0f);
+                RaycastHit2D hit = Physics2D.Raycast(_tempPos, Vector2.zero, 0f,layerMask);
 
 
                 if (hit.collider !=null) 
@@ -85,12 +108,6 @@ public class PiriManager : SingleTon<PiriManager>
             isReadyToUse = false;
         }
 
-    }
-    protected override void Init()
-    {
-        base.Init();
-        defaultPiriEnergy = 3;
-        totalPiriUseCount = 0;
     }
 
     /// <summary>
@@ -161,9 +178,10 @@ public class PiriManager : SingleTon<PiriManager>
 
     public void SolveThisObject(GameObject _solveObj)
     {
-
+        Debug.Log("Select Object name : " + _solveObj.name);
         if (_solveObj.GetComponent<PulleyPlatform>() != null)
         {
+            Debug.Log("OK~ go Solved!");
             var _test = _solveObj.GetComponent<PulleyPlatform>();
             _test.selectState = ESelectState.SOLVED;
         }

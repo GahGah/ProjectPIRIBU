@@ -7,26 +7,41 @@ using UnityEngine.InputSystem.Controls;
 //모든 입력 관리
 public class InputManager : SingleTon<InputManager>
 {
-    public ButtonControl buttonUp = Keyboard.current.wKey;
-    public ButtonControl buttonLeft = Keyboard.current.aKey;
-    public ButtonControl buttonDown = Keyboard.current.sKey;
-    public ButtonControl buttonRight = Keyboard.current.dKey;
-    public ButtonControl buttonJump = Keyboard.current.spaceKey;
-    public ButtonControl buttonMouseLeft = Mouse.current.leftButton;
-    public ButtonControl buttonCtrl = Keyboard.current.ctrlKey;
-    public ButtonControl buttonPause = Keyboard.current.escapeKey;
-    public ButtonControl buttonCatch = Keyboard.current.leftShiftKey;
-    public Vector2Control buttonScroll = Mouse.current.scroll;
+    public ButtonControl buttonUp;// = Keyboard.current.wKey;
+    public ButtonControl buttonLeft; //= Keyboard.current.aKey;
+    public ButtonControl buttonDown;// = Keyboard.current.sKey;
+    public ButtonControl buttonRight; //= Keyboard.current.dKey;
+    public ButtonControl buttonJump;// = Keyboard.current.spaceKey;
+    public ButtonControl buttonMouseLeft;// = Mouse.current.leftButton;
+    public ButtonControl buttonCtrl;// = Keyboard.current.ctrlKey;
+    public ButtonControl buttonPause;// = Keyboard.current.escapeKey;
+    public ButtonControl buttonCatch; //= Keyboard.current.leftShiftKey;
+    public Vector2Control buttonScroll;// = Mouse.current.scroll;
+
+    public ButtonControl buttonChildFollow;
 
     private Vector2 mouseCurrentPosition = Vector2.zero;
 
-    private void Awake()
+    protected override void Awake()
     {
         base.Awake();
     }
     protected override void Init()
     {
         base.Init();
+
+        buttonUp = Keyboard.current.wKey;
+        buttonLeft = Keyboard.current.aKey;
+        buttonDown = Keyboard.current.sKey;
+        buttonRight = Keyboard.current.dKey;
+        buttonJump = Keyboard.current.spaceKey;
+        buttonMouseLeft = Mouse.current.leftButton;
+        buttonCtrl = Keyboard.current.ctrlKey;
+        buttonPause = Keyboard.current.escapeKey;
+        buttonCatch = Keyboard.current.leftShiftKey;
+        buttonScroll = Mouse.current.scroll;
+        buttonChildFollow = Keyboard.current.qKey;
+
     }
     /// <summary>
     /// 해당 버튼의 세팅을 변경합니다.

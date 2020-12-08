@@ -209,7 +209,7 @@ GameObject:
   - component: {fileID: 1818470572680679543}
   - component: {fileID: 1818470572680679542}
   - component: {fileID: 1818470572680679529}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: Sensor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -305,8 +305,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3b842c4af6163241be9b8745dfe3a68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  radious: 1
   linearPlatforms: []
   InteractionObjects: []
+  characters: []
 --- !u!1 &5722792225312363772
 GameObject:
   m_ObjectHideFlags: 0
@@ -353,7 +355,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 274e8a1060068184bb3dbf59dd9b3dd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parent: {fileID: 0}
+  liftParent: {fileID: 0}
   childs: []
   coll: {fileID: 0}
   rigid: {fileID: 0}
@@ -363,6 +365,7 @@ MonoBehaviour:
   standardPos: {x: -13.085081, y: 6.3382864, z: 0}
   deltaPos: {x: 0, y: 0, z: 0}
   nextPos: {x: -15.671954, y: 0.3473752, z: 0}
+  deltaPosFromParent: {x: 0, y: 0, z: 0}
   preScale: {x: 1, y: 1, z: 1}
   currScale: {x: 1, y: 1, z: 1}
   standardScale: {x: 1, y: 1, z: 1}
@@ -380,6 +383,7 @@ MonoBehaviour:
     m_Bits: 28672
   character: {fileID: 0}
   IgnoreColliders: []
+  isGrounded: 0
   foot: {fileID: 1818470571671186697}
   body: {fileID: 1818470571640107175}
   sensor: {fileID: 1818470572680679529}
@@ -397,7 +401,7 @@ MonoBehaviour:
     modelSide: 1
     jumpSpeed: 18
     fallSpeed: 0.9
-  groundDegree: 50
   groundForward: {x: 0, y: -0}
   groundDist: 0.5
+  groundDegree: 50
   interactionObject: {fileID: 0}
