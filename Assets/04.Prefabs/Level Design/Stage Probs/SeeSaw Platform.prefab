@@ -192,8 +192,8 @@ MonoBehaviour:
   fixedUpdatePerSec: 0
   isOneWay: 1
   targetAngle: 0
-  recoveryPower: 40
-  weight: 15
+  recoveryPower: 35
+  weight: 13
 --- !u!114 &7413296386579818432
 MonoBehaviour:
   m_ObjectHideFlags: 0
