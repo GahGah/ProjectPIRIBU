@@ -13334,6 +13334,11 @@ PrefabInstance:
       propertyPath: m_Size.x
       value: 3.1278367
       objectReference: {fileID: 0}
+    - target: {fileID: 3016624106477434710, guid: 076abeba19039ec4bba2a6db129e2ba9,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 14
+      objectReference: {fileID: 0}
     - target: {fileID: 3016624106477434711, guid: 076abeba19039ec4bba2a6db129e2ba9,
         type: 3}
       propertyPath: routeList.Array.size
@@ -13362,7 +13367,7 @@ PrefabInstance:
     - target: {fileID: 3016624106618818277, guid: 076abeba19039ec4bba2a6db129e2ba9,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 16
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3016624106618818282, guid: 076abeba19039ec4bba2a6db129e2ba9,
         type: 3}
