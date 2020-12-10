@@ -5,10 +5,10 @@ using UnityEngine.UI;
 
 /// <summary>
 /// UI를 관리하는 매니저...
+/// 역할별로 나누려다가 그냥 통합했습니다.
 /// </summary>
 public class UIManager : SingleTon<UIManager>
 {
-
 
     protected override void Awake()
     {
@@ -25,19 +25,26 @@ public class UIManager : SingleTon<UIManager>
     private void Start()
     {
         StartCoroutine(InitCursor());
-        StartCoroutine(ProcessPiriImage());
+        StartCoroutine(ProcessPiriMask());
+        StartCoroutine(ProcessPiriGaugeImage());
     }
     private void Update()
     {
-
         currentPiriFilledSpeed = 1f/piriFilledSpeed;
     }
 
 
-    #region 피리 HUD 부분
+    #region HUDManager
+
+    public bool isCanChangeHUD;
+
+    private bool isCanMaskChange;
     [Header("피리")]
     [Tooltip("피리 게이지 채워지는 부분의 이미지")]
     public Image piriFilledImage;
+
+    [Tooltip("피리 마스크 이미지.")]
+    public Image piriMaskImage;
 
     [Tooltip("몇 초 동안 변화할 것인가.")]
     public float piriFilledSpeed;
@@ -56,11 +63,13 @@ public class UIManager : SingleTon<UIManager>
     public float realTimer = 0f;
     public void Button_MinusOnePiriEnergy()
     {
-        PiriManager.Instance.currentPiriEnergy -= 1;
+        PiriManager.Instance.TEST_PIRICOUNTMINUSONE();
     }
 
     private void PiriInit()
     {
+        isCanMaskChange = false;
+        isCanChangeHUD = true;
         oldPiriImagePer = PiriManager.Instance.currentPiriEnergyPer;
         piriUITimer = 0f;
 
@@ -76,30 +85,51 @@ public class UIManager : SingleTon<UIManager>
         piriHighColor = new Color32(146, 237, 137, 255);
         piriLowColor = new Color32(255, 88, 88, 255);
     }
-    private IEnumerator ProcessPiriImage()
+
+    private IEnumerator ProcessPiriMask()
     {
-        while (true)
+        while (isCanChangeHUD)
+        {
+            if (PiriManager.Instance.ctrlInputPer>0f)
+            {
+                piriMaskImage.fillAmount = PiriManager.Instance.ctrlInputPer;
+                Debug.Log(PiriManager.Instance.ctrlInputPer);
+            }
+            else if (PiriManager.Instance.ctrlInputPer <=0f&&isCanMaskChange)
+            {
+                piriMaskImage.fillAmount = 0f;
+            }
+            else
+            {
+
+            }
+           
+            yield return YieldInstructionCache.WaitForEndOfFrame;
+        }
+    }
+        
+    private IEnumerator ProcessPiriGaugeImage()
+    {
+        while (isCanChangeHUD)
         {
             if (PiriManager.Instance.currentPiriEnergyPer != oldPiriImagePer)
             {
-                yield return StartCoroutine(LerpOldPiriImagerPer());
+                yield return StartCoroutine(LerpOldPiriGaugeImagePer());
             }
             yield return YieldInstructionCache.WaitForEndOfFrame;
         }
 
     }
 
-
-
-    private IEnumerator LerpOldPiriImagerPer()
+    private IEnumerator LerpOldPiriGaugeImagePer()
     {
-        Debug.Log("Update...");
         piriUITimer = 0f;
         realTimer = 0f;
 
         float tempImagePer = oldPiriImagePer;
         while (Mathf.Abs(PiriManager.Instance.currentPiriEnergyPer - oldPiriImagePer) > 0.005f)
         {
+            isCanMaskChange = false;
             piriUITimer += Time.smoothDeltaTime * currentPiriFilledSpeed;
             realTimer += Time.smoothDeltaTime;
             oldPiriImagePer = Mathf.Lerp(tempImagePer, PiriManager.Instance.currentPiriEnergyPer, piriUITimer);
@@ -114,12 +144,14 @@ public class UIManager : SingleTon<UIManager>
         oldPiriImagePer = PiriManager.Instance.currentPiriEnergyPer;
         piriFilledImage.color = Color32.Lerp(piriLowColor, piriHighColor, oldPiriImagePer);
         piriFilledImage.fillAmount = oldPiriImagePer;
-        Debug.Log("UpdateComplete!");
+        yield return new WaitForSeconds(1f);
+        isCanMaskChange = true;
+        PiriManager.Instance.ctrlInputPer = 0f;
     }
 
     #endregion
 
-    #region 커서 부분
+    #region CursorManager
 
     [Header("마우스 커서")]
 
@@ -136,7 +168,6 @@ public class UIManager : SingleTon<UIManager>
     }
     IEnumerator InitCursor()
     {
-
         yield return YieldInstructionCache.WaitForEndOfFrame;
         Cursor.SetCursor(cursorTextures[0], hotspot, CursorMode.Auto);
         //Cursor.SetCursor(cursorTexture, hotspot, );

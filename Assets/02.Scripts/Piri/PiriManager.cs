@@ -13,15 +13,18 @@ public class PiriManager : SingleTon<PiriManager>
     public int currentPiriEnergy; //현재 능력 사용 가능 횟수
 
 
-    [Tooltip("현재 남은 피리 능력 사용 가능 횟수를 퍼센트로 표시.")]
+    [Tooltip("현재 남은 피리 능력 사용 가능 횟수를 퍼센트로 표시."), HideInInspector]
     public float currentPiriEnergyPer;
     [Tooltip("컨트롤키 꾹 누르는 시간")]
     public float ctrlInputTime;
 
+    [Tooltip("컨트롤키 꾹 누르는 시간의...그...퍼센트를 반환."), HideInInspector]
+    public float ctrlInputPer;
+
     [Tooltip("피리 능력 총 사용 횟수")]
     private int totalPiriUseCount;
 
-
+    private bool isCanAddedPressTimer;
 
     public bool isReadyToUse; //사용 준비 됨?
 
@@ -53,10 +56,11 @@ public class PiriManager : SingleTon<PiriManager>
     {
         //base.Init();
 
-        
+        isCanAddedPressTimer = true;
         //defaultPiriEnergy = 3;
         //totalPiriUseCount = 0;
 
+        ctrlInputPer = 0f;
         layerMask = (1 << LayerMask.NameToLayer("Sensor"));
         layerMask = ~layerMask;
         isChildFollow = true;
@@ -66,6 +70,11 @@ public class PiriManager : SingleTon<PiriManager>
         defaultPiriEnergy = 5;
         currentPiriEnergy = defaultPiriEnergy;
         isShouldUseChild = false;
+
+        if (ctrlInputTime <= 0f)
+        {
+            ctrlInputTime = 1f;
+        }
     }
 
     private void Update()
@@ -74,16 +83,22 @@ public class PiriManager : SingleTon<PiriManager>
     }
     private void PiriProcess()
     {
-        if (InputManager.instance.buttonCtrl.isPressed)
+        if (InputManager.instance.buttonCtrl.isPressed && isCanAddedPressTimer)
         {
             //Debug.Log("isTrue");
 
             pressTimer += Time.smoothDeltaTime;
+            ctrlInputPer = 1f * pressTimer / ctrlInputTime;
         }
+
         if (InputManager.instance.buttonCtrl.wasReleasedThisFrame)
         {
-
+            if (!isCanAddedPressTimer)
+            {
+                isCanAddedPressTimer = true;
+            }
             pressTimer = 0f;
+            ctrlInputPer = 1f * pressTimer / ctrlInputTime;
         }
 
         if (InputManager.instance.buttonChildFollow.wasPressedThisFrame)
@@ -96,9 +111,10 @@ public class PiriManager : SingleTon<PiriManager>
         if (pressTimer >= ctrlInputTime)
         {
             isReadyToUse = true;
-           
+
             if (InputManager.instance.buttonMouseLeft.wasPressedThisFrame)
             {
+
 
                 Vector2 _tempPos = Camera.main.ScreenToWorldPoint(InputManager.instance.GetMouseCurrentPosition());
                 Debug.Log("POS :" + InputManager.instance.GetMouseCurrentPosition());
@@ -111,6 +127,8 @@ public class PiriManager : SingleTon<PiriManager>
                     SolveThisObject(hit.collider.gameObject);
                 }
 
+
+
             }
         }
         else
@@ -119,6 +137,7 @@ public class PiriManager : SingleTon<PiriManager>
         }
 
         currentPiriEnergyPer = 1f * currentPiriEnergy / maxPiriEnergy;
+
     }
 
     /// <summary>
@@ -153,6 +172,83 @@ public class PiriManager : SingleTon<PiriManager>
     }
 
 
+    public void TEST_PIRICOUNTMINUSONE()
+    {
+        if (currentPiriEnergy > 0)
+        {
+            currentPiriEnergy -= 1;
+        }
+        else
+        {
+            isShouldUseChild = true;
+
+            if (GameManager.Instance.childs[0].enabled != false)
+            {
+                GameManager.Instance.childs[GameManager.Instance.childs.Count - 1].gameObject.SetActive(false);
+
+                GameManager.Instance.childs.Remove(GameManager.Instance.childs[GameManager.Instance.childs.Count - 1]);
+
+            }
+
+
+
+        }
+    }
+    public void SolveThisObject(GameObject _solveObj)
+    {
+
+        if (currentPiriEnergy <= 0)
+        {
+            return;
+        }
+        bool tempOK = false;
+        Debug.Log("Select Object name : " + _solveObj.name);
+        if (_solveObj.GetComponent<PulleyPlatform>() != null)
+        {
+            Debug.Log("OK~ go Solved!");
+            var _test = _solveObj.GetComponent<PulleyPlatform>();
+            _test.selectState = ESelectState.SOLVED;
+            tempOK = true;
+        }
+        else if (_solveObj.GetComponent<WindmillPlatform>() != null)
+        {
+            var _test = _solveObj.GetComponent<WindmillPlatform>();
+            _test.selectState = ESelectState.SOLVED;
+            tempOK = true;
+        }
+        else
+        {
+            Debug.Log("yeah");
+        }
+
+        if (tempOK)
+        {
+            if (currentPiriEnergy > 0)
+            {
+                currentPiriEnergy -= 1;
+            }
+            else
+            {
+                isShouldUseChild = true;
+
+                if (GameManager.Instance.childs[0].enabled != false)
+                {
+                    GameManager.Instance.childs[GameManager.Instance.childs.Count - 1].gameObject.SetActive(false);
+
+                    GameManager.Instance.childs.Remove(GameManager.Instance.childs[GameManager.Instance.childs.Count - 1]);
+
+                }
+
+
+
+            }
+        }
+
+        isCanAddedPressTimer = false;
+        pressTimer = 0f;
+
+
+    }
     private IEnumerator ProcessPiriEnergy()
     {
         while (true)
@@ -182,25 +278,5 @@ public class PiriManager : SingleTon<PiriManager>
     }
 
 
-    public void SolveThisObject(GameObject _solveObj)
-    {
-        Debug.Log("Select Object name : " + _solveObj.name);
-        if (_solveObj.GetComponent<PulleyPlatform>() != null)
-        {
-            Debug.Log("OK~ go Solved!");
-            var _test = _solveObj.GetComponent<PulleyPlatform>();
-            _test.selectState = ESelectState.SOLVED;
-        }
-        else if (_solveObj.GetComponent<WindmillPlatform>() != null)
-        {
-            var _test = _solveObj.GetComponent<WindmillPlatform>();
-            _test.selectState = ESelectState.SOLVED;
-        }
-        else
-        {
-            Debug.Log("yeah");
-        }
-
-    }
 
 }
