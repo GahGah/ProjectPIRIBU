@@ -21,7 +21,6 @@ public class InputManager : SingleTon<InputManager>
     public ButtonControl buttonChildFollow;
 
     private Vector2 mouseCurrentPosition = Vector2.zero;
-
     protected override void Awake()
     {
         base.Awake();
