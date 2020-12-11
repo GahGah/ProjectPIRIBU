@@ -83,7 +83,7 @@ public class PiriManager : SingleTon<PiriManager>
     }
     private void PiriProcess()
     {
-        if (InputManager.instance.buttonCtrl.isPressed && isCanAddedPressTimer)
+        if (InputManager.Instance.buttonCtrl.isPressed && isCanAddedPressTimer)
         {
             //Debug.Log("isTrue");
 
@@ -91,7 +91,7 @@ public class PiriManager : SingleTon<PiriManager>
             ctrlInputPer = 1f * pressTimer / ctrlInputTime;
         }
 
-        if (InputManager.instance.buttonCtrl.wasReleasedThisFrame)
+        if (InputManager.Instance.buttonCtrl.wasReleasedThisFrame)
         {
             if (!isCanAddedPressTimer)
             {
@@ -101,23 +101,23 @@ public class PiriManager : SingleTon<PiriManager>
             ctrlInputPer = 1f * pressTimer / ctrlInputTime;
         }
 
-        if (InputManager.instance.buttonChildFollow.wasPressedThisFrame)
+        if (InputManager.Instance.buttonChildFollow.wasPressedThisFrame)
         {
             isChildFollow = !isChildFollow;
             Debug.Log("일단 아이들 따라오기 : " + isChildFollow);
-            GameManager.instance.SetChildFollow(isChildFollow);
+            GameManager.Instance.SetChildFollow(isChildFollow);
         }
 
         if (pressTimer >= ctrlInputTime)
         {
             isReadyToUse = true;
 
-            if (InputManager.instance.buttonMouseLeft.wasPressedThisFrame)
+            if (InputManager.Instance.buttonMouseLeft.wasPressedThisFrame)
             {
 
 
-                Vector2 _tempPos = Camera.main.ScreenToWorldPoint(InputManager.instance.GetMouseCurrentPosition());
-                Debug.Log("POS :" + InputManager.instance.GetMouseCurrentPosition());
+                Vector2 _tempPos = Camera.main.ScreenToWorldPoint(InputManager.Instance.GetMouseCurrentPosition());
+                Debug.Log("POS :" + InputManager.Instance.GetMouseCurrentPosition());
 
                 RaycastHit2D hit = Physics2D.Raycast(_tempPos, Vector2.zero, 0f, layerMask);
 
@@ -254,14 +254,14 @@ public class PiriManager : SingleTon<PiriManager>
         while (true)
         {
 
-            if (isReadyToUse && InputManager.instance.buttonMouseLeft.wasPressedThisFrame // and 꾹누르는 시간이 있다면 pressTimer >시간 
+            if (isReadyToUse && InputManager.Instance.buttonMouseLeft.wasPressedThisFrame // and 꾹누르는 시간이 있다면 pressTimer >시간 
                 )
             {
-                Debug.Log(InputManager.instance.GetMouseCurrentPosition());
+                Debug.Log(InputManager.Instance.GetMouseCurrentPosition());
 
                 //use 피리능력.       
 
-                Ray ray = Camera.main.ScreenPointToRay(InputManager.instance.GetMouseCurrentPosition());
+                Ray ray = Camera.main.ScreenPointToRay(InputManager.Instance.GetMouseCurrentPosition());
                 RaycastHit hit;
                 if (Physics.Raycast(ray, out hit, 10000f))
                 {

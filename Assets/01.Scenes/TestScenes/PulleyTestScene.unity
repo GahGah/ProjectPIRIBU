@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -137,7 +137,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &47953693
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -439,7 +439,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &204814129
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -674,7 +674,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &359476113
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -758,7 +758,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &387253465
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -874,7 +874,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &675730293
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1070,7 +1070,7 @@ PrefabInstance:
     - target: {fileID: 3016624105812731479, guid: 076abeba19039ec4bba2a6db129e2ba9,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3016624106477434711, guid: 076abeba19039ec4bba2a6db129e2ba9,
         type: 3}
@@ -1347,7 +1347,7 @@ PrefabInstance:
     - target: {fileID: 3016624105812731479, guid: 076abeba19039ec4bba2a6db129e2ba9,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3016624106477434711, guid: 076abeba19039ec4bba2a6db129e2ba9,
         type: 3}
@@ -1409,7 +1409,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &1083167228
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1834,7 +1834,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &1208564540
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1935,7 +1935,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &1414095898
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2186,7 +2186,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &1478651110
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2319,6 +2319,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 2246656992615568739, guid: b68a17cae8f35bb46975819cb916e619,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b68a17cae8f35bb46975819cb916e619, type: 3}
 --- !u!1 &1485878150
@@ -2339,7 +2344,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1485878151
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2466,7 +2471,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &1660483595
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2550,7 +2555,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &1682655676
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2869,7 +2874,7 @@ PrefabInstance:
     - target: {fileID: 3016624105812731479, guid: 076abeba19039ec4bba2a6db129e2ba9,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3016624106477434711, guid: 076abeba19039ec4bba2a6db129e2ba9,
         type: 3}
@@ -2938,7 +2943,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &1967485165
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3042,7 +3047,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2134706308
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3055,12 +3060,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1d5ae153b2a4584996386dc32b77f86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxPiriEnergy: 10
   defaultPiriEnergy: 3
   currentPiriEnergy: 0
-  maxPiriEnergy: 10
+  currentPiriEnergyPer: 0
   ctrlInputTime: 3
+  ctrlInputPer: 0
   isReadyToUse: 0
   pressTimer: 0
+  isShouldUseChild: 0
 --- !u!4 &2134706309
 Transform:
   m_ObjectHideFlags: 0
@@ -3229,7 +3237,7 @@ PrefabInstance:
     - target: {fileID: 3016624105812731479, guid: 076abeba19039ec4bba2a6db129e2ba9,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3016624106477434711, guid: 076abeba19039ec4bba2a6db129e2ba9,
         type: 3}
@@ -3274,6 +3282,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Pulley Button
+      objectReference: {fileID: 0}
+    - target: {fileID: 848237326345949223, guid: 7632e10789adbc54ea0bb45464698ec7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8324150908136677929, guid: 7632e10789adbc54ea0bb45464698ec7,
         type: 3}
@@ -3444,7 +3457,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &6661974340234346859
 MonoBehaviour:
   m_ObjectHideFlags: 0

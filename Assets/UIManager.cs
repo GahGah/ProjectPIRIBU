@@ -9,16 +9,19 @@ using UnityEngine.UI;
 /// </summary>
 public class UIManager : SingleTon<UIManager>
 {
-
+    public Slider MasterVolumeSilder;
+    public Slider BgmVolumeSlider;
+    public Slider SfxVolimeSlider;
     protected override void Awake()
     {
         base.Awake();
-        Init();
+        //Init();
     }
-
     protected override void Init()
     {
+        base.Init();
         CursorInit();
+        CanvasObjectDictSetting();
         PiriInit();
 
     }
@@ -27,12 +30,74 @@ public class UIManager : SingleTon<UIManager>
         StartCoroutine(InitCursor());
         StartCoroutine(ProcessPiriMask());
         StartCoroutine(ProcessPiriGaugeImage());
-    }
-    private void Update()
-    {
-        currentPiriFilledSpeed = 1f/piriFilledSpeed;
+
     }
 
+    #region CanvasManager
+
+    public List<GameObject> canvasObjectList;
+    private Dictionary<string, GameObject> canvasObjectDict;
+
+
+    private void CanvasObjectDictSetting()
+    {
+        Debug.Log("CanvasObjectDictSetting...");
+        canvasObjectDict = new Dictionary<string, GameObject>();
+        foreach (var item in canvasObjectList)
+        {
+            canvasObjectDict.Add(item.gameObject.name, item.gameObject);
+            Debug.Log("딕셔너리 추가! 키 : " + canvasObjectDict[item.gameObject.name]);
+
+        }
+    }
+
+    public void GoQuit()
+    {
+        Application.Quit();
+    }
+    public void SetActiveThisCanvasObject(string _name, bool _act)
+    {
+        canvasObjectDict[_name].SetActive(_act);
+    }
+
+    public void SetActiveThisObject(GameObject _gameObject, bool _act)
+    {
+        _gameObject.SetActive(_act);
+    }
+    public void ActiveToggleThisCanvasObject(string _name)
+    {
+        canvasObjectDict[_name].SetActive(!canvasObjectDict[_name].activeInHierarchy);
+    }
+    public void ActiveToggleThisObject(GameObject _gameObject)
+    {
+        _gameObject.SetActive(!_gameObject.activeInHierarchy);
+    }
+
+    public void SetActiveTrueOnlyThisCanvasObject(string _name)
+    {
+
+        GameObject _tempObject = canvasObjectDict[_name];
+
+        foreach (var item in canvasObjectList)
+        {
+            if (item.gameObject == _tempObject)
+            {
+                item.gameObject.SetActive(true);
+                continue;
+            }
+
+            if (item.gameObject.activeInHierarchy == true)
+            {
+                item.gameObject.SetActive(false);
+            }
+            else
+            {
+                continue;
+            }
+        }
+    }
+
+    #endregion
 
     #region HUDManager
 
@@ -80,22 +145,23 @@ public class UIManager : SingleTon<UIManager>
 
         currentPiriFilledSpeed = 1f / piriFilledSpeed;
 
-        piriFilledImage.color = new Color32(146,237,137,255);
+        piriFilledImage.color = new Color32(146, 237, 137, 255);
 
         piriHighColor = new Color32(146, 237, 137, 255);
         piriLowColor = new Color32(255, 88, 88, 255);
+
     }
 
     private IEnumerator ProcessPiriMask()
     {
         while (isCanChangeHUD)
         {
-            if (PiriManager.Instance.ctrlInputPer>0f)
+            if (PiriManager.Instance.ctrlInputPer > 0f)
             {
                 piriMaskImage.fillAmount = PiriManager.Instance.ctrlInputPer;
                 Debug.Log(PiriManager.Instance.ctrlInputPer);
             }
-            else if (PiriManager.Instance.ctrlInputPer <=0f&&isCanMaskChange)
+            else if (PiriManager.Instance.ctrlInputPer <= 0f && isCanMaskChange)
             {
                 piriMaskImage.fillAmount = 0f;
             }
@@ -103,11 +169,11 @@ public class UIManager : SingleTon<UIManager>
             {
 
             }
-           
+
             yield return YieldInstructionCache.WaitForEndOfFrame;
         }
     }
-        
+
     private IEnumerator ProcessPiriGaugeImage()
     {
         while (isCanChangeHUD)
@@ -155,8 +221,8 @@ public class UIManager : SingleTon<UIManager>
 
     [Header("마우스 커서")]
 
-    [Tooltip("마우스 커서를 변경해도 될까? "), SerializeField]
-    private bool isCanChangeCursor;
+    [Tooltip("마우스 커서를 변경해도 될까? "),HideInInspector]
+    public bool isCanChangeCursor;
     Vector2 hotspot;
     public Texture2D[] cursorTextures;
 
@@ -176,19 +242,28 @@ public class UIManager : SingleTon<UIManager>
 
     IEnumerator ChangeCursor()
     {
-        while (isCanChangeCursor)
+        while (true)
         {
-            if (InputManager.instance.buttonMouseLeft.wasPressedThisFrame)
+            if (isCanChangeCursor)
             {
-                Cursor.SetCursor(cursorTextures[1], hotspot, CursorMode.Auto);
-            }
-            else if (InputManager.instance.buttonMouseLeft.wasReleasedThisFrame)
-            {
-                Cursor.SetCursor(cursorTextures[0], hotspot, CursorMode.Auto);
+                if (InputManager.instance.buttonMouseLeft.wasPressedThisFrame)
+                {
+                    Cursor.SetCursor(cursorTextures[1], hotspot, CursorMode.Auto);
+                }
+                else if (InputManager.instance.buttonMouseLeft.wasReleasedThisFrame)
+                {
+                    Cursor.SetCursor(cursorTextures[0], hotspot, CursorMode.Auto);
+                }
+                else
+                {
+                    Cursor.SetCursor(cursorTextures[0], hotspot, CursorMode.Auto);
+                }
             }
             else
             {
+                Cursor.SetCursor(cursorTextures[2], hotspot, CursorMode.Auto);
             }
+           
 
             yield return YieldInstructionCache.WaitForEndOfFrame;
 

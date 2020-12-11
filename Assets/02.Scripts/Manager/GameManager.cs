@@ -37,6 +37,8 @@ public class GameManager : SingleTon<GameManager>
     [HideInInspector] public Hero hero;
     [HideInInspector] public Rect childsRange;
 
+    [Tooltip("피리 UI를 띄울 위치입니다. 건들지마~")]
+    public Transform piriUIPosition;
     protected override void Awake()
     {
         base.Awake();//여기서 Init한다.
