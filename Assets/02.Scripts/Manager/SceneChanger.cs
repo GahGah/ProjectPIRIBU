@@ -4,8 +4,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class SceneChanger : SingleTon<SceneChanger>
+public class SceneChanger : MonoBehaviour
 {
+    [Tooltip("Destroy를 하고 싶지 않아서 독자적인 싱글턴 사용")]
+    public static SceneChanger Instance;
 
     public Image loadingBarImage;
     public CanvasGroup canvasGroup;
@@ -24,21 +26,21 @@ public class SceneChanger : SingleTon<SceneChanger>
     /// </summary>
     public bool isLoading;
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
+        Init();
     }
 
-    protected override void Init()
+    private void Init()
     {
-        base.Init();
         currentFadeSpeed = 1f / 2f;
         currentLoadingFadeSpeed = 1f / 2f;
         loadingBarImage.fillAmount = 0f;
-    }
-
-    private void Start()
-    {
     }
 
 
@@ -50,7 +52,7 @@ public class SceneChanger : SingleTon<SceneChanger>
         SceneManager.sceneLoaded += LoadSceneEnd;
         loadSceneName = _sceneName;
 
-        StartCoroutine(LoadSceneAsync(_sceneName, Color.black));
+        StartCoroutine(LoadingScene(_sceneName, Color.black));
 
     }
     private void LoadSceneEnd(Scene scene, LoadSceneMode loadSceneMode)
@@ -65,6 +67,8 @@ public class SceneChanger : SingleTon<SceneChanger>
             if (loadSceneName == "HomeScene")
             {
                 UIManager.Instance.SetActiveTrueOnlyThisCanvasObject("MainMenuCanvas");
+                UIManager.Instance.InitChildButtons();
+
 
             }
             else if (loadSceneName == "InGameScene")
@@ -81,33 +85,33 @@ public class SceneChanger : SingleTon<SceneChanger>
     /// <param name="_sceneName">로드하고 싶은 씬의 이름~</param>
     /// <param name="_fadeColor">어떤 색의 배경으로 페이드 인/페이드 아웃 할 것인가?</param>
     /// <returns></returns>
-    private IEnumerator LoadSceneAsync(string _sceneName, Color _fadeColor)
+    private IEnumerator LoadingScene(string _sceneName, Color _fadeColor)
     {
         whitePanel.gameObject.SetActive(true);
         loadingBarImage.gameObject.SetActive(true);
         whitePanel.color = _fadeColor;
         loadingBarImage.fillAmount = 0f;
-        loadingTimer = 0f;
 
         yield return StartCoroutine(FadeAlpha(0f, 1f));
-
 
         AsyncOperation loadOp = SceneManager.LoadSceneAsync(_sceneName);
         loadOp.allowSceneActivation = false;
 
-        while (loadOp.isDone==false)
+        loadingTimer = 0f;
+
+        while (loadOp.isDone == false)
         {
             yield return YieldInstructionCache.WaitForEndOfFrame;
             loadingTimer += Time.unscaledDeltaTime;
 
-            if (loadOp.progress<0.9f)
+            if (loadOp.progress < 0.9f)
             {
                 loadingBarImage.fillAmount = Mathf.Lerp(loadingBarImage.fillAmount, loadOp.progress, loadingTimer);
             }
             else
             {
                 loadingBarImage.fillAmount = Mathf.Lerp(loadingBarImage.fillAmount, 1f, loadingTimer);
-                if (loadingBarImage.fillAmount==1f)
+                if (loadingBarImage.fillAmount == 1f)
                 {
                     yield return new WaitForSecondsRealtime(1f);
                     loadOp.allowSceneActivation = true;
@@ -116,15 +120,15 @@ public class SceneChanger : SingleTon<SceneChanger>
             }
 
         }
-        
+
     }
 
-    private IEnumerator FadeAlphaCanvasGroup(float _startAlphaValue,float _endAlphaValue)
+    private IEnumerator FadeAlphaCanvasGroup(float _startAlphaValue, float _endAlphaValue)
     {
-        canvasGroup.alpha =_startAlphaValue;
+        canvasGroup.alpha = _startAlphaValue;
         float _tempAlpha = _startAlphaValue;
         fadeTimer = 0f;
-        while (canvasGroup.alpha!= _endAlphaValue)
+        while (canvasGroup.alpha != _endAlphaValue)
         {
             fadeTimer += Time.deltaTime * currentFadeSpeed;
             _tempAlpha = Mathf.Lerp(_startAlphaValue, _endAlphaValue, fadeTimer);
@@ -148,36 +152,39 @@ public class SceneChanger : SingleTon<SceneChanger>
     }
     private IEnumerator FadeAlpha(float _startAlphaValue, float _endAlphaValue)
     {
+        canvasGroup.alpha = 1f;
         whitePanel.canvasRenderer.SetAlpha(_startAlphaValue);
         float _tempAlpha = _startAlphaValue;
         fadeTimer = 0f;
-        while (whitePanel.canvasRenderer.GetAlpha()!=_endAlphaValue) 
+        while (whitePanel.canvasRenderer.GetAlpha() != _endAlphaValue)
         {
+            Debug.Log("Loading...");
             fadeTimer += Time.deltaTime * currentFadeSpeed;
             _tempAlpha = Mathf.Lerp(_startAlphaValue, _endAlphaValue, fadeTimer);
             whitePanel.canvasRenderer.SetAlpha(_tempAlpha);
 
             yield return YieldInstructionCache.WaitForEndOfFrame;
 
-            if (Mathf.Abs(whitePanel.canvasRenderer.GetAlpha()-_endAlphaValue)<=0.005f)
+            if (Mathf.Abs(whitePanel.canvasRenderer.GetAlpha() - _endAlphaValue) <= 0.005f)
             {
                 whitePanel.canvasRenderer.SetAlpha(_endAlphaValue);
             }
         }
 
 
-        if (_endAlphaValue ==0f)
+        if (_endAlphaValue == 0f)
         {
             whitePanel.gameObject.SetActive(false);
-         //   StartCoroutine(FadeAlphaLoadingBar(1f, 0f));
             loadingBarImage.gameObject.SetActive(false);
+
+            
         }
     }
 
     private IEnumerator FadeAlphaLoadingBar(float _startAlphaValue, float _endAlphaValue)
     {
 
-        if (_startAlphaValue==1f)
+        if (_startAlphaValue == 1f)
         {
             loadingBarImage.fillAmount = 1f;
         }

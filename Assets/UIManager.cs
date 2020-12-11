@@ -7,31 +7,41 @@ using UnityEngine.UI;
 /// UI를 관리하는 매니저...
 /// 역할별로 나누려다가 그냥 통합했습니다.
 /// </summary>
-public class UIManager : SingleTon<UIManager>
+public class UIManager : MonoBehaviour
 {
+    [Tooltip("Destroy를 하고 싶지 않아서 독자적인 싱글턴 사용")]
+    public static UIManager Instance;
+
     public Slider MasterVolumeSilder;
     public Slider BgmVolumeSlider;
     public Slider SfxVolimeSlider;
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
-        //Init();
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
+        Init();
     }
-    protected override void Init()
-    {
-        base.Init();
-        CursorInit();
-        CanvasObjectDictSetting();
-        PiriInit();
 
+    public void Init()
+    {
+        CursorInit();
+        PiriInit();
+        CanvasObjectDictSetting();
+        InitChildButtons();
     }
     private void Start()
     {
+
         StartCoroutine(InitCursor());
         StartCoroutine(ProcessPiriMask());
         StartCoroutine(ProcessPiriGaugeImage());
 
     }
+
+
     #region CanvasManager
 
     public List<GameObject> canvasObjectList;
@@ -40,19 +50,18 @@ public class UIManager : SingleTon<UIManager>
 
     private void CanvasObjectDictSetting()
     {
-        Debug.Log("CanvasObjectDictSetting...");
         canvasObjectDict = new Dictionary<string, GameObject>();
         foreach (var item in canvasObjectList)
         {
+
             canvasObjectDict.Add(item.gameObject.name, item.gameObject);
-            Debug.Log("딕셔너리 추가! 키 : " + canvasObjectDict[item.gameObject.name]);
 
         }
     }
 
     public void PauseToggle()
     {
-        SetActiveThisObject(canvasObjectDict["PopUpCanvas"], !canvasObjectDict["PopUpCanvas"].activeInHierarchy );
+        SetActiveThisObject(canvasObjectDict["PopUpCanvas"], !canvasObjectDict["PopUpCanvas"].activeInHierarchy);
         if (canvasObjectDict["PopUpCanvas"].activeInHierarchy)
         {
             GoPause();
@@ -64,6 +73,11 @@ public class UIManager : SingleTon<UIManager>
             SetActiveThisObject(canvasObjectDict["SettingsCanvas"], false);
         }
     }
+
+    public void GoGameStart()
+    {
+        SceneChanger.Instance.LoadScene("InGameScene");
+    }
     public void GoQuit()
     {
         Application.Quit();
@@ -73,7 +87,7 @@ public class UIManager : SingleTon<UIManager>
     {
 
         Time.timeScale = 0f;
-        
+
     }
 
     private void GoDePause()
@@ -184,7 +198,7 @@ public class UIManager : SingleTon<UIManager>
             if (PiriManager.Instance.ctrlInputPer > 0f)
             {
                 piriMaskImage.fillAmount = PiriManager.Instance.ctrlInputPer;
-                Debug.Log(PiriManager.Instance.ctrlInputPer);
+               // Debug.Log(PiriManager.Instance.ctrlInputPer);
             }
             else if (PiriManager.Instance.ctrlInputPer <= 0f && isCanMaskChange)
             {
@@ -246,7 +260,7 @@ public class UIManager : SingleTon<UIManager>
 
     [Header("마우스 커서")]
 
-    [Tooltip("마우스 커서를 변경해도 될까? "),HideInInspector]
+    [Tooltip("마우스 커서를 변경해도 될까? "), HideInInspector]
     public bool isCanChangeCursor;
     Vector2 hotspot;
     public Texture2D[] cursorTextures;
@@ -271,11 +285,11 @@ public class UIManager : SingleTon<UIManager>
         {
             if (isCanChangeCursor)
             {
-                if (InputManager.instance.buttonMouseLeft.wasPressedThisFrame)
+                if (InputManager.Instance.buttonMouseLeft.wasPressedThisFrame)
                 {
                     Cursor.SetCursor(cursorTextures[1], hotspot, CursorMode.Auto);
                 }
-                else if (InputManager.instance.buttonMouseLeft.wasReleasedThisFrame)
+                else if (InputManager.Instance.buttonMouseLeft.wasReleasedThisFrame)
                 {
                     Cursor.SetCursor(cursorTextures[0], hotspot, CursorMode.Auto);
                 }
@@ -288,7 +302,7 @@ public class UIManager : SingleTon<UIManager>
             {
                 Cursor.SetCursor(cursorTextures[2], hotspot, CursorMode.Auto);
             }
-           
+
 
             yield return YieldInstructionCache.WaitForEndOfFrame;
 
@@ -297,4 +311,58 @@ public class UIManager : SingleTon<UIManager>
 
     #endregion
 
+    #region MainMenuChild
+
+    public Button[] childButtons;
+    [HideInInspector]
+    public int[] childClickCount;
+    public void InitChildButtons()
+    {
+        childClickCount = new int[3];
+        for (int i = 0; i < childClickCount.Length; i++)
+        {
+            childClickCount[i] = 0;
+        }
+        foreach (var item in childButtons)
+        {
+            item.interactable = true;
+            item.image.canvasRenderer.SetAlpha(1f);
+        }
+    }
+    public void DestroyChildToMainMenu(int _index)
+    {
+        if (childClickCount[_index] ==0)
+        {
+            childButtons[_index].interactable = false;
+            StartCoroutine(DestroyChild(childButtons[_index]));
+        }
+        else
+        {
+            childClickCount[_index] -= 1;
+
+        }
+    }
+
+    IEnumerator DestroyChild(Button _childButton)
+    {
+        Image _img = _childButton.image;
+
+        _img.canvasRenderer.SetAlpha(1f);
+        float _tempAlpha = 1f;
+        float timer = 0f;
+        while (_img.canvasRenderer.GetAlpha() != 0f)
+        {
+            timer += Time.deltaTime * (1f/2f);
+            _tempAlpha = Mathf.Lerp(1f, 0f, timer);
+            _img.canvasRenderer.SetAlpha(_tempAlpha);
+
+            yield return YieldInstructionCache.WaitForEndOfFrame;
+
+            if (Mathf.Abs(_img.canvasRenderer.GetAlpha() - 0f) <= 0.005f)
+            {
+                _img.canvasRenderer.SetAlpha(0f);
+            }
+        }
+    }
+    #endregion
 }

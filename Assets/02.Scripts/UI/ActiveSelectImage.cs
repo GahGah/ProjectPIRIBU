@@ -63,7 +63,6 @@ public class ActiveSelectImage : MonoBehaviour, IPointerEnterHandler, IPointerEx
     }
     private void OnEnable()
     {
-        Debug.Log("Enable");
         selectImage.fillAmount = 0f;
         goFillAmount = 0f;
         StartCoroutine(LerpImage());

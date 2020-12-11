@@ -30,7 +30,6 @@ public class OutsideAlphaController : MonoBehaviour
             alphaVal = 0f;
         }
         nowCoroutine = null;
-        Debug.Log(spriteRenderer.color);
         spriteRenderer.color = new Color(spriteRenderer.color.r, spriteRenderer.color.g, spriteRenderer.color.b, alphaVal);
     }
 

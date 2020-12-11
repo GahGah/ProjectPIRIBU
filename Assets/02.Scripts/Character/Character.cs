@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+#if UNITY_EDITOR
 using UnityEditor;
-using UnityEditor.UIElements;
+#endif
+//using UnityEditor.UIElements;
 using UnityEngine;
 
 /// <summary>
@@ -34,7 +36,9 @@ public class Character : MonoBehaviour
 			GUIStyle style = new GUIStyle();
 			style.alignment = TextAnchor.MiddleCenter;
 			style.fontSize = 10;
+#if UNITY_EDITOR
 			Handles.Label(transform.position+Vector3.up*1.5f, stateMachine.GetStateName());
+#endif
 
 		}
 	}
