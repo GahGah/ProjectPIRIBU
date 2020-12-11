@@ -73,9 +73,11 @@ public class GameManager : SingleTon<GameManager>
     private void Update()
     {
         //ESC키 누르면 임의 리셋
+        //2020-12-12 : 일시정지 창 나오게 햇음
         if (inputManager.buttonPause.wasPressedThisFrame)
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            UIManager.Instance.PauseToggle();
+           // SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
         UpdateChildRange();

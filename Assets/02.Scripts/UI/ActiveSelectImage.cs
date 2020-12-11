@@ -80,7 +80,7 @@ public class ActiveSelectImage : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
                 while (true)
                 {
-                    _tempTimer += Time.deltaTime * currentFilledSpeed;
+                    _tempTimer += Time.unscaledDeltaTime * currentFilledSpeed;
                     selectImage.fillAmount = Mathf.Lerp(selectImage.fillAmount, goFillAmount, _tempTimer);
 
                     yield return YieldInstructionCache.WaitForEndOfFrame;

@@ -32,11 +32,10 @@ public class UIManager : SingleTon<UIManager>
         StartCoroutine(ProcessPiriGaugeImage());
 
     }
-
     #region CanvasManager
 
     public List<GameObject> canvasObjectList;
-    private Dictionary<string, GameObject> canvasObjectDict;
+    public Dictionary<string, GameObject> canvasObjectDict;
 
 
     private void CanvasObjectDictSetting()
@@ -51,9 +50,35 @@ public class UIManager : SingleTon<UIManager>
         }
     }
 
+    public void PauseToggle()
+    {
+        SetActiveThisObject(canvasObjectDict["PopUpCanvas"], !canvasObjectDict["PopUpCanvas"].activeInHierarchy );
+        if (canvasObjectDict["PopUpCanvas"].activeInHierarchy)
+        {
+            GoPause();
+        }
+        else
+        {
+            GoDePause();
+            SetActiveThisObject(canvasObjectDict["QuitCanvas"], false);
+            SetActiveThisObject(canvasObjectDict["SettingsCanvas"], false);
+        }
+    }
     public void GoQuit()
     {
         Application.Quit();
+    }
+
+    private void GoPause()
+    {
+
+        Time.timeScale = 0f;
+        
+    }
+
+    private void GoDePause()
+    {
+        Time.timeScale = 1f;
     }
     public void SetActiveThisCanvasObject(string _name, bool _act)
     {

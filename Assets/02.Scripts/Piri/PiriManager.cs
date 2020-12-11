@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PiriManager : SingleTon<PiriManager>
 {
+
+
     [Tooltip("피리 능력 횟수의 최대값입니다.")]
     public int maxPiriEnergy = 5;
 
@@ -21,8 +23,8 @@ public class PiriManager : SingleTon<PiriManager>
     [Tooltip("컨트롤키 꾹 누르는 시간의...그...퍼센트를 반환."), HideInInspector]
     public float ctrlInputPer;
 
-    [Tooltip("피리 능력 총 사용 횟수")]
-    private int totalPiriUseCount;
+    [Tooltip("애를 소모해서 피리 능력을 사용한 횟수")]
+    public int totaChildUseCount;
 
     private bool isCanAddedPressTimer;
 
@@ -36,14 +38,9 @@ public class PiriManager : SingleTon<PiriManager>
     private bool isChildFollow;
 
 
+    [HideInInspector]
     public bool isShouldUseChild;
-    public int getTotalPiriUseCount
-    {
-        get
-        {
-            return totalPiriUseCount;
-        }
-    }
+
 
     protected override void Awake()
     {
@@ -55,7 +52,7 @@ public class PiriManager : SingleTon<PiriManager>
     protected override void Init()
     {
         //base.Init();
-
+        totaChildUseCount = 0;
         isCanAddedPressTimer = true;
         //defaultPiriEnergy = 3;
         //totalPiriUseCount = 0;
@@ -187,6 +184,7 @@ public class PiriManager : SingleTon<PiriManager>
                 GameManager.Instance.childs[GameManager.Instance.childs.Count - 1].gameObject.SetActive(false);
 
                 GameManager.Instance.childs.Remove(GameManager.Instance.childs[GameManager.Instance.childs.Count - 1]);
+                totaChildUseCount += 1;
 
             }
 
@@ -196,53 +194,43 @@ public class PiriManager : SingleTon<PiriManager>
     }
     public void SolveThisObject(GameObject _solveObj)
     {
+        
+        if (currentPiriEnergy > 0)
+        {
+            currentPiriEnergy -= 1;
+        }
+        else if (GameManager.Instance.childs[0].enabled != false)
+        {
+            isShouldUseChild = true;
+            GameManager.Instance.childs[GameManager.Instance.childs.Count - 1].gameObject.SetActive(false);
 
-        if (currentPiriEnergy <= 0)
+            GameManager.Instance.childs.Remove(GameManager.Instance.childs[GameManager.Instance.childs.Count - 1]);
+        }
+        else
         {
             return;
         }
-        bool tempOK = false;
+
         Debug.Log("Select Object name : " + _solveObj.name);
         if (_solveObj.GetComponent<PulleyPlatform>() != null)
         {
             Debug.Log("OK~ go Solved!");
             var _test = _solveObj.GetComponent<PulleyPlatform>();
             _test.selectState = ESelectState.SOLVED;
-            tempOK = true;
+
         }
         else if (_solveObj.GetComponent<WindmillPlatform>() != null)
         {
             var _test = _solveObj.GetComponent<WindmillPlatform>();
             _test.selectState = ESelectState.SOLVED;
-            tempOK = true;
+
         }
         else
         {
             Debug.Log("yeah");
         }
 
-        if (tempOK)
-        {
-            if (currentPiriEnergy > 0)
-            {
-                currentPiriEnergy -= 1;
-            }
-            else
-            {
-                isShouldUseChild = true;
 
-                if (GameManager.Instance.childs[0].enabled != false)
-                {
-                    GameManager.Instance.childs[GameManager.Instance.childs.Count - 1].gameObject.SetActive(false);
-
-                    GameManager.Instance.childs.Remove(GameManager.Instance.childs[GameManager.Instance.childs.Count - 1]);
-
-                }
-
-
-
-            }
-        }
 
         isCanAddedPressTimer = false;
         pressTimer = 0f;
