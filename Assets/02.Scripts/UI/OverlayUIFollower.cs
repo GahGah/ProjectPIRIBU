@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -47,14 +48,15 @@ public class OverlayUIFollower : MonoBehaviour
 
     private void targetFollow()
     {
-        if (gameObject.activeInHierarchy)
-        {
-            screenPoint = Camera.main.WorldToScreenPoint(targetTransform.position);
-            gameObject.transform.position = screenPoint;
-        }
-        else
-        {
-
-        }
+		try {
+			if (gameObject.activeInHierarchy)
+			{
+				screenPoint = Camera.main.WorldToScreenPoint(targetTransform.position);
+				gameObject.transform.position = screenPoint;
+			}
+		} catch (Exception) {
+			targetTransform = GameManager.Instance.piriUIPosition;
+		}
+        
     }
 }

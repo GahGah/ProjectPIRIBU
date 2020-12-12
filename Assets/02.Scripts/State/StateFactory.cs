@@ -22,6 +22,9 @@ public class StateFactory : SingleTon<StateFactory> {
 			case States.Hero_Box:
 				retState = new HeroBox();
 				break;
+			case States.Hero_Die:
+				retState = new HeroDie();
+				break;
 			case States.Child_Ground:
 				retState = new ChildGround();
 				break;
@@ -48,7 +51,7 @@ public class StateFactory : SingleTon<StateFactory> {
 }
 
 public enum States { 
-	Hero_Ground, Hero_Air, Hero_Jump, Hero_Ladder, Hero_Box,
+	Hero_Ground, Hero_Air, Hero_Jump, Hero_Ladder, Hero_Box, Hero_Die,
 	Child_Ground,Child_Air,
 	Enemy_Ground, Enemy_Air
 }

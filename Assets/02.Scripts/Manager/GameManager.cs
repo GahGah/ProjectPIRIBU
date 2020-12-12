@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -33,13 +34,14 @@ public class GameManager : SingleTon<GameManager>
 
     public bool isDebugMode = false;
 
-	bool isStageScene = false;
+	[HideInInspector] public bool isStageScene = false;
 	[HideInInspector] public InputManager inputManager;
     [HideInInspector] public List<Child> childs;
     [HideInInspector] public Hero hero;
     [HideInInspector] public Rect childsRange;
 
-    [Tooltip("피리 UI를 띄울 위치입니다. 건들지마~")]
+    //피리 UI를 띄울 위치입니다.
+	//씬 재로딩하면 Null 되어서 찾아가도록 합니다~
     public Transform piriUIPosition;
 
     protected override void Awake()
@@ -54,27 +56,35 @@ public class GameManager : SingleTon<GameManager>
 		childsRange = new Rect();
 		
 		//새 씬이 로딩될때마다 캐릭터 검색
-		SceneManager.sceneLoaded += (x, y) => { FindCharactersInStage(); };
+		SceneManager.sceneLoaded += (x, y) => { FindObjectsInStage(); };
 
 	}
 
-	//Hard Coding : "캐릭터가 씬에 없으면 게임씬 아닌걸로 알겠다."
-	void FindCharactersInStage() {
-		Debug.Log("Find Characters");
+	void FindObjectsInStage() {
 		hero = null;
 		childs.Clear();
-		//피리부 검색
+		
+		//Hard Coding : "피리부가 씬에 없으면 게임씬 아닌걸로 알겠다."
 		hero = FindObjectOfType<Hero>();
 
-		//아이들 검색
-		Child[] children = FindObjectsOfType<Child>();
-		foreach (Child child in children) {
-			if (!childs.Contains(child))
-				childs.Add(child);
-		}
-		
 		if (hero) {
 			isStageScene = true;
+
+			//피리UI 트랜스폼 검색
+			foreach (Transform trans in hero.GetComponentInChildren<Transform>()) {
+				if (trans.gameObject.name == "Piri UI Position") {
+					piriUIPosition = trans;
+					break;
+				}
+
+			}
+			//아이들 검색
+			Child[] children = FindObjectsOfType<Child>();
+			foreach (Child child in children) {
+				if (!childs.Contains(child))
+					childs.Add(child);
+			}
+
 		} else {
 			isStageScene = false;
 		}

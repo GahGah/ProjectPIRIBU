@@ -130,7 +130,6 @@ public class UnitCharacter : Unit
 		rayDist = RayGroundFromFoot(-groundNormal);
 		groundNormal = raycastHitGround.normal;
 		groundForward = new Vector2(groundNormal.y, -groundNormal.x);
-		Debug.DrawLine(transform.position, transform.position + (Vector3)groundForward, Color.black);
 
 		//지형부착 성공
 		if (groundDist >= rayDist && IsGroundNormal(groundNormal)) {

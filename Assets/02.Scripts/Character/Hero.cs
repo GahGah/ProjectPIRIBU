@@ -35,6 +35,11 @@ public class HeroGround : HeroState {
 	}
 	public override void Execute() {
 
+		if (input.buttonCtrl.isPressed) {
+			sm.SetState(States.Hero_Die);
+			return;
+		}
+
 		//지형 부착
 		if (unit.AttachGround()) {
 			groundForward = unit.groundForward;
@@ -330,5 +335,11 @@ public class HeroBox : HeroState {
 		animator.speed = 1;
 		animator.SetBool("IsPushing", false);
 		box.isPushingMode = false;
+	}
+}
+
+public class HeroDie : HeroState {
+	public override void Enter() {
+		SceneChanger.Instance.LoadScene("InGameScene");
 	}
 }

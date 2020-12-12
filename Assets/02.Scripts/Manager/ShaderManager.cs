@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Experimental.Rendering.Universal;
+using System;
 
 public class ShaderManager : SingleTon<GameManager>
 {
@@ -45,26 +46,50 @@ public class ShaderManager : SingleTon<GameManager>
     // Start is called before the first frame update
     void Start()
     {
+		LoadResources();
         mainLight_L2D = mainLight.GetComponent<Light2D>();
         skyStar_Material = skyStar.GetComponent<MeshRenderer>().material;
-        getSpriteList();
-        setSpritesFogLevel();
+		setSpritesFogLevel();
         setSkyObject();
     }
 
     // Update is called once per frame
     void Update()
     {
-        timer();
-        changeLightAndFogColor();
-        changeSkyObjects();
-
-        setSpritesFogLevel();
+		//스테이지 씬에서만 쉐이더 동작
+		if (GameManager.instance.isStageScene) {
+			if (sun == null) LoadResources();//리소스 null일시 다시 검색
+			timer();
+			changeLightAndFogColor();
+			changeSkyObjects();
+			setSpritesFogLevel();
+		}
     }
 
     //------------------------------
     private SpriteRenderer[] spriteRenderers;
     private List<GameObject> spriteObjects;
+
+	//씬이 전환되거나 재로딩되었을 시 게임오브젝트 및 스프라이트 전부 다시 재로딩
+	void LoadResources() {
+		if (GameManager.instance.isStageScene) {
+			getSpriteList();
+
+			//하늘 배경 게임오브젝트 탐색
+			foreach (GameObject go in FindObjectsOfType<GameObject>()) {
+				switch (go.name) {
+					case "Sun" : sun = go; break;
+					case "Moon": moon = go; break;
+					case "SkySprite": skySprite = go; break;
+					case "StarFlowSprite": skyStar = go; break;
+					case "Global Light 2D": mainLight = go; break;
+					default: continue;
+				}
+			}
+
+		}
+
+	}
 
     void getSpriteList()
     {
@@ -89,6 +114,7 @@ public class ShaderManager : SingleTon<GameManager>
             }
         }
     }
+
 
     void timer()
     {
@@ -155,15 +181,16 @@ public class ShaderManager : SingleTon<GameManager>
             gradientEnd = Color.Lerp(skyGradient_night.colorKeys[1].color, skyGradient_morning.colorKeys[1].color, (curTime - time_nightEnd) / timeInterval);
         }
 
-        // 모든 스프라이트 & 메인 라이트에 적용
-        foreach (SpriteRenderer sr in spriteRenderers)
-        {
-            sr.sharedMaterial.SetColor("_FogColor", fogCol);
-        }
-        mainLight_L2D.color = lightCol;
+		// 모든 스프라이트 & 메인 라이트에 적용
+		foreach (SpriteRenderer sr in spriteRenderers)
+		{
+			sr.sharedMaterial.SetColor("_FogColor", fogCol);
+		}
+		mainLight_L2D.color = lightCol;
 
-        skySprite.GetComponent<MeshRenderer>().material.SetColor("_BeginColor", gradientBegin);
-        skySprite.GetComponent<MeshRenderer>().material.SetColor("_EndColor", gradientEnd);
+		skySprite.GetComponent<MeshRenderer>().material.SetColor("_BeginColor", gradientBegin);
+		skySprite.GetComponent<MeshRenderer>().material.SetColor("_EndColor", gradientEnd);
+
     }
 
     private Vector2 P0 = new Vector2(-55f, -8f);
