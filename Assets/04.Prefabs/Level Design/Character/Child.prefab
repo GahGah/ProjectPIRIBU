@@ -78,7 +78,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unit: {fileID: 3608487998561999138}
   animator: {fileID: 5470783979760401754}
-  allowedCliffSpace: 0.5
+  allowedCliffSpace: 0.45
   isFollowHero: 0
 --- !u!1 &3530669823811892136
 GameObject:
@@ -228,7 +228,7 @@ PrefabInstance:
     - target: {fileID: 1818470571640107175, guid: b1bdc0bb03758b5418c99b2d9b65e13e,
         type: 3}
       propertyPath: m_Size.x
-      value: 0.78
+      value: 0.85
       objectReference: {fileID: 0}
     - target: {fileID: 1818470571640107175, guid: b1bdc0bb03758b5418c99b2d9b65e13e,
         type: 3}
@@ -238,12 +238,12 @@ PrefabInstance:
     - target: {fileID: 1818470571671186696, guid: b1bdc0bb03758b5418c99b2d9b65e13e,
         type: 3}
       propertyPath: m_Size.x
-      value: 0.6
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 1818470571671186699, guid: b1bdc0bb03758b5418c99b2d9b65e13e,
         type: 3}
       propertyPath: m_Size.x
-      value: 0.6
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 1818470571671186711, guid: b1bdc0bb03758b5418c99b2d9b65e13e,
         type: 3}

@@ -19,7 +19,7 @@ public class Ladder : InteractionObject {
 		transform.localScale = scale;
 		ladderShape.transform.localScale = new Vector3(1, 1 / scale.y, 1);
 		spline.SetPosition(0, Vector3.down * transform.localScale.y * 0.5f);
-		spline.SetPosition(1, Vector3.up * transform.localScale.y * 0.5f);
+		spline.SetPosition(1, Vector3.up * (transform.localScale.y * 0.5f - 0.5f) );
 
 	}
 

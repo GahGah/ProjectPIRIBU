@@ -36,8 +36,8 @@ public class HeroGround : HeroState {
 	public override void Execute() {
 
 		if (input.buttonCtrl.isPressed) {
-			sm.SetState(States.Hero_Die);
-			return;
+			//sm.SetState(States.Hero_Die);
+			//return;
 		}
 
 		//지형 부착
