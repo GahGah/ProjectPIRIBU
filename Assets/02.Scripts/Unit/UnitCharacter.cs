@@ -149,7 +149,7 @@ public class UnitCharacter : Unit
 				if (isAllRayOverFoot)
 					rayDist *= 0.8f;
 				else
-					rayDist *= 0.7f;
+					rayDist *= 0.5f;
 			}
 			SetMovement(MovementType.AddPos, -groundNormal * rayDist);
 			isGrounded = true;
@@ -160,7 +160,7 @@ public class UnitCharacter : Unit
 	}
 
 	bool isAllRayOverFoot;//지형검사에서 모든 Ray가 원점보다 위였는가?
-	float rayGroundOffset = 0.1f;//발보다 약간 위에서 쬐어주는 값
+	float rayGroundOffset = 0.25f;//발보다 약간 위에서 쬐어주는 값
 	/// <summary>
 	/// 지형에 RayCast하고 거리가 가장 짧은 ray를 raycastHitGround에 저장 및 가장 짧은 거리를 반환
 	/// </summary>
