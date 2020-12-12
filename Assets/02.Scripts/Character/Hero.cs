@@ -225,16 +225,16 @@ public class HeroLadder : HeroState {
 		attachSpeed += (1-attachSpeed)*0.1f;
 
 
-		Vector3 ladderDir = ladder.transform.up;
+		Vector3 ladderDir = ladder.transform.up*0.1f;
 		animator.speed = 0;
 		//위아래 이동
 		if (Vector3.Magnitude(dirToLadder) <= 0.2f) {//사다리에 붙어있을때만
 			if (input.buttonUp.isPressed) {
-				newAnchor -= ladderDir*0.15f;
+				newAnchor -= ladderDir;
 				animator.speed = 1;
 			}
 			else if (input.buttonDown.isPressed) {
-				newAnchor += ladderDir*0.15f;
+				newAnchor += ladderDir;
 				animator.speed = 1;
 			}
 		}
