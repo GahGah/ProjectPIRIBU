@@ -4,10 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class SceneChanger : MonoBehaviour
+public class SceneChanger : SingleTon<SceneChanger>
 {
-    [Tooltip("Destroy를 하고 싶지 않아서 독자적인 싱글턴 사용")]
-    public static SceneChanger Instance;
 
     public Image loadingBarImage;
     public CanvasGroup canvasGroup;
@@ -26,18 +24,9 @@ public class SceneChanger : MonoBehaviour
     /// </summary>
     public bool isLoading;
 
-    private void Awake()
+    protected override void Init()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(this.gameObject);
-        }
-        Init();
-    }
-
-    private void Init()
-    {
+		base.Init();
         currentFadeSpeed = 1f / 2f;
         currentLoadingFadeSpeed = 1f / 2f;
         loadingBarImage.fillAmount = 0f;

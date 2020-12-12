@@ -119,17 +119,21 @@ public class UnitCharacter : Unit
 	//캐릭터를 땅에 붙임. groundForward가 업데이트됨. 붙이지 못했을시 false 반환
 	//Logic Error : Attach 과정 자체가 캐릭터를 내리는 행위라 mass가 더 붙은 듯한 문제가 있음.
 	public bool AttachGround() {
-		float rayDist = RayGroundFromFoot(Vector2.down);
-		Vector2 groundNormal = raycastHitGround.normal;
-		groundForward = new Vector2(groundNormal.y, -groundNormal.x);
+		float rayDist;
+		Vector2 groundNormal;
 
+		//처음엔 아래방향으로 RayCast하여 지면 노말을 검사
+		rayDist = RayGroundFromFoot(Vector2.down);
+		groundNormal = raycastHitGround.normal;
+		groundForward = new Vector2(groundNormal.y, -groundNormal.x);
 		//발과 지형간의 최소거리인 rayDist값으로 지형부착 이동을 한다.
 		rayDist = RayGroundFromFoot(-groundNormal);
 		groundNormal = raycastHitGround.normal;
 		groundForward = new Vector2(groundNormal.y, -groundNormal.x);
+		Debug.DrawLine(transform.position, transform.position + (Vector3)groundForward, Color.black);
 
 		//지형부착 성공
-		if (groundDist > rayDist && IsGroundNormal(groundNormal)) {
+		if (groundDist >= rayDist && IsGroundNormal(groundNormal)) {
 			//Parent에 아래힘 가하기
 			if (liftParent)
 				liftParent.SetMovement(
@@ -144,22 +148,20 @@ public class UnitCharacter : Unit
 			//Dist가 음수면 foot가 올라가게 되어있다.
 				//모든 RayHit가 발 위라면 플랫폼에 끼였을 가능성이 높다.
 				if (isAllRayOverFoot)
-					rayDist *= 0.2f;
+					rayDist *= 0.8f;
 				else
-					rayDist *= 0.1f;
+					rayDist *= 0.7f;
 			}
 			SetMovement(MovementType.AddPos, -groundNormal * rayDist);
 			isGrounded = true;
 			return true;
 		}
 
-		//지형부착 실패
-		isGrounded = false;
 		return false;
 	}
 
 	bool isAllRayOverFoot;//지형검사에서 모든 Ray가 원점보다 위였는가?
-	float rayGroundOffset = 0.25f;//발보다 약간 위에서 쬐어주는 값
+	float rayGroundOffset = 0.1f;//발보다 약간 위에서 쬐어주는 값
 	/// <summary>
 	/// 지형에 RayCast하고 거리가 가장 짧은 ray를 raycastHitGround에 저장 및 가장 짧은 거리를 반환
 	/// </summary>
@@ -167,59 +169,48 @@ public class UnitCharacter : Unit
 		float dist = Mathf.Infinity;
 		isAllRayOverFoot = true;
 
-		//평균노말
-		//Vector2 totalNormal = Vector2.zero;
 		//여러군데 검사
 		int rays = 2;
 		for (int i = -rays; i <= rays; i ++) {
-			//Vector2 currentNormal = Vector2.up;
 
 			Vector2 origin = foot.transform.position
 				- foot.transform.up * foot.size.y * 0.5f
 				+ foot.transform.right * foot.size.x * ((float)i / rays * 0.5f)
-				-(Vector3)_rayDir* rayGroundOffset;
+				- (Vector3)_rayDir* rayGroundOffset;
 
-			
-			RaycastHit2D[] hits;
-			hits = Physics2D.RaycastAll(origin, _rayDir, (groundDist + rayGroundOffset)*2, groundLayer);
-			foreach (RaycastHit2D hit in hits) {
-				//if (IgnoreColliders.Contains(hit.collider)) continue; //Logic Error : Ignore중인 땅까지 스캔함.
-				
-				//한 ray라도 발 아래에 쬐어지면
-				if (hit.distance - rayGroundOffset > -rayGroundOffset*0.5f)//논리적으로 우항은 0이어야 하지만 약간 완화
+
+			RaycastHit2D hit = Physics2D.Raycast(origin, _rayDir, (groundDist + rayGroundOffset) * 2, groundLayer);
+
+
+			//if (IgnoreColliders.Contains(hit.collider)) continue; //Logic Error : Ignore중인 땅까지 스캔함.
+			if (hit.collider) {
+				if (IsGroundNormal(hit.normal)) {
+					//논리적으로 우항은 0이어야 하지만 약간 완화
+					if (hit.distance - rayGroundOffset > -rayGroundOffset * 0.5f)
 						isAllRayOverFoot = false;
 
-				//dist값 업데이트, 지형 노말인 Ray만 groundRay로 쳐줌
-				float distNow = hit.distance - rayGroundOffset;
-				if (distNow < dist && IsGroundNormal(hit.normal)) {
-					dist = distNow;
-					
-					if (isSetRayHit) raycastHitGround = hit;
+					float distNow = hit.distance - rayGroundOffset;
+					//dist값 업데이트, 지형 노말인 Ray만 groundRay로 쳐줌
+					if (distNow < dist) {
+						dist = distNow;
+						if (isSetRayHit) raycastHitGround = hit;
+					}
 				}
-
-				//땅에 닿는 hit의 노말을 currentNormal에 업데이트
-				//if (distNow <= groundDist) currentNormal = hit.normal;
-
-				/*
-				Color color;
-				if (dist < 0) color = Color.blue;
-				else color = Color.red;
-				Debug.DrawLine(origin, hit.point, color);
-				*/
-
-
-
-			}
-			if (hits.Length == 0)
+			} else {
 				isAllRayOverFoot = false;
+			}
+			
+			/*
+			Color color;
+			if (currentMinDist < 0) color = Color.blue;
+			else color = Color.red;
+			Debug.DrawLine(origin+ _rayDir * rayGroundOffset, origin+_rayDir * currentMinDist, color);
+			Debug.DrawLine(hit.point, hit.point + hit.normal*0.5f, Color.green);
+			*/
 
-			//각 ray로 본 지형의 노말을 중첩
-			//totalNormal += currentNormal;
+
 		}
 
-		//지형 평균 각도 구하기 (뭔가 잘 안됨)
-		//if (isSetRayHit) raycastHitGround.normal = totalNormal / (rays * 2 + 1);
-		//Debug.DrawLine(foot.transform.position, foot.transform.position + (Vector3)(totalNormal / (rays * 2 + 1)),Color.cyan);
 
 		return dist;
 	}

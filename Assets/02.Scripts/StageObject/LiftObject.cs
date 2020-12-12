@@ -63,14 +63,13 @@ public class LiftObject : MonoBehaviour {
 
 		fixedUpdatePerSec = 1.0f / Time.fixedDeltaTime;
 	}
+	protected virtual void Update() {
+
+	}
 	
 	protected virtual void FixedUpdate() {
 		UpdatePreTransforms();
 		UpdateNow();
-	}
-
-	protected virtual void Update() {
-
 	}
 
 	private void UpdateNow() {
@@ -89,7 +88,7 @@ public class LiftObject : MonoBehaviour {
 		UpdateDeltaTransforms();
 
 		//UpdateRigidbody에선 Transform이 변경되지 않는다.
-		//따라서 UpdateCurrTransforms가 먼저 와도 값의 차이가 없음.
+		//따라서 UpdateCurrTransforms가 먼저 와도 Current Transform 값들의 차이가 없음.
 		UpdateRigidbody();
 		movementInputs.Clear();
 
@@ -209,6 +208,7 @@ public class LiftObject : MonoBehaviour {
 
 		
 	}
+	
 
 	public Vector2 GetVelocity() {
 		return rigid.velocity;
@@ -249,8 +249,4 @@ public class LiftObject : MonoBehaviour {
 		liftParent = null;
 	}
 
-	public void Draw() {
-		Debug.DrawLine(currPos, currPos - (Vector3)GetVelocity(), Color.green, 1f);
-		Debug.DrawLine(currPos, currPos + (Vector3)GetVelocity(), Color.red);
-	}
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -32,7 +33,8 @@ public class GameManager : SingleTon<GameManager>
 
     public bool isDebugMode = false;
 
-    [HideInInspector] public InputManager inputManager;
+	bool isStageScene = false;
+	[HideInInspector] public InputManager inputManager;
     [HideInInspector] public List<Child> childs;
     [HideInInspector] public Hero hero;
     [HideInInspector] public Rect childsRange;
@@ -48,19 +50,36 @@ public class GameManager : SingleTon<GameManager>
     protected override void Init()
     {
         base.Init();
-        inputManager = InputManager.Instance;
+		inputManager = InputManager.Instance;
+		childsRange = new Rect();
+		
+		//새 씬이 로딩될때마다 캐릭터 검색
+		SceneManager.sceneLoaded += (x, y) => { FindCharactersInStage(); };
 
-        //히어로 관련
-        hero = FindObjectOfType<Hero>();
-        //아이들 관련
-        Child[] children = FindObjectsOfType<Child>();
-        foreach (Child child in children)
-        {
-            if (!childs.Contains(child))
-                childs.Add(child);
-        }
-        childsRange = new Rect();
-    }
+	}
+
+	//Hard Coding : "캐릭터가 씬에 없으면 게임씬 아닌걸로 알겠다."
+	void FindCharactersInStage() {
+		Debug.Log("Find Characters");
+		hero = null;
+		childs.Clear();
+		//피리부 검색
+		hero = FindObjectOfType<Hero>();
+
+		//아이들 검색
+		Child[] children = FindObjectsOfType<Child>();
+		foreach (Child child in children) {
+			if (!childs.Contains(child))
+				childs.Add(child);
+		}
+		
+		if (hero) {
+			isStageScene = true;
+		} else {
+			isStageScene = false;
+		}
+
+	}
 
     //임시 배경음 재생
     private void Start()
@@ -77,16 +96,18 @@ public class GameManager : SingleTon<GameManager>
 
     private void Update()
     {
-        //ESC키 누르면 임의 리셋
-        //2020-12-12 : 일시정지 창 나오게 햇음
+        //ESC키 눌러 일시정지
         if (inputManager.buttonPause.wasPressedThisFrame)
         {
             UIManager.Instance.PauseToggle();
-           // SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
-        UpdateChildRange();
-        DrawChildRange();
+
+		//스테이지 씬에서의 동작
+		if (isStageScene) {
+			UpdateChildRange();
+			DrawChildRange();
+		}
     }
 
     public void SetChildFollow(bool isFollow)
