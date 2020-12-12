@@ -39,6 +39,7 @@ public class GameManager : SingleTon<GameManager>
 
     [Tooltip("피리 UI를 띄울 위치입니다. 건들지마~")]
     public Transform piriUIPosition;
+
     protected override void Awake()
     {
         base.Awake();//여기서 Init한다.
@@ -64,9 +65,13 @@ public class GameManager : SingleTon<GameManager>
     //임시 배경음 재생
     private void Start()
     {
-        AudioSource audioSource = GetComponent<AudioSource>();
-        if (!audioSource.isPlaying)
-            audioSource.Play();
+        AudioSource audioSource = gameObject.GetComponent<AudioSource>();
+        if (audioSource!=null)
+        {
+            if (!audioSource.isPlaying)
+                audioSource.Play();
+        }
+
     }
 
 
@@ -103,22 +108,27 @@ public class GameManager : SingleTon<GameManager>
     {
         Vector2 leftBottom = new Vector2(Mathf.Infinity, Mathf.Infinity);
         Vector2 rightTop = new Vector2(-Mathf.Infinity, -Mathf.Infinity);
-        foreach (Child child in childs)
+        if (childs!=null)
         {
-            Vector2 pos = child.unit.transform.position;
-            if (pos.x < leftBottom.x)
-                leftBottom.x = pos.x;
-            if (pos.y < leftBottom.y)
-                leftBottom.y = pos.y;
-            if (pos.x > rightTop.x)
-                rightTop.x = pos.x;
-            if (pos.y > rightTop.y)
-                rightTop.y = pos.y;
+            foreach (Child child in childs)
+            {
+                Vector2 pos = child.unit.transform.position;
+                if (pos.x < leftBottom.x)
+                    leftBottom.x = pos.x;
+                if (pos.y < leftBottom.y)
+                    leftBottom.y = pos.y;
+                if (pos.x > rightTop.x)
+                    rightTop.x = pos.x;
+                if (pos.y > rightTop.y)
+                    rightTop.y = pos.y;
+
+            }
+            childsRange.xMin = leftBottom.x;
+            childsRange.yMin = leftBottom.y;
+            childsRange.xMax = rightTop.x;
+            childsRange.yMax = rightTop.y;
         }
-        childsRange.xMin = leftBottom.x;
-        childsRange.yMin = leftBottom.y;
-        childsRange.xMax = rightTop.x;
-        childsRange.yMax = rightTop.y;
+
     }
 
     /// <summary>

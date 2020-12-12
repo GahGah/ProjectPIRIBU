@@ -53,13 +53,11 @@ public class SceneChanger : MonoBehaviour
         loadSceneName = _sceneName;
 
         StartCoroutine(LoadingScene(_sceneName, Color.black));
-
     }
     private void LoadSceneEnd(Scene scene, LoadSceneMode loadSceneMode)
     {
 
         if (scene.name == loadSceneName)
-
         {
             StartCoroutine(FadeAlphaCanvasGroup(1f, 0f));
 
@@ -74,6 +72,7 @@ public class SceneChanger : MonoBehaviour
             else if (loadSceneName == "InGameScene")
             {
                 UIManager.Instance.SetActiveTrueOnlyThisCanvasObject("HUDCanvas");
+
             }
             isLoading = false;
         }
@@ -87,17 +86,18 @@ public class SceneChanger : MonoBehaviour
     /// <returns></returns>
     private IEnumerator LoadingScene(string _sceneName, Color _fadeColor)
     {
+        yield return YieldInstructionCache.WaitForEndOfFrame;
         whitePanel.gameObject.SetActive(true);
         loadingBarImage.gameObject.SetActive(true);
         whitePanel.color = _fadeColor;
         loadingBarImage.fillAmount = 0f;
 
-        yield return StartCoroutine(FadeAlpha(0f, 1f));
+        yield return StartCoroutine(FadeAlphaCanvasGroup(0f, 1f));
 
         AsyncOperation loadOp = SceneManager.LoadSceneAsync(_sceneName);
         loadOp.allowSceneActivation = false;
 
-        loadingTimer = 0f;
+            loadingTimer = 0f;
 
         while (loadOp.isDone == false)
         {
@@ -130,7 +130,7 @@ public class SceneChanger : MonoBehaviour
         fadeTimer = 0f;
         while (canvasGroup.alpha != _endAlphaValue)
         {
-            fadeTimer += Time.deltaTime * currentFadeSpeed;
+            fadeTimer += Time.unscaledDeltaTime * currentFadeSpeed;
             _tempAlpha = Mathf.Lerp(_startAlphaValue, _endAlphaValue, fadeTimer);
             canvasGroup.alpha = _tempAlpha;
 
@@ -146,7 +146,6 @@ public class SceneChanger : MonoBehaviour
         if (_endAlphaValue == 0f)
         {
             whitePanel.gameObject.SetActive(false);
-            //   StartCoroutine(FadeAlphaLoadingBar(1f, 0f));
             loadingBarImage.gameObject.SetActive(false);
         }
     }
@@ -159,7 +158,7 @@ public class SceneChanger : MonoBehaviour
         while (whitePanel.canvasRenderer.GetAlpha() != _endAlphaValue)
         {
             Debug.Log("Loading...");
-            fadeTimer += Time.deltaTime * currentFadeSpeed;
+            fadeTimer += Time.unscaledDeltaTime * currentFadeSpeed;
             _tempAlpha = Mathf.Lerp(_startAlphaValue, _endAlphaValue, fadeTimer);
             whitePanel.canvasRenderer.SetAlpha(_tempAlpha);
 

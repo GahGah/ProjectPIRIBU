@@ -74,6 +74,11 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void GoHome()
+    {
+         SceneChanger.Instance.LoadScene("HomeScene");
+
+    }
     public void GoGameStart()
     {
         SceneChanger.Instance.LoadScene("InGameScene");
