@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Mat_VFX_PipeSkill_CircleParticleTrail_01
+  m_Name: Mat_VFX_PipeSkill_CircleBloom_Green
   m_Shader: {fileID: -6465566751694194690, guid: af90630ecf77cda4c8a3ebe1278c7e9e,
     type: 3}
   m_ShaderKeywords: 
@@ -21,7 +21,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - Texture2D_D23B96BC:
-        m_Texture: {fileID: 2800000, guid: 55a8de6e567cc2a4993067f501a287d7, type: 3}
+        m_Texture: {fileID: 2800000, guid: 2a8468b799f27a94f93a291c084097ff, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _AlphaTex:
@@ -44,7 +44,7 @@ Material:
     - Boolean_7084CEFD: 0
     - _EnableExternalAlpha: 0
     m_Colors:
-    - Color_C3CC9AB: {r: 0.42431232, g: 1.9766746, b: 0.9521155, a: 0}
+    - Color_C3CC9AB: {r: 0.00022043366, g: 0.0016114458, b: 0.00022043366, a: 0}
     - Vector2_409FD572: {r: 0.8, g: 1, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
