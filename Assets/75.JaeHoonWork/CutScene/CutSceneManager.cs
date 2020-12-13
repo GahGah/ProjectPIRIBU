@@ -6,8 +6,10 @@ public class CutSceneManager : MonoBehaviour
 {
 	public GameObject pagePrefab;
 	public List<Sprite> sprites;
+	public string nextSceneName;
 	private List<PageCurl> pages;
 	PageCurl page;
+	bool disableNext;
 	void Start()
 	{
 		pages = new List<PageCurl>();
@@ -23,12 +25,13 @@ public class CutSceneManager : MonoBehaviour
 		//첫 페이지가 마지막 item이므로 다시 Reverse시킴
 		pages.Reverse();
 		page = pages[0];
-
+		disableNext = false;
 	}
 
 	void Update()
 	{
-		if (InputManager.Instance.buttonMouseLeft.wasPressedThisFrame) {
+		
+		if (InputManager.Instance.buttonMouseLeft.wasPressedThisFrame && !disableNext) {
 			
 			if (!pages[0]) {
 				pages.RemoveAt(0);
@@ -37,6 +40,10 @@ public class CutSceneManager : MonoBehaviour
 
 			if (pages.Count > 1)
 				page.NextPage();
+			else {
+				SceneChanger.Instance.LoadScene(nextSceneName);
+				disableNext = true;
+			}
 		}
 	}
 }

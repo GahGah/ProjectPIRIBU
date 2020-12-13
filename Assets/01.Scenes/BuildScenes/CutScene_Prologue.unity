@@ -528,13 +528,12 @@ MonoBehaviour:
   pagePrefab: {fileID: 4261479138124458657, guid: 3a5a8b5a4072a9546b1bebdf34c0a85f,
     type: 3}
   sprites:
-  - {fileID: 21300000, guid: d8a5ce37a4f398147851a7878a86f34a, type: 3}
-  - {fileID: 21300000, guid: c6a4b730c2d985344a15d99815cb143a, type: 3}
-  - {fileID: 21300000, guid: d8a5ce37a4f398147851a7878a86f34a, type: 3}
-  - {fileID: 21300000, guid: c6a4b730c2d985344a15d99815cb143a, type: 3}
-  - {fileID: 21300000, guid: c6a4b730c2d985344a15d99815cb143a, type: 3}
-  - {fileID: 21300000, guid: c6a4b730c2d985344a15d99815cb143a, type: 3}
-  - {fileID: 21300000, guid: c6a4b730c2d985344a15d99815cb143a, type: 3}
+  - {fileID: 21300000, guid: 3d33e903538d8614a863efc9e55db3c9, type: 3}
+  - {fileID: 21300000, guid: dede653639b027245a8d6f4e2b1a4812, type: 3}
+  - {fileID: 21300000, guid: ab4e027ad80b2464b8e7d1d9ad01a907, type: 3}
+  - {fileID: 21300000, guid: 3e92fc81a73247447bc74141d5c8bdf0, type: 3}
+  - {fileID: 21300000, guid: 4412722e6a909e642ad6dd966c37a764, type: 3}
+  nextSceneName: InGameScene
 --- !u!224 &1556032843 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4261479138124458662, guid: 3a5a8b5a4072a9546b1bebdf34c0a85f,

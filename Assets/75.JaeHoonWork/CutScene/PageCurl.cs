@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
-[ExecuteInEditMode]
+//[ExecuteInEditMode]
 public class PageCurl : MonoBehaviour {
 
 	public Transform _Front;
