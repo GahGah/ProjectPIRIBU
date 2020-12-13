@@ -32,6 +32,8 @@ public class ShaderManager : SingleTon<GameManager>
     [SerializeField] private Gradient skyGradient_evening = new Gradient();
     [SerializeField] private Gradient skyGradient_night = new Gradient();
 
+    
+
     [SerializeField] private float fogIntensity;
 
     [SerializeField] private GameObject skySprite;
@@ -42,11 +44,15 @@ public class ShaderManager : SingleTon<GameManager>
     [SerializeField] public GameObject mainLight;
     private Light2D mainLight_L2D;
 
+    [SerializeField] private GameObject BG_Mountain_03;
+    [SerializeField] private Gradient BG_Mountain_03_Color = new Gradient();
+
 
     // Start is called before the first frame update
     void Start()
     {
 		LoadResources();
+        setBGObjectColor();
     }
 
     // Update is called once per frame
@@ -59,7 +65,10 @@ public class ShaderManager : SingleTon<GameManager>
 			changeLightAndFogColor();
 			changeSkyObjects();
 			setSpritesFogLevel();
-		}
+
+            //---
+            setBGObjectColor();
+        }
     }
 
     //------------------------------
@@ -79,6 +88,7 @@ public class ShaderManager : SingleTon<GameManager>
 					case "SkySprite": skySprite = go; break;
 					case "StarFlowSprite": skyStar = go; break;
 					case "Global Light 2D": mainLight = go; break;
+                    case "BG_Mountain_03": BG_Mountain_03 = go; break;
 					default: continue;
 				}
 			}
@@ -87,7 +97,11 @@ public class ShaderManager : SingleTon<GameManager>
 			skyStar_Material = skyStar.GetComponent<MeshRenderer>().material;
 			setSpritesFogLevel();
 			setSkyObject();
-		}
+
+            //---
+            setBGObjectColor();
+
+        }
 
 	}
 
@@ -124,6 +138,16 @@ public class ShaderManager : SingleTon<GameManager>
         {
             curTime = 0;
         }
+    }
+
+    private void setBGObjectColor()
+    {
+        BG_Mountain_03.GetComponent<MeshRenderer>().sharedMaterial.GetFloat("FogIntensity");
+        Debug.Log(BG_Mountain_03.GetComponent<MeshRenderer>().sharedMaterial.GetFloat("FogIntensity"));
+        Debug.Log(BG_Mountain_03);
+        BG_Mountain_03.GetComponent<MeshRenderer>().sharedMaterial.SetColor("BeginColor", BG_Mountain_03_Color.colorKeys[0].color);
+        BG_Mountain_03.GetComponent<MeshRenderer>().sharedMaterial.SetColor("EndColor", BG_Mountain_03_Color.colorKeys[1].color);
+        BG_Mountain_03.GetComponent<MeshRenderer>().sharedMaterial.SetFloat("FogIntensity", 1f);
     }
 
     void changeLightAndFogColor()
@@ -188,8 +212,8 @@ public class ShaderManager : SingleTon<GameManager>
 		}
 		mainLight_L2D.color = lightCol;
 
-		skySprite.GetComponent<MeshRenderer>().material.SetColor("_BeginColor", gradientBegin);
-		skySprite.GetComponent<MeshRenderer>().material.SetColor("_EndColor", gradientEnd);
+		skySprite.GetComponent<MeshRenderer>().sharedMaterial.SetColor("_BeginColor", gradientBegin);
+		skySprite.GetComponent<MeshRenderer>().sharedMaterial.SetColor("_EndColor", gradientEnd);
 
     }
 
@@ -264,4 +288,6 @@ public class ShaderManager : SingleTon<GameManager>
             moon.transform.localPosition = moonPos;
         }
     }
+
+
 }
