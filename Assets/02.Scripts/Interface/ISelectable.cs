@@ -17,5 +17,6 @@ public enum ESelectState
     DEFAULT = 0,
     SELECT,
     CANCLE,
-    SOLVED //해결되었을 때.
+    SOLVED, //해결되었을 때.
+    DONTSELECT // 선택 불가
 }

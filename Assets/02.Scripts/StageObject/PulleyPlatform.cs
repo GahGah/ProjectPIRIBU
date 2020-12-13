@@ -56,7 +56,11 @@ public class PulleyPlatform : LinearPlatform, ISelectable
     public void Init()
     {
         debugColor = Color.white;
-        selectState = ESelectState.DEFAULT;
+        if (selectState != ESelectState.DONTSELECT)
+        {
+            selectState = ESelectState.DEFAULT;
+        }
+
 
         isArrive = false;
         isStopped = false;
@@ -139,30 +143,34 @@ public class PulleyPlatform : LinearPlatform, ISelectable
     }
     public void HandleSelectState(ESelectState _selectState)
     {
-        switch (selectState)
+        if (selectState!=ESelectState.DONTSELECT)
         {
-            case ESelectState.DEFAULT:
-                debugColor = Color.white;
-                break;
+            switch (selectState)
+            {
+                case ESelectState.DEFAULT:
+                    debugColor = Color.white;
+                    break;
 
-            case ESelectState.SELECT:
-                debugColor = Color.yellow;
-                break;
+                case ESelectState.SELECT:
+                    debugColor = Color.yellow;
+                    break;
 
-            case ESelectState.CANCLE:
-                debugColor = Color.white;
-                break;
+                case ESelectState.CANCLE:
+                    debugColor = Color.white;
+                    break;
 
-            case ESelectState.SOLVED:
-                debugColor = Color.blue;
-                isCanMove = true;
-                isStopped = false;
-                currentRouteIndex = answerRouteIndex;
-                break;
+                case ESelectState.SOLVED:
+                    debugColor = Color.blue;
+                    isCanMove = true;
+                    isStopped = false;
+                    currentRouteIndex = answerRouteIndex;
+                    break;
 
-            default:
-                break;
+                default:
+                    break;
+            }
         }
+     
     }
 
 

@@ -44,7 +44,11 @@ public class WindmillPlatform : LiftObject, ISelectable
     public void Init()
     {
         debugColor = Color.white;
-        selectState = ESelectState.DEFAULT;
+        if (selectState != ESelectState.DONTSELECT)
+        {
+            selectState = ESelectState.DEFAULT;
+        }
+
 
         isGoal = false;
         isStopped = false;
@@ -61,7 +65,7 @@ public class WindmillPlatform : LiftObject, ISelectable
         limitDis = 0.1f;
 
 
-        if (windmillStartRotation!=0)
+        if (windmillStartRotation != 0)
         {
             goalRotation = windmillStartRotation;
         }
@@ -103,27 +107,30 @@ public class WindmillPlatform : LiftObject, ISelectable
     }
     public void HandleSelectState(ESelectState _selectState)
     {
-        switch (selectState)
+        if (selectState != ESelectState.DONTSELECT)
         {
-            case ESelectState.DEFAULT:
-                debugColor = Color.white;
-                break;
+            switch (selectState)
+            {
+                case ESelectState.DEFAULT:
+                    debugColor = Color.white;
+                    break;
 
-            case ESelectState.SELECT:
-                debugColor = Color.yellow;
-                break;
+                case ESelectState.SELECT:
+                    debugColor = Color.yellow;
+                    break;
 
-            case ESelectState.CANCLE:
-                debugColor = Color.white;
-                break;
+                case ESelectState.CANCLE:
+                    debugColor = Color.white;
+                    break;
 
-            case ESelectState.SOLVED:
-                goalRotation = answerRotation;
-                debugColor = Color.blue;
-                break;
+                case ESelectState.SOLVED:
+                    goalRotation = answerRotation;
+                    debugColor = Color.blue;
+                    break;
 
-            default:
-                break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -167,8 +174,8 @@ public class WindmillPlatform : LiftObject, ISelectable
 
     public float ClampAngle(float _angle)
     {
-       // return _angle;
-       return Mathf.Clamp(_angle, -180, 180);
+        // return _angle;
+        return Mathf.Clamp(_angle, -180, 180);
 
     }
     private void PlatformRotateToGoalRotation()
