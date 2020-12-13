@@ -147,9 +147,9 @@ public class UnitCharacter : Unit
 			//Dist가 음수면 foot가 올라가게 되어있다.
 				//모든 RayHit가 발 위라면 플랫폼에 끼였을 가능성이 높다.
 				if (isAllRayOverFoot)
-					rayDist *= 0.8f;
-				else
 					rayDist *= 0.5f;
+				else
+					rayDist *= 0.2f;
 			}
 			SetMovement(MovementType.AddPos, -groundNormal * rayDist);
 			isGrounded = true;
@@ -178,17 +178,35 @@ public class UnitCharacter : Unit
 				- (Vector3)_rayDir* rayGroundOffset;
 
 
-			RaycastHit2D hit = Physics2D.Raycast(origin, _rayDir, (groundDist + rayGroundOffset) * 2, groundLayer);
+			float distNow = (groundDist + rayGroundOffset) * 2;
+			RaycastHit2D hit = Physics2D.Raycast(origin, _rayDir, distNow, groundLayer);
 
-
-			//if (IgnoreColliders.Contains(hit.collider)) continue; //Logic Error : Ignore중인 땅까지 스캔함.
 			if (hit.collider) {
+
+				//처음부터 어느 collider에 바로 닿은 hit의 normal은 그냥 -_raydir임
+				if (hit.distance == 0) {
+					//원웨이 플랫폼에 낀거면 통상적인 지형 노말로 바꿔줌
+					if (hit.collider.CompareTag("LinearPlatform")) {
+						hit.normal = Vector2.up;
+					} else {
+						//원웨이 플랫폼도 아니라면 벽일 수 있음. offset 없이 진짜 원점에서 출발한 ray로 normal을 탐지함.
+						RaycastHit2D subHit = Physics2D.Raycast(origin+ _rayDir * rayGroundOffset, -_rayDir, rayGroundOffset, groundLayer);
+						if (subHit.distance != 0) {
+							hit.normal = subHit.normal;
+						} else {
+							//이때도 충돌체에 끼어서 distance가 0이 나오면 그냥 원웨이 땅에 끼었을 확률 높음
+							//이미 원웨이 플랫폼인지 검사했지만, 보험용으로 한번 더 처리
+							hit.normal = Vector2.up;
+						}
+					}
+				}
+
 				if (IsGroundNormal(hit.normal)) {
 					//논리적으로 우항은 0이어야 하지만 약간 완화
 					if (hit.distance - rayGroundOffset > -rayGroundOffset * 0.5f)
 						isAllRayOverFoot = false;
 
-					float distNow = hit.distance - rayGroundOffset;
+					distNow = hit.distance - rayGroundOffset;
 					//dist값 업데이트, 지형 노말인 Ray만 groundRay로 쳐줌
 					if (distNow < dist) {
 						dist = distNow;
@@ -199,13 +217,14 @@ public class UnitCharacter : Unit
 				isAllRayOverFoot = false;
 			}
 			
-			/*
+			
 			Color color;
-			if (currentMinDist < 0) color = Color.blue;
+			if (distNow < 0)
+				color = Color.blue;
 			else color = Color.red;
-			Debug.DrawLine(origin+ _rayDir * rayGroundOffset, origin+_rayDir * currentMinDist, color);
-			Debug.DrawLine(hit.point, hit.point + hit.normal*0.5f, Color.green);
-			*/
+			Debug.DrawLine(origin, origin +_rayDir * (distNow+ rayGroundOffset), color);
+			//Debug.DrawLine(hit.point, hit.point + hit.normal*0.5f, Color.green);
+			
 
 
 		}
@@ -246,9 +265,6 @@ public class UnitCharacter : Unit
 	/// </summary>
 	/// <returns>착지판정하는가?</returns>
 	public bool GroundCheckFromAir() {
-		//이동호출
-		Vector2 vel = new Vector2(status.sideMoveSpeed, status.verticalSpeed);
-		SetMovement(MovementType.SetVelocity, vel);
 
 		//착지판정 
 		Vector2 _rayDir = Vector2.down;
@@ -264,10 +280,9 @@ public class UnitCharacter : Unit
 				+ foot.transform.right * foot.size.x * ((float)i / rays * 0.5f)
 				- (Vector3)_rayDir * rayGroundOffset;
 
+			RaycastHit2D hit = Physics2D.Raycast(origin, _rayDir, (groundDist + rayGroundOffset) * 2, groundLayer);
 
-			RaycastHit2D[] hits = Physics2D.RaycastAll(origin, _rayDir, (groundDist + rayGroundOffset) * 2, groundLayer);
-			foreach (RaycastHit2D hit in hits) {
-
+			if (hit.collider) {
 				//한 ray라도 발 아래에 쬐어지면
 				if (hit.distance - rayGroundOffset > -rayGroundOffset * 0.5f)//논리적으로 우항은 0이어야 하지만 약간 완화
 					isAllRayOverFoot = false;
@@ -281,18 +296,21 @@ public class UnitCharacter : Unit
 				if (distNow <= 0.05f //땅에 가까이 붙었을때
 					&& status.verticalSpeed - groundYSpeed <= 0//추락할때만 땅에 붙게 (지형 속도도 고려)
 					&& IsGroundNormal(hit.normal)) {//지형 각도 범위일때
+
 					isGrounded = true;
 					return true;
 				}
 			}
 
-			if (hits.Length == 0)
-				isAllRayOverFoot = false;
 		}
 
+		//땅 못밟으면 이동호출
+		Vector2 vel = new Vector2(status.sideMoveSpeed, status.verticalSpeed);
+		SetMovement(MovementType.SetVelocity, vel);
 
 		isGrounded = false;
 		return false;
+
 	}
 	
 

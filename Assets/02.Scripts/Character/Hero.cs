@@ -123,14 +123,23 @@ public class HeroAir : HeroState {
 
 	}
 	public override void Execute() {
+		
+
 		//좌우이동
 		unit.HandleMoveSpeed(unit.GetSideMoveDirection(), moveStat.airMoveSpeed);
+
 
 		//애니메이션 flip
 		if (moveStat.sideMoveSpeed > 0) {
 			animator.GetComponent<SpriteRenderer>().flipX = false ;
 		} else if (moveStat.sideMoveSpeed < 0) {
 			animator.GetComponent<SpriteRenderer>().flipX = true;
+		}
+
+		//착지판정
+		if (unit.GroundCheckFromAir()) {
+			sm.SetState(States.Hero_Ground);
+			return;
 		}
 
 		//추락
@@ -140,10 +149,6 @@ public class HeroAir : HeroState {
 		Vector2 vel = new Vector2(moveStat.sideMoveSpeed, moveStat.verticalSpeed);
 		unit.SetMovement(MovementType.SetVelocity, vel);
 
-		//착지판정
-		if (unit.GroundCheckFromAir()) {
-			sm.SetState(States.Hero_Ground);
-		}
 
 		//상호작용 오브젝트
 		List<InteractionObject> interactions = unit.sensor.InteractionObjects;

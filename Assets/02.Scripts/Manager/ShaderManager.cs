@@ -47,10 +47,6 @@ public class ShaderManager : SingleTon<GameManager>
     void Start()
     {
 		LoadResources();
-        mainLight_L2D = mainLight.GetComponent<Light2D>();
-        skyStar_Material = skyStar.GetComponent<MeshRenderer>().material;
-		setSpritesFogLevel();
-        setSkyObject();
     }
 
     // Update is called once per frame
@@ -87,6 +83,10 @@ public class ShaderManager : SingleTon<GameManager>
 				}
 			}
 
+			mainLight_L2D = mainLight.GetComponent<Light2D>();
+			skyStar_Material = skyStar.GetComponent<MeshRenderer>().material;
+			setSpritesFogLevel();
+			setSkyObject();
 		}
 
 	}
@@ -94,10 +94,10 @@ public class ShaderManager : SingleTon<GameManager>
     void getSpriteList()
     {
         //모든 스프라이트 오브젝트를 로드함.
-        spriteRenderers = GameObject.FindObjectsOfType(typeof(SpriteRenderer)) as SpriteRenderer[];
+        spriteRenderers = FindObjectsOfType(typeof(SpriteRenderer)) as SpriteRenderer[];
         spriteObjects = new List<GameObject>();
 
-        foreach (SpriteRenderer sr in spriteRenderers)
+		foreach (SpriteRenderer sr in spriteRenderers)
         {
             spriteObjects.Add(sr.gameObject);
         }
