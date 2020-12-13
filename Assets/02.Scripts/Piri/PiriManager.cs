@@ -191,54 +191,57 @@ public class PiriManager : SingleTon<PiriManager>
         Debug.Log("Select Object name : " + _solveObj.name);
 
 
-        if (currentPiriEnergy > 0)
-        {
-            currentPiriEnergy -= 1;
-
-
-            StartPiriEffect(isShouldUseChild, _solveObj);
-
-            isCanAddedPressTimer = false;
-            pressTimer = 0f;
-
-        }
-        else if (GameManager.Instance.childs.Count > 0)
-        {
-         
-            if (GameManager.Instance.childs[0].enabled != false)
-            {
-                Debug.Log(GameManager.Instance.childs.Count - 1);
-                isShouldUseChild = true;
-
-
-                StartPiriEffect(isShouldUseChild, _solveObj);
-
-                isCanAddedPressTimer = false;
-                pressTimer = 0f;
-            }
-            else
-            {
-                isCanAddedPressTimer = false;
-                pressTimer = 0f;
-                return;
-            }
-
-
-        }
-        else
-        {
-            isCanAddedPressTimer = false;
-            pressTimer = 0f;
-            return;
-        }
-
-
         if (_solveObj.GetComponent<PulleyPlatform>() != null)
         {
             var _test = _solveObj.GetComponent<PulleyPlatform>();
-            if (_test.selectState==ESelectState.DEFAULT)
+            if (_test.selectState != ESelectState.SOLVED && _test.selectState == ESelectState.DEFAULT)
             {
+                if (currentPiriEnergy > 0)
+                {
+                    currentPiriEnergy -= 1;
+
+
+                    StartPiriEffect(isShouldUseChild, _solveObj);
+
+                    isCanAddedPressTimer = false;
+                    pressTimer = 0f;
+
+                }
+                else if (GameManager.Instance.childs.Count > 0)
+                {
+
+                    if (GameManager.Instance.childs[0].enabled != false)
+                    {
+                        Debug.Log(GameManager.Instance.childs.Count - 1);
+                        isShouldUseChild = true;
+
+
+                        StartPiriEffect(isShouldUseChild, _solveObj);
+
+                        isCanAddedPressTimer = false;
+                        pressTimer = 0f;
+                    }
+                    else
+                    {
+                        isCanAddedPressTimer = false;
+                        pressTimer = 0f;
+                        return;
+                    }
+
+
+                }
+                else
+                {
+                    isCanAddedPressTimer = false;
+                    pressTimer = 0f;
+                    return;
+                }
+
                 _test.selectState = ESelectState.SOLVED;
+
+
+
+
             }
 
 
@@ -248,7 +251,50 @@ public class PiriManager : SingleTon<PiriManager>
             var _test = _solveObj.GetComponent<WindmillPlatform>();
             if (_test.selectState == ESelectState.DEFAULT)
             {
+
+                if (currentPiriEnergy > 0)
+                {
+                    currentPiriEnergy -= 1;
+
+
+                    StartPiriEffect(isShouldUseChild, _solveObj);
+
+                    isCanAddedPressTimer = false;
+                    pressTimer = 0f;
+
+                }
+                else if (GameManager.Instance.childs.Count > 0)
+                {
+
+                    if (GameManager.Instance.childs[0].enabled != false)
+                    {
+                        Debug.Log(GameManager.Instance.childs.Count - 1);
+                        isShouldUseChild = true;
+
+
+                        StartPiriEffect(isShouldUseChild, _solveObj);
+
+                        isCanAddedPressTimer = false;
+                        pressTimer = 0f;
+                    }
+                    else
+                    {
+                        isCanAddedPressTimer = false;
+                        pressTimer = 0f;
+                        return;
+                    }
+
+
+                }
+                else
+                {
+                    isCanAddedPressTimer = false;
+                    pressTimer = 0f;
+                    return;
+                }
+
                 _test.selectState = ESelectState.SOLVED;
+
             }
 
         }
@@ -256,6 +302,10 @@ public class PiriManager : SingleTon<PiriManager>
         {
             return;
         }
+
+
+
+
 
         isCanAddedPressTimer = false;
         pressTimer = 0f;

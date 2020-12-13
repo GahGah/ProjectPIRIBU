@@ -82,6 +82,8 @@ public class WindmillPlatform : LiftObject, ISelectable
     {
         rigidBody.rotation = windmillStartRotation;
         StartCoroutine(RotateGoalRotation());
+
+
     }
     protected override void Update()
     {

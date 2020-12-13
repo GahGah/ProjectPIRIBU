@@ -117,6 +117,12 @@ public class PulleyPlatform : LinearPlatform, ISelectable
         rigidBody.position = routeList[currentRouteIndex].transform.position;
         StartCoroutine(MovePlatformThisRoute());
         ClampRouteIndex(7);
+
+        foreach (var item in routeList)
+        {
+            item.GetComponent<SpriteRenderer>().enabled = false;
+        }
+
     }
     protected override void Update()
     {
