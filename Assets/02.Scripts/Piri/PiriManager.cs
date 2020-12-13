@@ -238,7 +238,7 @@ public class PiriManager : SingleTon<PiriManager>
     }
     private void StartPiriEffect(GameObject _endTarget)
     {
-        EffectManager.Instance.VFX_PipeSkill.GetComponent<Script_VFX_PipeSkillEffect>().StartEffect(GameManager.Instance.hero.gameObject, _endTarget);
+        EffectManager.Instance.VFX_PipeSkill.GetComponentInChildren<Script_VFX_PipeSkillEffect>().StartEffect(GameManager.Instance.hero.gameObject, _endTarget);
     }
     private IEnumerator ProcessPiriEnergy()
     {
