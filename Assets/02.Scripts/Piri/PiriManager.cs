@@ -25,7 +25,6 @@ public class PiriManager : SingleTon<PiriManager>
 
     [Tooltip("애를 소모해서 피리 능력을 사용한 횟수")]
     public int totaChildUseCount;
-
     private bool isCanAddedPressTimer;
 
     public bool isReadyToUse; //사용 준비 됨?
@@ -123,9 +122,6 @@ public class PiriManager : SingleTon<PiriManager>
                 {
                     SolveThisObject(hit.collider.gameObject);
                 }
-
-
-
             }
         }
         else
@@ -136,7 +132,7 @@ public class PiriManager : SingleTon<PiriManager>
         currentPiriEnergyPer = 1f * currentPiriEnergy / maxPiriEnergy;
 
     }
-
+    
     /// <summary>
     /// 피리 능력 횟수를 count만큼 증가시킵니다.
     /// </summary>
@@ -181,47 +177,79 @@ public class PiriManager : SingleTon<PiriManager>
 
             if (GameManager.Instance.childs[0].enabled != false)
             {
-                GameManager.Instance.childs[GameManager.Instance.childs.Count - 1].gameObject.SetActive(false);
+                GameManager.Instance.childs[GameManager.Instance.childs.Count].gameObject.SetActive(false);
 
                 GameManager.Instance.childs.Remove(GameManager.Instance.childs[GameManager.Instance.childs.Count - 1]);
                 totaChildUseCount += 1;
 
             }
 
-
-
         }
     }
     public void SolveThisObject(GameObject _solveObj)
     {
-        
+        Debug.Log("Select Object name : " + _solveObj.name);
+
+
         if (currentPiriEnergy > 0)
         {
             currentPiriEnergy -= 1;
-        }
-        else if (GameManager.Instance.childs[0].enabled != false)
-        {
-            isShouldUseChild = true;
-            GameManager.Instance.childs[GameManager.Instance.childs.Count - 1].gameObject.SetActive(false);
 
-            GameManager.Instance.childs.Remove(GameManager.Instance.childs[GameManager.Instance.childs.Count - 1]);
+
+            StartPiriEffect(isShouldUseChild, _solveObj);
+
+            isCanAddedPressTimer = false;
+            pressTimer = 0f;
+
+        }
+        else if (GameManager.Instance.childs.Count > 0)
+        {
+         
+            if (GameManager.Instance.childs[0].enabled != false)
+            {
+                Debug.Log(GameManager.Instance.childs.Count - 1);
+                isShouldUseChild = true;
+
+
+                StartPiriEffect(isShouldUseChild, _solveObj);
+
+                isCanAddedPressTimer = false;
+                pressTimer = 0f;
+            }
+            else
+            {
+                isCanAddedPressTimer = false;
+                pressTimer = 0f;
+                return;
+            }
+
+
         }
         else
         {
+            isCanAddedPressTimer = false;
+            pressTimer = 0f;
             return;
         }
 
-        Debug.Log("Select Object name : " + _solveObj.name);
+
         if (_solveObj.GetComponent<PulleyPlatform>() != null)
         {
             var _test = _solveObj.GetComponent<PulleyPlatform>();
-            _test.selectState = ESelectState.SOLVED;
+            if (_test.selectState==ESelectState.DEFAULT)
+            {
+                _test.selectState = ESelectState.SOLVED;
+            }
+
 
         }
         else if (_solveObj.GetComponent<WindmillPlatform>() != null)
         {
             var _test = _solveObj.GetComponent<WindmillPlatform>();
-            _test.selectState = ESelectState.SOLVED;
+            if (_test.selectState == ESelectState.DEFAULT)
+            {
+                _test.selectState = ESelectState.SOLVED;
+            }
 
         }
         else
@@ -229,16 +257,23 @@ public class PiriManager : SingleTon<PiriManager>
             return;
         }
 
-        StartPiriEffect(_solveObj);
-
         isCanAddedPressTimer = false;
         pressTimer = 0f;
 
-
     }
-    private void StartPiriEffect(GameObject _endTarget)
+    private void StartPiriEffect(bool _isChildBye,GameObject _endTarget)
     {
-        EffectManager.Instance.startEffect_VFX_PipeSkill(GameManager.instance.hero.gameObject, _endTarget);
+        if (_isChildBye)
+        {
+            EffectManager.Instance.startEffect_VFX_PipeSkill(GameManager.Instance.childs[GameManager.Instance.childs.Count-1].gameObject, _endTarget);
+            GameManager.Instance.childs[GameManager.Instance.childs.Count - 1].gameObject.SetActive(false);
+            GameManager.Instance.childs.Remove(GameManager.Instance.childs[GameManager.Instance.childs.Count - 1]);
+        }
+        else
+        {
+            EffectManager.Instance.startEffect_VFX_PipeSkill(GameManager.Instance.piriEffectPosition.gameObject, _endTarget);
+        }
+
     }
     private IEnumerator ProcessPiriEnergy()
     {

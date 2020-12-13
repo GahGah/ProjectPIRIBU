@@ -30,7 +30,12 @@ public class CutSceneManager : MonoBehaviour
 
 	void Update()
 	{
-		
+		if (InputManager.Instance.buttonPause.wasPressedThisFrame)
+		{
+			SceneChanger.Instance.LoadScene(nextSceneName);
+			disableNext = true;
+		}
+
 		if (InputManager.Instance.buttonMouseLeft.wasPressedThisFrame && !disableNext) {
 			
 			if (!pages[0]) {

@@ -44,6 +44,10 @@ public class GameManager : SingleTon<GameManager>
 	//씬 재로딩하면 Null 되어서 찾아가도록 합니다~
     public Transform piriUIPosition;
 
+    //피리 이펙트를 나오게 할 위치...
+    //PUP랑 동일하게 썼는데 오류 나려나 ㅋㅋㅋㅋㅋ
+    public Transform piriEffectPosition;
+
     protected override void Awake()
     {
         base.Awake();//여기서 Init한다.
@@ -78,8 +82,21 @@ public class GameManager : SingleTon<GameManager>
 				}
 
 			}
-			//아이들 검색
-			Child[] children = FindObjectsOfType<Child>();
+
+            //피리UI 트랜스폼 검색
+            foreach (Transform trans in hero.GetComponentInChildren<Transform>())
+            {
+                if (trans.gameObject.name == "Piri Effect Position")
+                {
+                    piriEffectPosition = trans;
+                    break;
+                }
+
+            }
+
+
+            //아이들 검색
+            Child[] children = FindObjectsOfType<Child>();
 			foreach (Child child in children) {
 				if (!childs.Contains(child))
 					childs.Add(child);
