@@ -7,10 +7,10 @@ public class PiriManager : SingleTon<PiriManager>
 
 
     [Tooltip("피리 능력 횟수의 최대값입니다.")]
-    public int maxPiriEnergy = 5;
+    public int maxPiriEnergy = 2;
 
     [Tooltip("피리 능력 기본 제공 횟수")]
-    public int defaultPiriEnergy = 5;
+    public int defaultPiriEnergy = 2;
     [Tooltip("현재 남은 피리 능력 사용 가능 횟수.")]
     public int currentPiriEnergy; //현재 능력 사용 가능 횟수
 
@@ -63,8 +63,8 @@ public class PiriManager : SingleTon<PiriManager>
         isChildFollow = true;
 
 
-        maxPiriEnergy = 5;
-        defaultPiriEnergy = 5;
+        maxPiriEnergy = 2;
+        defaultPiriEnergy = 2;
         currentPiriEnergy = defaultPiriEnergy;
         isShouldUseChild = false;
 
