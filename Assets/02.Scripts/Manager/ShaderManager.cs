@@ -32,8 +32,6 @@ public class ShaderManager : SingleTon<GameManager>
     [SerializeField] private Gradient skyGradient_evening = new Gradient();
     [SerializeField] private Gradient skyGradient_night = new Gradient();
 
-    
-
     [SerializeField] private float fogIntensity;
 
     [SerializeField] private GameObject skySprite;
@@ -44,15 +42,27 @@ public class ShaderManager : SingleTon<GameManager>
     [SerializeField] public GameObject mainLight;
     private Light2D mainLight_L2D;
 
+    [SerializeField] private GameObject BG_Tree_01;
+    [SerializeField] private GameObject BG_Tree_02;
+    [SerializeField] private GameObject BG_Mountain_01;
+    [SerializeField] private GameObject BG_Mountain_02;
     [SerializeField] private GameObject BG_Mountain_03;
-    [SerializeField] private Gradient BG_Mountain_03_Color = new Gradient();
 
+    [SerializeField] private Gradient MountainColor = new Gradient();
+
+    private Material BG_Tree_01_Material;
+    private Material BG_Tree_02_Material;
+    private Material BG_Mountain_01_Material;
+    private Material BG_Mountain_02_Material;
+    private Material BG_Mountain_03_Material;
+
+    private Vector2 CamPos_Origin;
+    private Vector2 CamPos;
 
     // Start is called before the first frame update
     void Start()
     {
 		LoadResources();
-        setBGObjectColor();
     }
 
     // Update is called once per frame
@@ -65,9 +75,7 @@ public class ShaderManager : SingleTon<GameManager>
 			changeLightAndFogColor();
 			changeSkyObjects();
 			setSpritesFogLevel();
-
-            //---
-            setBGObjectColor();
+            changeBGObjectOffset();
         }
     }
 
@@ -88,22 +96,41 @@ public class ShaderManager : SingleTon<GameManager>
 					case "SkySprite": skySprite = go; break;
 					case "StarFlowSprite": skyStar = go; break;
 					case "Global Light 2D": mainLight = go; break;
+                    case "BG_Tree_01": BG_Tree_01 = go; break;
+                    case "BG_Tree_02": BG_Tree_02 = go; break;
+                    case "BG_Mountain_01": BG_Mountain_01 = go; break;
+                    case "BG_Mountain_02": BG_Mountain_02 = go; break;
                     case "BG_Mountain_03": BG_Mountain_03 = go; break;
 					default: continue;
 				}
 			}
 
 			mainLight_L2D = mainLight.GetComponent<Light2D>();
-			skyStar_Material = skyStar.GetComponent<MeshRenderer>().material;
-			setSpritesFogLevel();
+			skyStar_Material = skyStar.GetComponent<MeshRenderer>().sharedMaterial;
+
+            BG_Tree_01_Material = BG_Tree_01.GetComponent<MeshRenderer>().sharedMaterial;
+            BG_Tree_02_Material = BG_Tree_02.GetComponent<MeshRenderer>().sharedMaterial;
+            BG_Mountain_01_Material = BG_Mountain_01.GetComponent<MeshRenderer>().sharedMaterial;
+            BG_Mountain_02_Material = BG_Mountain_02.GetComponent<MeshRenderer>().sharedMaterial;
+            BG_Mountain_03_Material = BG_Mountain_03.GetComponent<MeshRenderer>().sharedMaterial;
+
+            CamPos_Origin = CameraManager.instance.currentCamera.transform.position;
+
+            initBGObjectColor();
+            setSpritesFogLevel();
 			setSkyObject();
-
-            //---
-            setBGObjectColor();
-
         }
-
 	}
+
+    void initBGObjectColor()
+    {
+        BG_Mountain_01_Material.SetColor("_BeginColor", MountainColor.colorKeys[0].color);
+        BG_Mountain_02_Material.SetColor("_BeginColor", MountainColor.colorKeys[0].color);
+        BG_Mountain_03_Material.SetColor("_BeginColor", MountainColor.colorKeys[0].color);
+        BG_Mountain_01_Material.SetColor("_EndColor", MountainColor.colorKeys[1].color);
+        BG_Mountain_02_Material.SetColor("_EndColor", MountainColor.colorKeys[1].color);
+        BG_Mountain_03_Material.SetColor("_EndColor", MountainColor.colorKeys[1].color);
+    }
 
     void getSpriteList()
     {
@@ -130,6 +157,7 @@ public class ShaderManager : SingleTon<GameManager>
     }
 
 
+
     void timer()
     {
         curTime += Time.deltaTime * timeMultiple;
@@ -140,16 +168,25 @@ public class ShaderManager : SingleTon<GameManager>
         }
     }
 
-    private void setBGObjectColor()
+    
+
+    void changeBGObjectOffset()
     {
-		Material mat = BG_Mountain_03.GetComponent<MeshRenderer>().sharedMaterial;
+        CamPos = CameraManager.instance.currentCamera.transform.position;
+        Vector2 PosDiffrence = CamPos_Origin - CamPos;
+        PosDiffrence = -PosDiffrence;
 
-		mat.SetFloat("FogIntensity", 1.0f);
-		mat.SetColor("BeginColor", BG_Mountain_03_Color.colorKeys[0].color);
-		mat.SetColor("EndColor", BG_Mountain_03_Color.colorKeys[1].color);
+        BG_Mountain_03_Material.SetVector("_Offset", PosDiffrence * 0.01f);
+        BG_Mountain_02_Material.SetVector("_Offset", PosDiffrence * 0.015f);
+        BG_Mountain_01_Material.SetVector("_Offset", PosDiffrence * 0.02f);
+        BG_Tree_02_Material.SetVector("_Offset", PosDiffrence * 0.025f);
+        BG_Tree_01_Material.SetVector("_Offset", PosDiffrence * 0.03f);
+    }
 
-	}
 
+    //MainLight 색
+    //Fog 색
+    //Sky 색 변경
     void changeLightAndFogColor()
     {
         Color fogCol;
@@ -205,16 +242,25 @@ public class ShaderManager : SingleTon<GameManager>
             gradientEnd = Color.Lerp(skyGradient_night.colorKeys[1].color, skyGradient_morning.colorKeys[1].color, (curTime - time_nightEnd) / timeInterval);
         }
 
-		// 모든 스프라이트 & 메인 라이트에 적용
-		foreach (SpriteRenderer sr in spriteRenderers)
-		{
-			sr.sharedMaterial.SetColor("_FogColor", fogCol);
-		}
+		// 모든 스프라이트에 적용
+		//foreach (SpriteRenderer sr in spriteRenderers)
+		//{
+		//	sr.sharedMaterial.SetColor("_FogColor", fogCol);
+		//}
+        
+        // 메인 라이트에 적용
 		mainLight_L2D.color = lightCol;
 
+        // 스카이 컬러 적용
 		skySprite.GetComponent<MeshRenderer>().sharedMaterial.SetColor("_BeginColor", gradientBegin);
 		skySprite.GetComponent<MeshRenderer>().sharedMaterial.SetColor("_EndColor", gradientEnd);
 
+        // 배경 오브젝트에 적용.
+        BG_Tree_01_Material.SetColor("_FogColor", fogCol);
+        BG_Tree_02_Material.SetColor("_FogColor", fogCol);
+        BG_Mountain_01_Material.SetColor("_FogColor", fogCol);
+        BG_Mountain_02_Material.SetColor("_FogColor", fogCol);
+        BG_Mountain_03_Material.SetColor("_FogColor", fogCol);
     }
 
     private Vector2 P0 = new Vector2(-55f, -8f);
@@ -264,7 +310,6 @@ public class ShaderManager : SingleTon<GameManager>
             timeInterval = (maxTime + time_nightStart) - time_nightEnd;                  //4500.
             float t = (tempTime - time_nightEnd) / timeInterval; // 0부터 1까지의 범위로 변환.
             float s = 1 - t;
-
 
             Vector2 bezierCurvePos = (s * s * P0) +
                 (2 * t * s * P1) +
