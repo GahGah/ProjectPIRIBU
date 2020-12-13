@@ -79,19 +79,19 @@ public class CameraManager : MonoBehaviour
 
     private float limitCalSize;
 
-	public static CameraManager instance;
+    public static CameraManager instance;
     public void Init()
     {
-		if (instance == null)
-			instance = this;
+        if (instance == null)
+            instance = this;
 
 
-		//height = currentCamera.orthographicSize;
-		//width = height * Screen.width / Screen.height;
+        //height = currentCamera.orthographicSize;
+        //width = height * Screen.width / Screen.height;
 
-		#region if <=0
+        #region if <=0
 
-		if (currentCamera == null)
+        if (currentCamera == null)
         {
             Debug.Log("currentCamera가 null");
         }
@@ -159,7 +159,7 @@ public class CameraManager : MonoBehaviour
         }
 
 
-       
+
     }
 
     private void FixedUpdate()
@@ -349,23 +349,36 @@ public class CameraManager : MonoBehaviour
 
 
     }
+
+    private float CustomLerp(float a, float b, float lerpValue)
+    {
+
+        float invLerpValue = 1 - lerpValue;
+        var result = a * invLerpValue - b * lerpValue;
+
+        return result;
+
+    }
     private void ChangeScaleThisObject()
     {
         float _sizePer = currentCamera.orthographicSize / cameraDefaultSize * 100;
 
-        if (Mathf.Abs(_sizePer-100)<limitCalSize)
+        if (Mathf.Abs(_sizePer - 100) < limitCalSize)
         {
             _sizePer = 100f;
         }
 
         if (isTimeMode)
         {
-            scaleChangeObject.transform.localScale = Vector3.Lerp(scaleChangeObject.transform.localScale,
-              new Vector3(
-                 (scObjX / 100) * _sizePer,
-                 (scObjY / 100) * _sizePer,
-                 scaleChangeObject.transform.localScale.z //z는 뭐 그대로 놔두기로 하고,,,
-                  ), zoomTimer);
+
+            scaleChangeObject.transform.localScale.Set(CustomLerp(scaleChangeObject.transform.localScale.x, (scObjX / 100) * _sizePer, zoomTimer),
+                               CustomLerp(scaleChangeObject.transform.localScale.y, (scObjY / 100) * _sizePer, zoomTimer), scaleChangeObject.transform.localScale.z);
+            //scaleChangeObject.transform.localScale = Vector3.Lerp(scaleChangeObject.transform.localScale,
+            //  new Vector3(
+            //     (scObjX / 100) * _sizePer,
+            //     (scObjY / 100) * _sizePer,
+            //     scaleChangeObject.transform.localScale.z //z는 뭐 그대로 놔두기로 하고,,,
+            //      ), zoomTimer);
         }
         else
         {

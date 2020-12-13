@@ -1816,6 +1816,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3303523395563476361, guid: 22c94e109dca2aa4d8e929b9a39131fb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3303523397591997395, guid: 22c94e109dca2aa4d8e929b9a39131fb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4995061381805588912, guid: 22c94e109dca2aa4d8e929b9a39131fb,
         type: 3}
       propertyPath: m_Name
@@ -1841,6 +1851,11 @@ PrefabInstance:
       propertyPath: isConfine
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4995061381805588915, guid: 22c94e109dca2aa4d8e929b9a39131fb,
+        type: 3}
+      propertyPath: scaleChangeObject
+      value: 
+      objectReference: {fileID: 1783094960}
     - target: {fileID: 4995061381805588916, guid: 22c94e109dca2aa4d8e929b9a39131fb,
         type: 3}
       propertyPath: orthographic size
@@ -2065,6 +2080,12 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1783094960 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6509173156140259079, guid: 22c94e109dca2aa4d8e929b9a39131fb,
+    type: 3}
+  m_PrefabInstance: {fileID: 1458485084}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1923034424
 GameObject:
   m_ObjectHideFlags: 0
