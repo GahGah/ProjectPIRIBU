@@ -214,7 +214,6 @@ public class PiriManager : SingleTon<PiriManager>
         Debug.Log("Select Object name : " + _solveObj.name);
         if (_solveObj.GetComponent<PulleyPlatform>() != null)
         {
-            Debug.Log("OK~ go Solved!");
             var _test = _solveObj.GetComponent<PulleyPlatform>();
             _test.selectState = ESelectState.SOLVED;
 
@@ -227,15 +226,19 @@ public class PiriManager : SingleTon<PiriManager>
         }
         else
         {
-            Debug.Log("yeah");
+            return;
         }
 
-
+        StartPiriEffect(_solveObj);
 
         isCanAddedPressTimer = false;
         pressTimer = 0f;
 
 
+    }
+    private void StartPiriEffect(GameObject _endTarget)
+    {
+        EffectManager.Instance.VFX_PipeSkill.GetComponent<Script_VFX_PipeSkillEffect>().StartEffect(GameManager.Instance.hero.gameObject, _endTarget);
     }
     private IEnumerator ProcessPiriEnergy()
     {
