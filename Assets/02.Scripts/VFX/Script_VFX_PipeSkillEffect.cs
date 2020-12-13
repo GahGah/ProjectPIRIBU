@@ -31,7 +31,7 @@ public class Script_VFX_PipeSkillEffect : MonoBehaviour
 
     private void Start()
     {
-        testStart();
+        //testStart();
     }
 
     /*--------------------------------------*/
@@ -66,7 +66,7 @@ public class Script_VFX_PipeSkillEffect : MonoBehaviour
 
     public void StartEffect(GameObject startTarget, GameObject endTarget)
     {
-        this.transform.position.Set(startTarget.transform.position.x, startTarget.transform.position.y, -9);
+        //this.transform.position.Set(startTarget.transform.position.x, startTarget.transform.position.y, -9);
         particles = new ParticleSystem.Particle[particleSystem.main.maxParticles];
         particleSystem.Play();
 
@@ -98,7 +98,7 @@ public class Script_VFX_PipeSkillEffect : MonoBehaviour
                 ParticleSystem.Particle tempParticle = particles[i];
 
                 Vector3 particlePos = particleSystem.transform.TransformPoint(particles[i].position);
-                Vector3 targetPos = testTarget.transform.position + this.transform.position;
+                Vector3 targetPos = endTarget.transform.position + this.transform.position;
 
                 float lifeRate = (tempParticle.remainingLifetime / tempParticle.startLifetime);
                 Vector3 targetPosInv = targetPos - particlePos;
@@ -130,7 +130,6 @@ public class Script_VFX_PipeSkillEffect : MonoBehaviour
 
             particleSystem.SetParticles(particles);
         }
-            
 
         StopCoroutine(cor_ExecuteEffect);
         EndEffect();

@@ -15,6 +15,15 @@ public class EffectManager : SingleTon<EffectManager>
     {
         base.Init();
     }
+
     [SerializeField]
     public GameObject VFX_PipeSkill;
+
+    public void startEffect_VFX_PipeSkill(GameObject startTarget, GameObject endTarget)
+    {
+        //ㅁㄴㅇㄹ
+
+        GameObject VFX = Instantiate(VFX_PipeSkill, new Vector3(startTarget.transform.position.x, startTarget.transform.position.y, -5), Quaternion.identity);
+        VFX.GetComponentInChildren<Script_VFX_PipeSkillEffect>().StartEffect(startTarget, endTarget);
+    }
 }

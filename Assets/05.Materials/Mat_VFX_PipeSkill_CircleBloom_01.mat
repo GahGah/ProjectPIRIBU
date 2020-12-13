@@ -44,7 +44,7 @@ Material:
     - Boolean_7084CEFD: 0
     - _EnableExternalAlpha: 0
     m_Colors:
-    - Color_C3CC9AB: {r: 0.0006035022, g: 0.0012070044, b: 0.0006035022, a: 0}
+    - Color_C3CC9AB: {r: 0.00022043366, g: 0.0016114458, b: 0.00022043366, a: 0}
     - Vector2_409FD572: {r: 0.8, g: 1, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
