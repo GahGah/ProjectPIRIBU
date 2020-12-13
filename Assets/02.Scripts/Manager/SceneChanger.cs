@@ -55,14 +55,16 @@ public class SceneChanger : SingleTon<SceneChanger>
             {
                 UIManager.Instance.SetActiveTrueOnlyThisCanvasObject("MainMenuCanvas");
                 UIManager.Instance.InitChildButtons();
+				UIManager.Instance.GoDePause();
 
-
-            }
+			}
             else if (loadSceneName == "InGameScene")
             {
                 UIManager.Instance.SetActiveTrueOnlyThisCanvasObject("HUDCanvas");
 
-            }
+            } else if (loadSceneName == "CutScene_Prologue") {
+				UIManager.Instance.SetActiveThisCanvasObject("MainMenuCanvas", false);
+			}
             isLoading = false;
         }
 

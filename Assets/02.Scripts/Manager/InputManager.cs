@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
+using UnityEngine.SceneManagement;
 
 //모든 입력 관리
 public class InputManager : SingleTon<InputManager>
@@ -24,7 +25,7 @@ public class InputManager : SingleTon<InputManager>
     protected override void Awake()
     {
         base.Awake();
-    }
+	}
     protected override void Init()
     {
         base.Init();

@@ -81,21 +81,21 @@ public class UIManager : MonoBehaviour
     }
     public void GoGameStart()
     {
-        SceneChanger.Instance.LoadScene("InGameScene");
+        SceneChanger.Instance.LoadScene("CutScene_Prologue");
     }
     public void GoQuit()
     {
         Application.Quit();
     }
 
-    private void GoPause()
+	public void GoPause()
     {
 
         Time.timeScale = 0f;
 
     }
 
-    private void GoDePause()
+    public void GoDePause()
     {
         Time.timeScale = 1f;
     }

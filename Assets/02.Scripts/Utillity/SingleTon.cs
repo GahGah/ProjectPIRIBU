@@ -26,7 +26,7 @@ public class SingleTon<T> : MonoBehaviour where T : MonoBehaviour {
 			instance = this.gameObject.GetComponent<T>();
 			DontDestroyOnLoad(this);
 		} else if (instance != this) {
-			Destroy(this);
+			Destroy(this.gameObject);
 		}
 	}
 
