@@ -14,4 +14,16 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/01.Scenes/BuildScenes/InGameScene.unity
     guid: 0e6bf890f73682140bee8d1b1e636e87
+  - enabled: 1
+    path: Assets/01.Scenes/BuildScenes/CutScene_Prologue.unity
+    guid: 36c11a20fbc376749be3c317ed5b9ba1
+  - enabled: 1
+    path: Assets/01.Scenes/BuildScenes/CutScene_BadEnding.unity
+    guid: a940021ff92654945ab6643586343c1e
+  - enabled: 1
+    path: Assets/01.Scenes/BuildScenes/CutScene_NormalEnding.unity
+    guid: 964d24cd82ded9846894d8c8b9e39c01
+  - enabled: 1
+    path: Assets/01.Scenes/BuildScenes/CutScene_GoodEnding.unity
+    guid: f388e1cca53468c45a3a17d989b5154d
   m_configObjects: {}

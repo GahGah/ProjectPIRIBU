@@ -142,13 +142,13 @@ public class ShaderManager : SingleTon<GameManager>
 
     private void setBGObjectColor()
     {
-        BG_Mountain_03.GetComponent<MeshRenderer>().sharedMaterial.GetFloat("FogIntensity");
-        Debug.Log(BG_Mountain_03.GetComponent<MeshRenderer>().sharedMaterial.GetFloat("FogIntensity"));
-        Debug.Log(BG_Mountain_03);
-        BG_Mountain_03.GetComponent<MeshRenderer>().sharedMaterial.SetColor("BeginColor", BG_Mountain_03_Color.colorKeys[0].color);
-        BG_Mountain_03.GetComponent<MeshRenderer>().sharedMaterial.SetColor("EndColor", BG_Mountain_03_Color.colorKeys[1].color);
-        BG_Mountain_03.GetComponent<MeshRenderer>().sharedMaterial.SetFloat("FogIntensity", 1f);
-    }
+		Material mat = BG_Mountain_03.GetComponent<MeshRenderer>().sharedMaterial;
+
+		mat.SetFloat("FogIntensity", 1.0f);
+		mat.SetColor("BeginColor", BG_Mountain_03_Color.colorKeys[0].color);
+		mat.SetColor("EndColor", BG_Mountain_03_Color.colorKeys[1].color);
+
+	}
 
     void changeLightAndFogColor()
     {
