@@ -78,14 +78,20 @@ public class CameraManager : MonoBehaviour
 
 
     private float limitCalSize;
+
+	public static CameraManager instance;
     public void Init()
     {
-        //height = currentCamera.orthographicSize;
-        //width = height * Screen.width / Screen.height;
+		if (instance == null)
+			instance = this;
 
-        #region if <=0
 
-        if (currentCamera == null)
+		//height = currentCamera.orthographicSize;
+		//width = height * Screen.width / Screen.height;
+
+		#region if <=0
+
+		if (currentCamera == null)
         {
             Debug.Log("currentCamera가 null");
         }
