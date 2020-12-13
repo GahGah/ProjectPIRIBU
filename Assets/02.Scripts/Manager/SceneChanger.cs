@@ -4,8 +4,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class SceneChanger : SingleTon<SceneChanger>
+public class SceneChanger : MonoBehaviour
 {
+    [Tooltip("Destroy를 하고 싶지 않아서 독자적인 싱글턴 사용")]
+    public static SceneChanger Instance;
 
     public Image loadingBarImage;
     public CanvasGroup canvasGroup;
@@ -23,10 +25,18 @@ public class SceneChanger : SingleTon<SceneChanger>
     /// 씬 로딩 중인가?
     /// </summary>
     public bool isLoading;
-
-    protected override void Init()
+    private void Awake()
     {
-		base.Init();
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
+        Init();
+    }
+    private void Init()
+    {
+
         currentFadeSpeed = 1f / 2f;
         currentLoadingFadeSpeed = 1f / 2f;
         loadingBarImage.fillAmount = 0f;
@@ -85,6 +95,7 @@ public class SceneChanger : SingleTon<SceneChanger>
 
         yield return StartCoroutine(FadeAlphaCanvasGroup(0f, 1f));
 
+        yield return new WaitForSecondsRealtime(1f);
         AsyncOperation loadOp = SceneManager.LoadSceneAsync(_sceneName);
         loadOp.allowSceneActivation = false;
 
