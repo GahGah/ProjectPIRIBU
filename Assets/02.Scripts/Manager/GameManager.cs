@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -39,6 +40,11 @@ public class GameManager : SingleTon<GameManager>
     [HideInInspector] public List<Child> childs;
     [HideInInspector] public Hero hero;
     [HideInInspector] public Rect childsRange;
+
+	int maxChildNumber;
+	AudioSource bgm;
+	float targetPitch;
+	float currPitch;
 
     //피리 UI를 띄울 위치입니다.
 	//씬 재로딩하면 Null 되어서 찾아가도록 합니다~
@@ -102,6 +108,8 @@ public class GameManager : SingleTon<GameManager>
 					childs.Add(child);
 			}
 
+			maxChildNumber = childs.Count();
+
 		} else {
 			isStageScene = false;
 		}
@@ -111,11 +119,15 @@ public class GameManager : SingleTon<GameManager>
     //임시 배경음 재생
     private void Start()
     {
-        AudioSource audioSource = gameObject.GetComponent<AudioSource>();
-        if (audioSource!=null)
+        bgm = gameObject.GetComponent<AudioSource>();
+        if (bgm!=null)
         {
-            if (!audioSource.isPlaying)
-                audioSource.Play();
+            if (!bgm.isPlaying)
+                bgm.Play();
+
+			targetPitch = 1;
+			currPitch = targetPitch;
+
         }
 
     }
@@ -129,11 +141,12 @@ public class GameManager : SingleTon<GameManager>
             UIManager.Instance.PauseToggle();
         }
 
-
 		//스테이지 씬에서의 동작
 		if (isStageScene) {
 			UpdateChildRange();
-			DrawChildRange();
+			targetPitch = Mathf.Lerp(targetPitch, 1 + (float)(GetChildNumber() - maxChildNumber) / maxChildNumber * 0.4f, Time.deltaTime*2);
+			currPitch = Mathf.Lerp(currPitch,targetPitch,Time.deltaTime*2);
+			bgm.pitch = currPitch;
 		}
     }
 
@@ -144,7 +157,6 @@ public class GameManager : SingleTon<GameManager>
             child.SetFollow(isFollow);
         }
     }
-
     public void DrawChildRange()
     {
         Debug.DrawLine(new Vector2(childsRange.xMin, childsRange.yMin), new Vector2(childsRange.xMax, childsRange.yMin));
@@ -188,5 +200,13 @@ public class GameManager : SingleTon<GameManager>
         Vector2 ret = new Vector2(childsRange.xMin, childsRange.xMax);
         return ret;
     }
+
+	public int GetChildNumber() {
+		return childs.Where(x => x != null && x.enabled).Count();
+	}
+
+	public void UsePiri() {
+		targetPitch = 1.4f;
+	}
 
 }

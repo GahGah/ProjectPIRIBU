@@ -25,7 +25,14 @@ public class SceneChanger : MonoBehaviour
     /// 씬 로딩 중인가?
     /// </summary>
     public bool isLoading;
-    private void Awake()
+
+	// 페이드인 끝나야만 컷씬 스킵 가능하게 할게요. 바로 누르면 씬 로딩이 제대로 안되어서;
+	/// <summary>
+	/// 페이딩중인가?
+	/// </summary>
+	public bool isFading;
+
+	private void Awake()
     {
         if (Instance == null)
         {
@@ -46,9 +53,10 @@ public class SceneChanger : MonoBehaviour
     public void LoadScene(string _sceneName)
     {
         isLoading = true;
-        //gameObject.SetActive(true);
+		isFading = true;
+		//gameObject.SetActive(true);
 
-        SceneManager.sceneLoaded += LoadSceneEnd;
+		SceneManager.sceneLoaded += LoadSceneEnd;
         loadSceneName = _sceneName;
 
         StartCoroutine(LoadingScene(_sceneName, Color.black));
@@ -147,8 +155,12 @@ public class SceneChanger : MonoBehaviour
 
         if (_endAlphaValue == 0f)
         {
-            whitePanel.gameObject.SetActive(false);
+
+			whitePanel.gameObject.SetActive(false);
             loadingBarImage.gameObject.SetActive(false);
+
+			//페이드인 끝나야만 컷씬 스킵 가능하게 할게요. 바로 누르면 씬 로딩이 제대로 안되어서;
+			isFading = false;
         }
     }
     private IEnumerator FadeAlpha(float _startAlphaValue, float _endAlphaValue)
@@ -177,8 +189,6 @@ public class SceneChanger : MonoBehaviour
         {
             whitePanel.gameObject.SetActive(false);
             loadingBarImage.gameObject.SetActive(false);
-
-            
         }
     }
 

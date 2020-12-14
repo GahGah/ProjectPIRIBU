@@ -28,27 +28,39 @@ public class CutSceneManager : MonoBehaviour
 		disableNext = false;
 	}
 
-	void Update()
-	{
-		if (InputManager.Instance.buttonPause.wasPressedThisFrame)
-		{
+	void GoNextScene() {
+		if (!SceneChanger.Instance.isFading) {
 			SceneChanger.Instance.LoadScene(nextSceneName);
 			disableNext = true;
 		}
-
-		if (InputManager.Instance.buttonMouseLeft.wasPressedThisFrame && !disableNext) {
+	}
+	void Update()
+	{
+		if (!disableNext) {
 			
-			if (!pages[0]) {
-				pages.RemoveAt(0);
-				page = pages[0];
+			//ESC 스킵
+			if (InputManager.Instance.buttonPause.wasPressedThisFrame)
+			{
+				GoNextScene();
 			}
 
-			if (pages.Count > 1)
-				page.NextPage();
-			else {
-				SceneChanger.Instance.LoadScene(nextSceneName);
-				disableNext = true;
+			if (InputManager.Instance.buttonMouseLeft.wasPressedThisFrame) {
+				
+				//넘긴 페이지 삭제
+				if (!pages[0]) {
+					pages.RemoveAt(0);
+					page = pages[0];
+				}
+
+				//다음 페이지
+				if (pages.Count > 1)
+					page.NextPage();
+
+				//마지막 페이지면 다음씬으로
+				else
+					GoNextScene();
 			}
+
 		}
 	}
 }
