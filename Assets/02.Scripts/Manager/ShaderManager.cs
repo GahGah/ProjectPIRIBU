@@ -90,7 +90,7 @@ public class ShaderManager : SingleTon<ShaderManager>
     void Update()
     {
 		//스테이지 씬에서만 쉐이더 동작
-		if (GameManager.Instance.isStageScene) {
+		if (GameManager.instance.isStageScene) {
 			if (sun == null) LoadResources();//리소스 null일시 다시 검색
 			timer();
 			changeLightAndFogColor();
@@ -106,7 +106,7 @@ public class ShaderManager : SingleTon<ShaderManager>
 
 	//씬이 전환되거나 재로딩되었을 시 게임오브젝트 및 스프라이트 전부 다시 재로딩
 	void LoadResources() {
-		if (GameManager.Instance.isStageScene) {
+		if (GameManager.instance.isStageScene) {
 			getSpriteList();
 
 			//하늘 배경 게임오브젝트 탐색

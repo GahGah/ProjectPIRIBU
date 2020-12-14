@@ -41,7 +41,7 @@ public class PiriManager : SingleTon<PiriManager>
     public bool isShouldUseChild;
 
     [HideInInspector]
-    public RaycastHit2D hit;
+    public GameObject hitObject;
 
     protected override void Awake()
     {
@@ -52,6 +52,7 @@ public class PiriManager : SingleTon<PiriManager>
     }
     protected override void Init()
     {
+        hitObject = null;
         //base.Init();
         totaChildUseCount = 0;
         isCanAddedPressTimer = true;
@@ -112,11 +113,13 @@ public class PiriManager : SingleTon<PiriManager>
 
 
             Vector2 _tempPos = Camera.main.ScreenToWorldPoint(InputManager.Instance.GetMouseCurrentPosition());
-            Debug.Log("POS :" + InputManager.Instance.GetMouseCurrentPosition());
+            //Debug.Log("POS :" + InputManager.Instance.GetMouseCurrentPosition());
 
-            hit = Physics2D.Raycast(_tempPos, Vector2.zero, 0f, layerMask);
+            RaycastHit2D hit = Physics2D.Raycast(_tempPos, Vector2.zero, 0f, layerMask);
+
             if (hit.collider != null)
             {
+                hitObject = hit.collider.gameObject;
                 if (InputManager.Instance.buttonMouseLeft.wasPressedThisFrame)
                 {
 

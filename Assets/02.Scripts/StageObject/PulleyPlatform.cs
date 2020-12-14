@@ -56,8 +56,6 @@ public class PulleyPlatform : LinearPlatform, ISelectable
     public GameObject effectObject;
     public void Init()
     {
-        effectObject.GetComponent<MeshRenderer>().material.SetColor("_Color", Color.black);
-
         debugColor = Color.white;
         if (selectState != ESelectState.DONTSELECT)
         {
@@ -124,6 +122,9 @@ public class PulleyPlatform : LinearPlatform, ISelectable
         {
             item.GetComponent<SpriteRenderer>().enabled = false;
         }
+        effectObject.transform.localPosition = new Vector3(this.gameObject.transform.localPosition.x, this.gameObject.transform.localPosition.y, -5f);
+        ShaderManager.Instance.changeBokeColor_Black(effectObject);
+
 
     }
     protected override void Update()
@@ -158,19 +159,34 @@ public class PulleyPlatform : LinearPlatform, ISelectable
 
 
                 case ESelectState.SELECT:
-                    ShaderManager.Instance.changeBokeColor(effectObject, new Color32(191, 98, 28, 255));
+                    
                     // debugColor = Color.yellow;
                     break;
 
                 case ESelectState.DEFAULT:
                     debugColor = Color.white;
-                    if (PiriManager.Instance.hit.collider.gameObject == this.gameObject)
+                    if (PiriManager.Instance.hitObject !=null&&PiriManager.Instance.hitObject==this.gameObject)
                     {
-                        ShaderManager.Instance.changeBokeColor(effectObject, new Color32(191, 98, 28, 255));
+                        if (PiriManager.Instance.isReadyToUse ==true)
+                        {
+                            ShaderManager.Instance.changeBokeColor_mouseOver(effectObject);
+                        }
+
                     }
                     else
                     {
-                        ShaderManager.Instance.changeBokeColor(effectObject, new Color32(191, 98, 28, 255));
+                        if (PiriManager.Instance.isReadyToUse)
+                        {
+                            Debug.Log("DefalutColor");
+                            ShaderManager.Instance.changeBokeColor_Default(effectObject);
+
+                        }
+                        else
+                        {
+                            Debug.Log("BlackColor");
+                            ShaderManager.Instance.changeBokeColor_Black(effectObject);
+                        }
+                        
                     }
                     break;
 
@@ -180,7 +196,7 @@ public class PulleyPlatform : LinearPlatform, ISelectable
 
                 case ESelectState.SOLVED:
                     // debugColor = Color.blue;
-                   
+                    ShaderManager.Instance.changeBokeColor_SkillUsed(effectObject);
                     isCanMove = true;
                     isStopped = false;
                     currentRouteIndex = answerRouteIndex;
