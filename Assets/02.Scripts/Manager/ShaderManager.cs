@@ -56,6 +56,8 @@ public class ShaderManager : SingleTon<ShaderManager>
     [SerializeField] private GameObject postProcessObj;
     private Volume postProcessVolume;
 
+    [SerializeField] private Color bokesColor_skillUsed;
+
     private Material BG_Tree_01_Material;
     private Material BG_Tree_02_Material;
     private Material BG_Mountain_01_Material;
@@ -198,7 +200,7 @@ public class ShaderManager : SingleTon<ShaderManager>
         PosDiffrence = -PosDiffrence;
         PosDiffrence.y += 0.2f;
 
-        BG_Mountain_03_Material.SetVector("_Offset", PosDiffrence * 0.01f);
+        BG_Mountain_03_Material.SetVector("_Offset", PosDiffrence * 0.012f);
         BG_Mountain_02_Material.SetVector("_Offset", PosDiffrence * 0.015f);
         BG_Mountain_01_Material.SetVector("_Offset", PosDiffrence * 0.02f);
         BG_Tree_02_Material.SetVector("_Offset", PosDiffrence * 0.025f);
@@ -390,5 +392,15 @@ public class ShaderManager : SingleTon<ShaderManager>
         vn.active = true;
         cc.active = true;
         cm.active = true;
+    }
+
+    public void changeBokeColor (GameObject bokeObj)
+    {
+        bokeObj.GetComponent<MeshRenderer>().material.SetColor("_Color", bokesColor_skillUsed);
+    }
+
+    public void changeBokeColor(GameObject bokeObj, Color col)
+    {
+        bokeObj.GetComponent<MeshRenderer>().material.SetColor("_Color", col);
     }
 }

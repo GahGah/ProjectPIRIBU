@@ -99,6 +99,7 @@ public class Script_VFX_PipeSkillEffect : MonoBehaviour
 
                 Vector3 particlePos = particleSystem.transform.TransformPoint(particles[i].position);
                 Vector3 targetPos = endTarget.transform.position + this.transform.position;
+                targetPos.z = particleSystem.gameObject.transform.position.z;
 
                 float lifeRate = (tempParticle.remainingLifetime / tempParticle.startLifetime);
                 Vector3 targetPosInv = targetPos - particlePos;
