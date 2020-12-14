@@ -33,6 +33,11 @@ public class SoundManager : SingleTon<SoundManager>
     private void Start()
     {
     }
+
+    public void PlaySFXOneShot(AudioClip ac)
+    {
+        audioSources[1].PlayOneShot(ac);
+    }
     public void PlayBGM()
     {
         audioSources[0].Play();

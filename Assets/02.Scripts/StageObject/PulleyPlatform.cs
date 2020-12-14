@@ -122,7 +122,7 @@ public class PulleyPlatform : LinearPlatform, ISelectable
         {
             item.GetComponent<SpriteRenderer>().enabled = false;
         }
-        effectObject.transform.localPosition = new Vector3(this.gameObject.transform.localPosition.x, this.gameObject.transform.localPosition.y, -5f);
+        // effectObject.transform.localPosition = new Vector3(this.gameObject.transform.localPosition.x, this.gameObject.transform.localPosition.y, -5f);
         ShaderManager.Instance.changeBokeColor_Black(effectObject);
 
 
@@ -152,42 +152,49 @@ public class PulleyPlatform : LinearPlatform, ISelectable
     }
     public void HandleSelectState(ESelectState _selectState)
     {
-        if (selectState!=ESelectState.DONTSELECT)
+        if (selectState != ESelectState.DONTSELECT)
         {
             switch (selectState)
             {
 
 
                 case ESelectState.SELECT:
-                    
+
                     // debugColor = Color.yellow;
                     break;
 
                 case ESelectState.DEFAULT:
                     debugColor = Color.white;
-                    if (PiriManager.Instance.hitObject !=null&&PiriManager.Instance.hitObject==this.gameObject)
+                    if (PiriManager.Instance.isReadyToUse == false)
                     {
-                        if (PiriManager.Instance.isReadyToUse ==true)
-                        {
-                            ShaderManager.Instance.changeBokeColor_mouseOver(effectObject);
-                        }
-
+                        ShaderManager.Instance.changeBokeColor_Black(effectObject);
                     }
                     else
                     {
-                        if (PiriManager.Instance.isReadyToUse)
+                        if (PiriManager.Instance.hitObject != null && PiriManager.Instance.hitObject == this.gameObject)
                         {
-                            Debug.Log("DefalutColor");
-                            ShaderManager.Instance.changeBokeColor_Default(effectObject);
+
+                            ShaderManager.Instance.changeBokeColor_mouseOver(effectObject);
 
                         }
                         else
                         {
-                            Debug.Log("BlackColor");
-                            ShaderManager.Instance.changeBokeColor_Black(effectObject);
+                            if (PiriManager.Instance.isReadyToUse)
+                            {
+                                Debug.Log("DefalutColor");
+                                ShaderManager.Instance.changeBokeColor_Default(effectObject);
+
+                            }
+                            else
+                            {
+                                Debug.Log("BlackColor");
+                                ShaderManager.Instance.changeBokeColor_Black(effectObject);
+                            }
+
                         }
-                        
                     }
+
+
                     break;
 
                 case ESelectState.CANCLE:
@@ -206,7 +213,7 @@ public class PulleyPlatform : LinearPlatform, ISelectable
                     break;
             }
         }
-     
+
     }
 
 
@@ -276,7 +283,7 @@ public class PulleyPlatform : LinearPlatform, ISelectable
         {
             SetMovement(MovementType.SetPos, Vector2.MoveTowards(rigidBody.position, _movePosition, pulleyDownSpeed * Time.smoothDeltaTime));
         }
-       
+
         //rigidBody.MovePosition(Vector2.MoveTowards(rigidBody.position, _movePosition, pulleyDownSpeed * Time.smoothDeltaTime));
         //rigidBody.position = Vector2.MoveTowards(rigidBody.position, _movePosition, pulleyDownSpeed * Time.smoothDeltaTime);
     }
