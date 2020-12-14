@@ -65,7 +65,7 @@ Material:
     - _ZWrite: 0
     m_Colors:
     - _AmbientColor: {r: 0.254717, g: 0.094918124, b: 0.094918124, a: 1}
-    - _BaseColor: {r: 0.23096801, g: 0.23096801, b: 0.23096801, a: 1}
+    - _BaseColor: {r: 0.7589169, g: 0.7589169, b: 0.7589169, a: 1}
     - _BeginColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EndColor: {r: 1, g: 1, b: 1, a: 1}
