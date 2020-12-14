@@ -529,8 +529,8 @@ MonoBehaviour:
     type: 3}
   sprites:
   - {fileID: 21300000, guid: c23034a50d213ec4c9df245153c1401d, type: 3}
-  - {fileID: 21300000, guid: e840e027610d2b249bfaecd90756c6f6, type: 3}
-  - {fileID: 21300000, guid: f7e077efec70ce740b19a49eb4d2855f, type: 3}
+  - {fileID: 21300000, guid: 9495667064f6b5f46ad92ec2eaaf4ebe, type: 3}
+  - {fileID: 21300000, guid: 6dd941a1b6453674fbc5e432ae554ebf, type: 3}
   nextSceneName: HomeScene
 --- !u!224 &1556032843 stripped
 RectTransform:
