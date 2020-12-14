@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.UI;
 
 /// <summary>
@@ -9,12 +10,14 @@ using UnityEngine.UI;
 /// </summary>
 public class UIManager : MonoBehaviour
 {
+
     [Tooltip("Destroy를 하고 싶지 않아서 독자적인 싱글턴 사용")]
     public static UIManager Instance;
 
+    private float gobVal;
     public Slider MasterVolumeSilder;
     public Slider BgmVolumeSlider;
-    public Slider SfxVolimeSlider;
+    public Slider SfxVolumeSlider;
     private void Awake()
     {
         if (Instance == null)
@@ -34,6 +37,8 @@ public class UIManager : MonoBehaviour
     }
     private void Start()
     {
+
+        InitSound();
 
         StartCoroutine(InitCursor());
         StartCoroutine(ProcessPiriMask());
@@ -74,6 +79,32 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void InitSound()
+    {
+        OnChangeMasterSlider();
+        OnChangeBGMSlider();
+        OnChangeSFXSlider();
+    }
+    public void OnChangeMasterSlider()
+    {
+        SoundManager.Instance.audioMixer.SetFloat("masterVolume", Mathf.Log(Mathf.Lerp(0.001f, 1f, MasterVolumeSilder.value)) * 20);
+    }
+
+    public void OnChangeBGMSlider()
+    {
+        SoundManager.Instance.audioMixer.SetFloat("bgmVolume", Mathf.Log(Mathf.Lerp(0.001f, 1f, BgmVolumeSlider.value)) * 20);
+    }
+
+    public void OnChangeSFXSlider()
+    {
+        SoundManager.Instance.audioMixer.SetFloat("sfxVolume", Mathf.Log(Mathf.Lerp(0.001f, 1f, SfxVolumeSlider.value)) * 20);
+        SoundManager.Instance.PlaySFX();
+    }
+
+    public void OnChangeUISlider()
+    {
+
+    }
     public void GoHome()
     {
          SceneChanger.Instance.LoadScene("HomeScene");

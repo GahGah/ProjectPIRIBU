@@ -71,6 +71,8 @@ public class SceneChanger : MonoBehaviour
             SceneManager.sceneLoaded -= LoadSceneEnd;
             if (loadSceneName == "HomeScene")
             {
+                SoundManager.Instance.audioSources[0].Stop();
+                SoundManager.Instance.PlayBGM(0);
                 UIManager.Instance.SetActiveTrueOnlyThisCanvasObject("MainMenuCanvas");
                 UIManager.Instance.InitChildButtons();
 				UIManager.Instance.GoDePause();
