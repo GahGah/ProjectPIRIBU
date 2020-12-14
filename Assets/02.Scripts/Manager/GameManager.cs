@@ -118,16 +118,17 @@ public class GameManager : SingleTon<GameManager>
     //임시 배경음 재생
     private void Start()
     {
-        bgm = gameObject.GetComponent<AudioSource>();
-        if (bgm!=null)
-        {
-            if (!bgm.isPlaying)
-                bgm.Play();
+        //사운드 매니저 추가에 따라서 이거 주석처리
+        //bgm = gameObject.GetComponent<AudioSource>();
+        //     if (bgm!=null)
+        //     {
+        //         if (!bgm.isPlaying)
+        //             bgm.Play();
 
-			targetPitch = 1;
-			currPitch = targetPitch;
+        targetPitch = 1;
+        currPitch = targetPitch;
 
-        }
+        //     }
 
     }
 
@@ -143,9 +144,19 @@ public class GameManager : SingleTon<GameManager>
 		//스테이지 씬에서의 동작
 		if (isStageScene) {
 			UpdateChildRange();
+
 			targetPitch = Mathf.Lerp(targetPitch, 1 + (float)(GetChildNumber() - maxChildNumber) / maxChildNumber * 0.4f, Time.deltaTime*2);
 			currPitch = Mathf.Lerp(currPitch,targetPitch,Time.deltaTime*2);
-			bgm.pitch = currPitch;
+            if ((float)(GetChildNumber() - maxChildNumber)<0)
+            {
+                SoundManager.instance.audioSources[0].pitch = currPitch;
+                if (SoundManager.instance.audioSources[0].isPlaying == false)
+                {
+                    SoundManager.instance.audioSources[0].Play();
+                }
+            }
+
+			//bgm.pitch = currPitch;
 		}
     }
 

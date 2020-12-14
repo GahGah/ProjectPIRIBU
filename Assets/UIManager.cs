@@ -98,7 +98,12 @@ public class UIManager : MonoBehaviour
     public void OnChangeSFXSlider()
     {
         SoundManager.Instance.audioMixer.SetFloat("sfxVolume", Mathf.Log(Mathf.Lerp(0.001f, 1f, SfxVolumeSlider.value)) * 20);
-        SoundManager.Instance.PlaySFX();
+
+        if (SoundManager.Instance.audioSources[1].isPlaying==false)
+        {
+            SoundManager.Instance.audioSources[1].Play();
+        }
+
     }
 
     public void OnChangeUISlider()

@@ -5916,7 +5916,7 @@ MonoBehaviour:
   - {fileID: 2235532454744963775, guid: ab2e91b0472a3a248a98ad7bce8bec74, type: 2}
   audioClips:
   - {fileID: 8300000, guid: 61dc0fb9e16a82f47af7b02bdbf3671b, type: 3}
-  - {fileID: 0}
+  - {fileID: 8300000, guid: b1bbc78ea375b224fac202a20a04fc7d, type: 3}
   - {fileID: 0}
   - {fileID: 0}
   audioSources:

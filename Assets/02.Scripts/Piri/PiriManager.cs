@@ -317,6 +317,7 @@ public class PiriManager : SingleTon<PiriManager>
 
 		if (_isChildBye)
         {
+            SoundManager.Instance.audioSources[1].Play();
             EffectManager.Instance.startEffect_VFX_PipeSkill(GameManager.Instance.childs[GameManager.Instance.childs.Count-1].gameObject, _endTarget, _isChildBye);
             GameManager.Instance.childs[GameManager.Instance.childs.Count - 1].gameObject.SetActive(false);
             GameManager.Instance.childs.Remove(GameManager.Instance.childs[GameManager.Instance.childs.Count - 1]);
@@ -324,6 +325,7 @@ public class PiriManager : SingleTon<PiriManager>
         }
         else
         {
+            SoundManager.Instance.audioSources[1].Play();
             EffectManager.Instance.startEffect_VFX_PipeSkill(GameManager.Instance.piriEffectPosition.gameObject, _endTarget, _isChildBye);
         }
 

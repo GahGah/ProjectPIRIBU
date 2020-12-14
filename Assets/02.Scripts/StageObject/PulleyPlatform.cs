@@ -53,8 +53,11 @@ public class PulleyPlatform : LinearPlatform, ISelectable
 
     private Color debugColor;
 
+    public GameObject effectObject;
     public void Init()
     {
+
+        effectObject.GetComponent<MeshRenderer>().material.SetColor("_Color", Color.black);
         debugColor = Color.white;
         if (selectState != ESelectState.DONTSELECT)
         {
