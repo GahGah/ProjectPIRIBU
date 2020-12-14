@@ -41,7 +41,7 @@ public class GameManager : SingleTon<GameManager>
     [HideInInspector] public Hero hero;
     [HideInInspector] public Rect childsRange;
 
-	int maxChildNumber;
+	[HideInInspector] public int maxChildNumber;
 	AudioSource bgm;
 	float targetPitch;
 	float currPitch;
