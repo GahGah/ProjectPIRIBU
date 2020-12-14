@@ -56,9 +56,9 @@ public class ShaderManager : SingleTon<ShaderManager>
     [SerializeField] private GameObject postProcessObj;
     private Volume postProcessVolume;
 
-    [SerializeField] [ColorUsageAttribute(true, true)] private Color32 bokesColor_defalut;
-    [SerializeField] [ColorUsageAttribute(true, true)] private Color32 bokesColor_mouseOver;
-    [SerializeField] [ColorUsageAttribute(true, true)] private Color32 bokesColor_skillUsed;
+    [SerializeField] [ColorUsageAttribute(true, true)] private Color bokesColor_defalut;
+    [SerializeField] [ColorUsageAttribute(true, true)] private Color bokesColor_mouseOver;
+    [SerializeField] [ColorUsageAttribute(true, true)] private Color bokesColor_skillUsed;
 
     private Material BG_Tree_01_Material;
     private Material BG_Tree_02_Material;
