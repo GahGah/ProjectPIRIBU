@@ -11533,7 +11533,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: a8f3a9ab38b175a43ade3895ec25afbc,
+      objectReference: {fileID: 21300000, guid: 5287deff0ac59484280641e0417bc2f2,
         type: 3}
     - target: {fileID: 809277444839874113, guid: d951084010b501346a5bc8aac55553d1,
         type: 3}
@@ -11559,18 +11559,18 @@ PrefabInstance:
         type: 3}
       propertyPath: leverOffImage
       value: 
-      objectReference: {fileID: 21300000, guid: a8f3a9ab38b175a43ade3895ec25afbc,
+      objectReference: {fileID: 21300000, guid: 5287deff0ac59484280641e0417bc2f2,
         type: 3}
     - target: {fileID: 2050441446814633191, guid: d951084010b501346a5bc8aac55553d1,
         type: 3}
       propertyPath: leverOnImage
       value: 
-      objectReference: {fileID: 21300000, guid: 5bf19bb668af91c4c8c79a7e46184cd0,
+      objectReference: {fileID: 21300000, guid: c3dac8bcc41318c4998aea4cfa6e3006,
         type: 3}
     - target: {fileID: 3774393864172529134, guid: d951084010b501346a5bc8aac55553d1,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.229
+      value: -0.29
       objectReference: {fileID: 0}
     - target: {fileID: 3774393864172529134, guid: d951084010b501346a5bc8aac55553d1,
         type: 3}
@@ -11591,6 +11591,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.z
       value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 3774393864172529134, guid: d951084010b501346a5bc8aac55553d1,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d951084010b501346a5bc8aac55553d1, type: 3}
@@ -12714,7 +12719,7 @@ PrefabInstance:
     - target: {fileID: 318300828429214413, guid: d951084010b501346a5bc8aac55553d1,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.085
+      value: 2.13
       objectReference: {fileID: 0}
     - target: {fileID: 318300828429214413, guid: d951084010b501346a5bc8aac55553d1,
         type: 3}
@@ -12770,7 +12775,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 5287deff0ac59484280641e0417bc2f2,
+      objectReference: {fileID: 21300000, guid: a8f3a9ab38b175a43ade3895ec25afbc,
         type: 3}
     - target: {fileID: 809277444839874113, guid: d951084010b501346a5bc8aac55553d1,
         type: 3}
@@ -12791,13 +12796,13 @@ PrefabInstance:
         type: 3}
       propertyPath: leverOffImage
       value: 
-      objectReference: {fileID: 21300000, guid: 5287deff0ac59484280641e0417bc2f2,
+      objectReference: {fileID: 21300000, guid: a8f3a9ab38b175a43ade3895ec25afbc,
         type: 3}
     - target: {fileID: 2050441446814633191, guid: d951084010b501346a5bc8aac55553d1,
         type: 3}
       propertyPath: leverOnImage
       value: 
-      objectReference: {fileID: 21300000, guid: c3dac8bcc41318c4998aea4cfa6e3006,
+      objectReference: {fileID: 21300000, guid: 5bf19bb668af91c4c8c79a7e46184cd0,
         type: 3}
     - target: {fileID: 3774393864172529134, guid: d951084010b501346a5bc8aac55553d1,
         type: 3}
@@ -14761,7 +14766,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 5287deff0ac59484280641e0417bc2f2,
+      objectReference: {fileID: 21300000, guid: a8f3a9ab38b175a43ade3895ec25afbc,
         type: 3}
     - target: {fileID: 650644810788069723, guid: 7632e10789adbc54ea0bb45464698ec7,
         type: 3}
@@ -14837,13 +14842,13 @@ PrefabInstance:
         type: 3}
       propertyPath: buttonOffImage
       value: 
-      objectReference: {fileID: 21300000, guid: 5287deff0ac59484280641e0417bc2f2,
+      objectReference: {fileID: 21300000, guid: a8f3a9ab38b175a43ade3895ec25afbc,
         type: 3}
     - target: {fileID: 8575905026627979264, guid: 7632e10789adbc54ea0bb45464698ec7,
         type: 3}
       propertyPath: buttonOnImage
       value: 
-      objectReference: {fileID: 21300000, guid: c3dac8bcc41318c4998aea4cfa6e3006,
+      objectReference: {fileID: 21300000, guid: 5bf19bb668af91c4c8c79a7e46184cd0,
         type: 3}
     - target: {fileID: 8575905026627979264, guid: 7632e10789adbc54ea0bb45464698ec7,
         type: 3}
@@ -16952,7 +16957,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 5287deff0ac59484280641e0417bc2f2,
+      objectReference: {fileID: 21300000, guid: a8f3a9ab38b175a43ade3895ec25afbc,
         type: 3}
     - target: {fileID: 650644810788069723, guid: 7632e10789adbc54ea0bb45464698ec7,
         type: 3}
@@ -17028,18 +17033,23 @@ PrefabInstance:
         type: 3}
       propertyPath: buttonOnImage
       value: 
-      objectReference: {fileID: 21300000, guid: c3dac8bcc41318c4998aea4cfa6e3006,
+      objectReference: {fileID: 21300000, guid: 5bf19bb668af91c4c8c79a7e46184cd0,
         type: 3}
     - target: {fileID: 8575905026627979264, guid: 7632e10789adbc54ea0bb45464698ec7,
         type: 3}
       propertyPath: buttonOffImage
       value: 
-      objectReference: {fileID: 21300000, guid: 5287deff0ac59484280641e0417bc2f2,
+      objectReference: {fileID: 21300000, guid: a8f3a9ab38b175a43ade3895ec25afbc,
         type: 3}
     - target: {fileID: 8883773190799729159, guid: 7632e10789adbc54ea0bb45464698ec7,
         type: 3}
       propertyPath: m_LocalPosition.z
       value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 8883773190799729159, guid: 7632e10789adbc54ea0bb45464698ec7,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.18
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7632e10789adbc54ea0bb45464698ec7, type: 3}
