@@ -7,8 +7,9 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using System;
 
-public class ShaderManager : SingleTon<GameManager>
+public class ShaderManager : SingleTon<ShaderManager>
 {
+
     public float curTime;
     [SerializeField] private int maxTime;
     [SerializeField] private float timeMultiple;
@@ -64,6 +65,17 @@ public class ShaderManager : SingleTon<GameManager>
     private Vector2 CamPos_Origin;
     private Vector2 CamPos;
 
+
+
+    protected override void Awake()
+    {
+        base.Awake();
+    }
+    protected override void Init()
+    {
+        base.Init();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -74,7 +86,7 @@ public class ShaderManager : SingleTon<GameManager>
     void Update()
     {
 		//스테이지 씬에서만 쉐이더 동작
-		if (GameManager.instance.isStageScene) {
+		if (GameManager.Instance.isStageScene) {
 			if (sun == null) LoadResources();//리소스 null일시 다시 검색
 			timer();
 			changeLightAndFogColor();
@@ -90,7 +102,7 @@ public class ShaderManager : SingleTon<GameManager>
 
 	//씬이 전환되거나 재로딩되었을 시 게임오브젝트 및 스프라이트 전부 다시 재로딩
 	void LoadResources() {
-		if (GameManager.instance.isStageScene) {
+		if (GameManager.Instance.isStageScene) {
 			getSpriteList();
 
 			//하늘 배경 게임오브젝트 탐색

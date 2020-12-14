@@ -314,7 +314,7 @@ public class PiriManager : SingleTon<PiriManager>
     private void StartPiriEffect(bool _isChildBye,GameObject _endTarget)
     {
 		GameManager.Instance.UsePiri();
-
+        ShaderManager.instance.onPostProcess();
 		if (_isChildBye)
         {
             EffectManager.Instance.startEffect_VFX_PipeSkill(GameManager.Instance.childs[GameManager.Instance.childs.Count-1].gameObject, _endTarget, _isChildBye);
