@@ -65,9 +65,9 @@ Material:
     m_Colors:
     - _AmbientColor: {r: 0.254717, g: 0.094918124, b: 0.094918124, a: 1}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _BeginColor: {r: 0.03398613, g: 0.011836951, b: 0.13207549, a: 1}
+    - _BeginColor: {r: 0.049934298, g: 0.20696816, b: 0.34578404, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _EndColor: {r: 0.017621929, g: 0.09920089, b: 0.33962262, a: 1}
+    - _EndColor: {r: 0.83026934, g: 0.5327328, b: 0.3137779, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _FogColor: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}

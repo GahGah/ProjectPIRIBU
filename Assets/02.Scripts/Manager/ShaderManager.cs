@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Experimental.Rendering.Universal;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using System;
 
 public class ShaderManager : SingleTon<GameManager>
@@ -49,6 +51,9 @@ public class ShaderManager : SingleTon<GameManager>
     [SerializeField] private GameObject BG_Mountain_03;
 
     [SerializeField] private Gradient MountainColor = new Gradient();
+
+    [SerializeField] private GameObject postProcessObj;
+    private Volume postProcessVolume;
 
     private Material BG_Tree_01_Material;
     private Material BG_Tree_02_Material;
@@ -101,6 +106,7 @@ public class ShaderManager : SingleTon<GameManager>
                     case "BG_Mountain_01": BG_Mountain_01 = go; break;
                     case "BG_Mountain_02": BG_Mountain_02 = go; break;
                     case "BG_Mountain_03": BG_Mountain_03 = go; break;
+                    case "PostProcess": postProcessObj = go; break; 
 					default: continue;
 				}
 			}
@@ -114,11 +120,14 @@ public class ShaderManager : SingleTon<GameManager>
             BG_Mountain_02_Material = BG_Mountain_02.GetComponent<MeshRenderer>().sharedMaterial;
             BG_Mountain_03_Material = BG_Mountain_03.GetComponent<MeshRenderer>().sharedMaterial;
 
+            postProcessVolume = postProcessObj.GetComponent<Volume>();
+
             CamPos_Origin = CameraManager.instance.currentCamera.transform.position;
 
             initBGObjectColor();
             setSpritesFogLevel();
 			setSkyObject();
+            offPostProcess();
         }
 	}
 
@@ -334,5 +343,39 @@ public class ShaderManager : SingleTon<GameManager>
         }
     }
 
+    public void offPostProcess()
+    {
+        FilmGrain fg;
+        Vignette vn;
+        ColorCurves cc;
+        ChannelMixer cm;
 
+        postProcessVolume.profile.TryGet(out fg);
+        postProcessVolume.profile.TryGet(out vn);
+        postProcessVolume.profile.TryGet(out cc);
+        postProcessVolume.profile.TryGet(out cm);
+
+        fg.active = false;
+        vn.active = false;
+        cc.active = false;
+        cm.active = false;
+    }
+
+    public void onPostProcess()
+    {
+        FilmGrain fg;
+        Vignette vn;
+        ColorCurves cc;
+        ChannelMixer cm;
+
+        postProcessVolume.profile.TryGet(out fg);
+        postProcessVolume.profile.TryGet(out vn);
+        postProcessVolume.profile.TryGet(out cc);
+        postProcessVolume.profile.TryGet(out cm);
+
+        fg.active = true;
+        vn.active = true;
+        cc.active = true;
+        cm.active = true;
+    }
 }
