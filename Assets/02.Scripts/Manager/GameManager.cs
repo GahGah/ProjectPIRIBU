@@ -150,7 +150,7 @@ public class GameManager : SingleTon<GameManager>
             Debug.Log((float)(GetChildNumber() - maxChildNumber));
             if ((float)(GetChildNumber() - maxChildNumber)<0)
             {
-                SoundManager.instance.audioSources[0].pitch = currPitch;
+                SoundManager.Instance.audioSources[0].pitch = currPitch;
                 if (SoundManager.instance.audioSources[0].isPlaying == false)
                 {
                     SoundManager.instance.audioSources[0].Play();
@@ -158,7 +158,7 @@ public class GameManager : SingleTon<GameManager>
             }
             if ((float)(GetChildNumber() - maxChildNumber)== 0)
             {
-                SoundManager.instance.audioSources[0].pitch = 1;
+                SoundManager.Instance.audioSources[0].pitch = 1;
                 if (SoundManager.instance.audioSources[0].isPlaying == false)
                 {
                     SoundManager.instance.audioSources[0].Play();

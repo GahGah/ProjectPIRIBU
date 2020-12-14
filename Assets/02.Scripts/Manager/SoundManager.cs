@@ -25,6 +25,7 @@ public class SoundManager : SingleTon<SoundManager>
             audioSources[i].outputAudioMixerGroup = audioMixerGroups[i];
         }
         audioSources[0].clip = audioClips[0];
+        audioSources[0].loop = true;
         audioSources[1].clip = audioClips[1];
 
     }
