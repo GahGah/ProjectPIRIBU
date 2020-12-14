@@ -2,18 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SoundManager : MonoBehaviour
+public class SoundManager : SingleTon<SoundManager>
 {
-    public static SoundManager Instance;
 
-    private void Awake()
+    protected override void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(this.gameObject);
-        }
+        base.Awake();
     }
+
+    protected override void Init()
+    {
+        base.Init();
+    }
+
+
 
 
 }
