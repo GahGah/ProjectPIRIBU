@@ -137,7 +137,7 @@ public class ShaderManager : SingleTon<ShaderManager>
             CamPos_Origin = CameraManager.instance.currentCamera.transform.position;
 
             initBGObjectColor();
-            setSpritesFogLevel();
+            //setSpritesFogLevel();
 			setSkyObject();
             offPostProcess();
         }
@@ -196,6 +196,7 @@ public class ShaderManager : SingleTon<ShaderManager>
         CamPos = CameraManager.instance.currentCamera.transform.position;
         Vector2 PosDiffrence = CamPos_Origin - CamPos;
         PosDiffrence = -PosDiffrence;
+        PosDiffrence.y += 0.2f;
 
         BG_Mountain_03_Material.SetVector("_Offset", PosDiffrence * 0.01f);
         BG_Mountain_02_Material.SetVector("_Offset", PosDiffrence * 0.015f);
