@@ -147,9 +147,18 @@ public class GameManager : SingleTon<GameManager>
 
 			targetPitch = Mathf.Lerp(targetPitch, 1 + (float)(GetChildNumber() - maxChildNumber) / maxChildNumber * 0.4f, Time.deltaTime*2);
 			currPitch = Mathf.Lerp(currPitch,targetPitch,Time.deltaTime*2);
+            Debug.Log((float)(GetChildNumber() - maxChildNumber));
             if ((float)(GetChildNumber() - maxChildNumber)<0)
             {
                 SoundManager.instance.audioSources[0].pitch = currPitch;
+                if (SoundManager.instance.audioSources[0].isPlaying == false)
+                {
+                    SoundManager.instance.audioSources[0].Play();
+                }
+            }
+            if ((float)(GetChildNumber() - maxChildNumber)== 0)
+            {
+                SoundManager.instance.audioSources[0].pitch = 1;
                 if (SoundManager.instance.audioSources[0].isPlaying == false)
                 {
                     SoundManager.instance.audioSources[0].Play();

@@ -50,6 +50,11 @@ public class PiriManager : SingleTon<PiriManager>
         pressTimer = 0f;
 
     }
+
+    public void PiriInit()
+    {
+        Init();
+    }
     protected override void Init()
     {
         hitObject = null;
@@ -337,7 +342,12 @@ public class PiriManager : SingleTon<PiriManager>
             EffectManager.Instance.startEffect_VFX_PipeSkill(GameManager.Instance.childs[GameManager.Instance.childs.Count - 1].gameObject, _endTarget, _isChildBye);
             GameManager.Instance.childs[GameManager.Instance.childs.Count - 1].gameObject.SetActive(false);
             GameManager.Instance.childs.Remove(GameManager.Instance.childs[GameManager.Instance.childs.Count - 1]);
-            ShaderManager.instance.onPostProcess();
+
+            if (totaChildUseCount>=3)
+            {
+                ShaderManager.instance.onPostProcess();
+            }
+           
         }
         else
         {

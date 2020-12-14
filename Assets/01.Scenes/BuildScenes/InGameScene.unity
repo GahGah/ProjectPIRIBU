@@ -5276,7 +5276,7 @@ PrefabInstance:
     - target: {fileID: 8534212088795555074, guid: 3735292ad981ffc46b53bedff6ef1884,
         type: 3}
       propertyPath: selectState
-      value: 4
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8534212088795555074, guid: 3735292ad981ffc46b53bedff6ef1884,
         type: 3}

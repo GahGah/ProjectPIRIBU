@@ -80,6 +80,8 @@ public class SceneChanger : MonoBehaviour
 			}
             else if (loadSceneName == "InGameScene")
             {
+
+                PiriManager.Instance.PiriInit();
                 UIManager.Instance.SetActiveTrueOnlyThisCanvasObject("HUDCanvas");
 
             } else if (loadSceneName == "CutScene_Prologue") {
