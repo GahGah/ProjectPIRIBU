@@ -31,7 +31,7 @@ public class CutSceneManager : MonoBehaviour
 
     void GoNextScene()
     {
-        if (!SceneChanger.Instance.isFading)
+        if (SceneChanger.Instance != null && !SceneChanger.Instance.isFading)
         {
             SceneChanger.Instance.LoadScene(nextSceneName);
             disableNext = true;

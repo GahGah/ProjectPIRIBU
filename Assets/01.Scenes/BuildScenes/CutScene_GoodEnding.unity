@@ -528,8 +528,8 @@ MonoBehaviour:
   pagePrefab: {fileID: 4261479138124458657, guid: 3a5a8b5a4072a9546b1bebdf34c0a85f,
     type: 3}
   sprites:
-  - {fileID: 21300000, guid: ea42edd5fcb6e1947936c8b624616fc0, type: 3}
-  - {fileID: 21300000, guid: e942df6475c36f249b486a05ad900535, type: 3}
+  - {fileID: 21300000, guid: 2887974eef668b44da539f13aa63d071, type: 3}
+  - {fileID: 21300000, guid: f3db9661c10d07d4d977f94c8ac9f64c, type: 3}
   nextSceneName: HomeScene
 --- !u!224 &1556032843 stripped
 RectTransform:
