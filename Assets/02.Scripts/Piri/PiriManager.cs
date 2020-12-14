@@ -40,6 +40,8 @@ public class PiriManager : SingleTon<PiriManager>
     [HideInInspector]
     public bool isShouldUseChild;
 
+    [HideInInspector]
+    public RaycastHit2D hit;
 
     protected override void Awake()
     {
@@ -108,21 +110,32 @@ public class PiriManager : SingleTon<PiriManager>
         {
             isReadyToUse = true;
 
-            if (InputManager.Instance.buttonMouseLeft.wasPressedThisFrame)
+
+            Vector2 _tempPos = Camera.main.ScreenToWorldPoint(InputManager.Instance.GetMouseCurrentPosition());
+            Debug.Log("POS :" + InputManager.Instance.GetMouseCurrentPosition());
+
+            hit = Physics2D.Raycast(_tempPos, Vector2.zero, 0f, layerMask);
+            if (hit.collider != null)
             {
-
-
-                Vector2 _tempPos = Camera.main.ScreenToWorldPoint(InputManager.Instance.GetMouseCurrentPosition());
-                Debug.Log("POS :" + InputManager.Instance.GetMouseCurrentPosition());
-
-                RaycastHit2D hit = Physics2D.Raycast(_tempPos, Vector2.zero, 0f, layerMask);
-
-
-                if (hit.collider != null)
+                if (InputManager.Instance.buttonMouseLeft.wasPressedThisFrame)
                 {
+
                     SolveThisObject(hit.collider.gameObject);
                 }
+                else
+                {
+                    //PulleyPlatform _tempPulley = hit.collider.gameObject.GetComponent<PulleyPlatform>();
+                    //if (_tempPulley != null)// 성공적으로 가져왔을 때
+                    //{
+                    //    ShaderManager.instance.changeBokeColor
+                    //}
+
+
+                }
+
             }
+
+
         }
         else
         {
@@ -132,7 +145,7 @@ public class PiriManager : SingleTon<PiriManager>
         currentPiriEnergyPer = 1f * currentPiriEnergy / maxPiriEnergy;
 
     }
-    
+
     /// <summary>
     /// 피리 능력 횟수를 count만큼 증가시킵니다.
     /// </summary>
@@ -194,7 +207,7 @@ public class PiriManager : SingleTon<PiriManager>
         if (_solveObj.GetComponent<PulleyPlatform>() != null)
         {
             var _test = _solveObj.GetComponent<PulleyPlatform>();
-            if (_test.selectState != ESelectState.SOLVED && _test.selectState == ESelectState.DEFAULT)
+            if (_test.selectState != ESelectState.SOLVED && _test.selectState != ESelectState.DONTSELECT)
             {
                 if (currentPiriEnergy > 0)
                 {
@@ -249,7 +262,7 @@ public class PiriManager : SingleTon<PiriManager>
         else if (_solveObj.GetComponent<WindmillPlatform>() != null)
         {
             var _test = _solveObj.GetComponent<WindmillPlatform>();
-            if (_test.selectState == ESelectState.DEFAULT)
+            if (_test.selectState != ESelectState.DONTSELECT)
             {
 
                 if (currentPiriEnergy > 0)
@@ -311,14 +324,14 @@ public class PiriManager : SingleTon<PiriManager>
         pressTimer = 0f;
 
     }
-    private void StartPiriEffect(bool _isChildBye,GameObject _endTarget)
+    private void StartPiriEffect(bool _isChildBye, GameObject _endTarget)
     {
-		GameManager.Instance.UsePiri();
+        GameManager.Instance.UsePiri();
 
-		if (_isChildBye)
+        if (_isChildBye)
         {
             SoundManager.Instance.audioSources[1].Play();
-            EffectManager.Instance.startEffect_VFX_PipeSkill(GameManager.Instance.childs[GameManager.Instance.childs.Count-1].gameObject, _endTarget, _isChildBye);
+            EffectManager.Instance.startEffect_VFX_PipeSkill(GameManager.Instance.childs[GameManager.Instance.childs.Count - 1].gameObject, _endTarget, _isChildBye);
             GameManager.Instance.childs[GameManager.Instance.childs.Count - 1].gameObject.SetActive(false);
             GameManager.Instance.childs.Remove(GameManager.Instance.childs[GameManager.Instance.childs.Count - 1]);
             ShaderManager.instance.onPostProcess();

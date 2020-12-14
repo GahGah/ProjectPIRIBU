@@ -56,14 +56,13 @@ public class PulleyPlatform : LinearPlatform, ISelectable
     public GameObject effectObject;
     public void Init()
     {
-
         effectObject.GetComponent<MeshRenderer>().material.SetColor("_Color", Color.black);
+
         debugColor = Color.white;
         if (selectState != ESelectState.DONTSELECT)
         {
             selectState = ESelectState.DEFAULT;
         }
-
 
         isArrive = false;
         isStopped = false;
@@ -156,12 +155,23 @@ public class PulleyPlatform : LinearPlatform, ISelectable
         {
             switch (selectState)
             {
-                case ESelectState.DEFAULT:
-                    debugColor = Color.white;
-                    break;
+
 
                 case ESelectState.SELECT:
-                    debugColor = Color.yellow;
+                    ShaderManager.Instance.changeBokeColor(effectObject, new Color32(191, 98, 28, 255));
+                    // debugColor = Color.yellow;
+                    break;
+
+                case ESelectState.DEFAULT:
+                    debugColor = Color.white;
+                    if (PiriManager.Instance.hit.collider.gameObject == this.gameObject)
+                    {
+                        ShaderManager.Instance.changeBokeColor(effectObject, new Color32(191, 98, 28, 255));
+                    }
+                    else
+                    {
+                        ShaderManager.Instance.changeBokeColor(effectObject, new Color32(191, 98, 28, 255));
+                    }
                     break;
 
                 case ESelectState.CANCLE:
@@ -169,7 +179,8 @@ public class PulleyPlatform : LinearPlatform, ISelectable
                     break;
 
                 case ESelectState.SOLVED:
-                    debugColor = Color.blue;
+                    // debugColor = Color.blue;
+                   
                     isCanMove = true;
                     isStopped = false;
                     currentRouteIndex = answerRouteIndex;
