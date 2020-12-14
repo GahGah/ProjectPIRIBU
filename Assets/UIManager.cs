@@ -99,7 +99,7 @@ public class UIManager : MonoBehaviour
     {
         SoundManager.Instance.audioMixer.SetFloat("sfxVolume", Mathf.Log(Mathf.Lerp(0.001f, 1f, SfxVolumeSlider.value)) * 20);
 
-        if (SoundManager.Instance.audioSources[1].isPlaying==false)
+        if (SoundManager.Instance.audioSources[1].isPlaying == false)
         {
             SoundManager.Instance.audioSources[1].Play();
         }
@@ -112,7 +112,7 @@ public class UIManager : MonoBehaviour
     }
     public void GoHome()
     {
-         SceneChanger.Instance.LoadScene("HomeScene");
+        SceneChanger.Instance.LoadScene("HomeScene");
 
     }
     public void GoGameStart()
@@ -124,7 +124,7 @@ public class UIManager : MonoBehaviour
         Application.Quit();
     }
 
-	public void GoPause()
+    public void GoPause()
     {
 
         Time.timeScale = 0f;
@@ -178,6 +178,49 @@ public class UIManager : MonoBehaviour
     }
 
     #endregion
+
+    #region ChangeCatchKey
+
+    public Transform[] selectImagePositions;
+    public Image selectImage;
+    private string currentCatchButtonName;
+    private void buttonNameInit()
+    {
+        currentCatchButtonName = "leftShift";
+    }
+    public void ChangeCatchButton(string str)
+    {
+        currentCatchButtonName = str;
+
+        switch (currentCatchButtonName)
+        {
+
+            case "leftShift":
+                selectImage.transform.position = selectImagePositions[0].position;
+                InputManager.Instance.ChangeCatchButton(currentCatchButtonName);
+                break;
+
+            case "r":
+                selectImage.transform.position = selectImagePositions[1].position;
+                InputManager.Instance.ChangeCatchButton(currentCatchButtonName);
+                break;
+
+            case "rightButton":
+                selectImage.transform.position = selectImagePositions[2].position;
+                InputManager.Instance.ChangeCatchButton(currentCatchButtonName);
+
+                break;
+
+            default:
+                selectImage.transform.position = selectImagePositions[0].position;
+                InputManager.Instance.ChangeCatchButton("leftShift");
+                break;
+        }
+
+    }
+
+    #endregion
+
 
     #region HUDManager
 
@@ -239,7 +282,7 @@ public class UIManager : MonoBehaviour
             if (PiriManager.Instance.ctrlInputPer > 0f)
             {
                 piriMaskImage.fillAmount = PiriManager.Instance.ctrlInputPer;
-               // Debug.Log(PiriManager.Instance.ctrlInputPer);
+                // Debug.Log(PiriManager.Instance.ctrlInputPer);
             }
             else if (PiriManager.Instance.ctrlInputPer <= 0f && isCanMaskChange)
             {
@@ -372,7 +415,7 @@ public class UIManager : MonoBehaviour
     }
     public void DestroyChildToMainMenu(int _index)
     {
-        if (childClickCount[_index] ==0)
+        if (childClickCount[_index] == 0)
         {
             childButtons[_index].interactable = false;
             StartCoroutine(DestroyChild(childButtons[_index]));
@@ -393,7 +436,7 @@ public class UIManager : MonoBehaviour
         float timer = 0f;
         while (_img.canvasRenderer.GetAlpha() != 0f)
         {
-            timer += Time.deltaTime * (1f/2f);
+            timer += Time.deltaTime * (1f / 2f);
             _tempAlpha = Mathf.Lerp(1f, 0f, timer);
             _img.canvasRenderer.SetAlpha(_tempAlpha);
 
