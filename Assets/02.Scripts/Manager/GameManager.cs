@@ -67,7 +67,6 @@ public class GameManager : SingleTon<GameManager>
 		
 		//새 씬이 로딩될때마다 캐릭터 검색
 		SceneManager.sceneLoaded += (x, y) => { FindObjectsInStage(); };
-
 	}
 
 	void FindObjectsInStage() {

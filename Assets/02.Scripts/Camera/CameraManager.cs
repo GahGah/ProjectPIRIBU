@@ -140,6 +140,7 @@ public class CameraManager : MonoBehaviour
 
         if (cameraState != ECameraState.STAY)
         {
+            Debug.Log("TestOK");
             ChangeScaleThisObject();
         }
 
@@ -370,9 +371,12 @@ public class CameraManager : MonoBehaviour
 
         if (isTimeMode)
         {
+            scaleChangeObject.transform.localScale.Set(
+                CustomLerp(scaleChangeObject.transform.localScale.x, (scObjX / 100) * _sizePer, zoomTimer),
+                               CustomLerp(scaleChangeObject.transform.localScale.y, (scObjY / 100) * _sizePer, zoomTimer),
+                               scaleChangeObject.transform.localScale.z);
 
-            scaleChangeObject.transform.localScale.Set(CustomLerp(scaleChangeObject.transform.localScale.x, (scObjX / 100) * _sizePer, zoomTimer),
-                               CustomLerp(scaleChangeObject.transform.localScale.y, (scObjY / 100) * _sizePer, zoomTimer), scaleChangeObject.transform.localScale.z);
+            Debug.Log(scaleChangeObject.transform.localScale);
             //scaleChangeObject.transform.localScale = Vector3.Lerp(scaleChangeObject.transform.localScale,
             //  new Vector3(
             //     (scObjX / 100) * _sizePer,

@@ -244,6 +244,7 @@ MonoBehaviour:
   whitePanel: {fileID: 474714119}
   loadSceneName: 
   isLoading: 0
+  isFading: 0
 --- !u!4 &30013368
 Transform:
   m_ObjectHideFlags: 0
@@ -453,7 +454,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1069.2212, y: 591.4841}
+  m_SizeDelta: {x: 577.3501, y: 319.3852}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &83694524
 CanvasRenderer:
