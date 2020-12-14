@@ -67,7 +67,7 @@ Material:
     - _Cutoff: 0.5
     - _DstBlend: 10
     - _EnableExternalAlpha: 0
-    - _FogIntensity: 0.7
+    - _FogIntensity: 0.75
     - _FogLevel: 5
     - _QueueOffset: 0
     - _SampleGI: 0
@@ -87,6 +87,6 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EndColor: {r: 0.40258992, g: 0.7830189, b: 0.575573, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
-    - _FogColor: {r: 0.593536, g: 0.50903064, b: 0.6034616, a: 1}
-    - _Offset: {r: -0.077949084, g: -0.020346407, b: 0, a: 0}
+    - _FogColor: {r: 0.11258456, g: 0.11623694, b: 0.20754719, a: 1}
+    - _Offset: {r: 2.9148052, g: 0.27318814, b: 0, a: 0}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}

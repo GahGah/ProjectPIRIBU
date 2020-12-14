@@ -21,7 +21,7 @@ public class CameraManager : MonoBehaviour
     public Transform target;
 
     [Tooltip("size에 따라서 스케일을 변화시킬 오브젝트...")]
-    public GameObject scaleChangeObject;
+    public GameObject BGObject;
 
     //위 오브젝트의 스케일 x,y값.
     private float scObjX = 0f;
@@ -72,12 +72,11 @@ public class CameraManager : MonoBehaviour
     private float height;
     private float width;
 
-
-
     private IEnumerator currentCoroutine;
 
-
     private float limitCalSize;
+
+    private Vector3 originBGObjectScale;
 
     public static CameraManager instance;
     public void Init()
@@ -105,9 +104,9 @@ public class CameraManager : MonoBehaviour
             followSpeed = 5f;
         }
 
-        if (scaleChangeObject == null)
+        if (BGObject == null)
         {
-            scaleChangeObject = new GameObject();
+            BGObject = new GameObject();
             //그냥 오류 방지를 위해 빈깡 하나 넣기.
         }
         #endregion
@@ -117,11 +116,11 @@ public class CameraManager : MonoBehaviour
         cameraState = ECameraState.DEFAULT;
         isTimeMode = true;
 
-        scObjX = scaleChangeObject.transform.localScale.x;
-        scObjY = scaleChangeObject.transform.localScale.y;
+        scObjX = BGObject.transform.localScale.x;
+        scObjY = BGObject.transform.localScale.y;
         //cameraDefaultPositionZ = -10f;
 
-
+        originBGObjectScale = BGObject.transform.localScale;
     }
 
     private void Awake()
@@ -137,16 +136,8 @@ public class CameraManager : MonoBehaviour
 
     private void Update()
     {
-
-        if (cameraState !=ECameraState.STAY)
-        {
-            ChangeScaleThisObject();
-        }
-
         //zoomSpeed가 변할...수도 있기 때문에.
         currentZoomSpeed = 1f / zoomSpeed;
-
-
 
         if (InputManager.Instance.buttonScroll.ReadValue().y > 0)
         {
@@ -167,7 +158,6 @@ public class CameraManager : MonoBehaviour
     private void FixedUpdate()
     {
         FollowTarget(); // 타겟 팔로잉
-
     }
 
     private void FollowTarget() // 타겟 팔로잉
@@ -189,7 +179,6 @@ public class CameraManager : MonoBehaviour
 
     private IEnumerator CameraControl()
     {
-
         while (true)
         {
             switch (cameraState)
@@ -235,10 +224,7 @@ public class CameraManager : MonoBehaviour
 
                 yield return null;
             }
-
         }
-
-
     }
     private IEnumerator CameraZoomOut(float _size)
     {
@@ -257,8 +243,11 @@ public class CameraManager : MonoBehaviour
                 zoomTimer += Time.smoothDeltaTime * currentZoomSpeed;
                 currentCamera.orthographicSize = Mathf.Lerp(oldOrthographicSize, _size, zoomTimer);
                 //스케일 변경 하고싶은 오브젝트의 스케일을...뭐 그 퍼센트만큼으로 변경시킨다. 되려나...
+                
+                // BG 크기 체인지
+                ChangeScaleBGObject();
 
-                  yield return YieldInstructionCache.WaitForEndOfFrame;
+                yield return YieldInstructionCache.WaitForEndOfFrame;
             }
         }
         else //아닐 경우
@@ -269,11 +258,18 @@ public class CameraManager : MonoBehaviour
                 //zoomTimer += Time.deltaTime;
                 currentCamera.orthographicSize = Mathf.SmoothDamp(currentCamera.orthographicSize, _size, ref velocity, zoomSpeed);
                 //ChangeScaleThisObject();
+
+                // BG 크기 체인지
+                ChangeScaleBGObject();
+
                 yield return YieldInstructionCache.WaitForEndOfFrame;
             }
         }
         currentCamera.orthographicSize = _size;
         cameraState = ECameraState.STAY;
+
+        
+
     }
     private IEnumerator CameraZoomIn(float _size)
     {
@@ -292,9 +288,9 @@ public class CameraManager : MonoBehaviour
                 zoomTimer += Time.smoothDeltaTime * currentZoomSpeed;
                 currentCamera.orthographicSize = Mathf.Lerp(oldOrthographicSize, _size, zoomTimer);
 
-                //테스트용 배경 줄이기. 
-                //먼저 현재 오쏘사이즈가 몇퍼센트 정도인지 구함. 
-                //스케일 변경 하고싶은 오브젝트의 스케일을...뭐 그 퍼센트만큼으로 변경시킨다. 되려나...
+                // BG 크기 체인지
+                ChangeScaleBGObject();
+
                 yield return YieldInstructionCache.WaitForEndOfFrame;
             }
         }
@@ -305,13 +301,18 @@ public class CameraManager : MonoBehaviour
                 // zoomTimer += Time.deltaTime;
                 currentCamera.orthographicSize = Mathf.SmoothDamp(currentCamera.orthographicSize, _size, ref velocity, zoomSpeed);
 
-                //ChangeScaleThisObject();
+                // BG 크기 체인지
+                ChangeScaleBGObject();
+
                 yield return YieldInstructionCache.WaitForEndOfFrame;
             }
         }
 
         currentCamera.orthographicSize = _size;
         cameraState = ECameraState.STAY;
+
+        // BG 크기 체인지
+        ChangeScaleBGObject();
     }
     private Vector3 GetConfinePosition()
     {
@@ -349,69 +350,13 @@ public class CameraManager : MonoBehaviour
 
     }
 
-    private float CustomLerp(float a, float b, float lerpValue)
+    private void ChangeScaleBGObject()
     {
-
-        float invLerpValue = 1 - lerpValue;
-        var result = a * invLerpValue - b * lerpValue;
-
-        return result;
-
+        float BgScaleRatio = (currentCamera.orthographicSize / cameraDefaultSize);
+        Vector3 scaleValue = originBGObjectScale * BgScaleRatio;
+        BGObject.transform.localScale = new Vector3(scaleValue.x, scaleValue.y, originBGObjectScale.z);
     }
-    private void ChangeScaleThisObject()
-    {
-        float _sizePer = currentCamera.orthographicSize / cameraDefaultSize * 100;
 
-        if (Mathf.Abs(_sizePer - 100) < limitCalSize)
-        {
-            _sizePer = 100f;
-        }
-
-        if (isTimeMode)
-        {
-
-            //---------------------------------
-            //currentChangeSize = new Vector3(Mathf.Abs(CustomLerp(scaleChangeObject.transform.localScale.x, (scObjX / 100) * _sizePer, zoomTimer)),
-                               //Mathf.Abs(CustomLerp(scaleChangeObject.transform.localScale.y, (scObjY / 100) * _sizePer, zoomTimer)),
-                               //scaleChangeObject.transform.localScale.z);
-
-            //currentChangeSize.Set(Mathf.Abs(currentChangeSize.x), Mathf.Abs(currentChangeSize.y), Mathf.Abs(currentChangeSize.z));
-
-            //scaleChangeObject.transform.localScale = currentChangeSize;
-            //---------------------------------
-
-            //scaleChangeObject.transform.localScale.Set(CustomLerp(scaleChangeObject.transform.localScale.x, (scObjX / 100) * _sizePer, zoomTimer),
-            //                   CustomLerp(scaleChangeObject.transform.localScale.y, (scObjY / 100) * _sizePer, zoomTimer),
-            //                   scaleChangeObject.transform.localScale.z);
-
-            //---------------------------------
-
-            scaleChangeObject.transform.localScale = Vector3.Lerp(scaleChangeObject.transform.localScale,
-              new Vector3(
-                 (scObjX / 100) * _sizePer,
-                 (scObjY / 100) * _sizePer,
-                 scaleChangeObject.transform.localScale.z //z는 뭐 그대로 놔두기로 하고,,,
-                  ), zoomTimer);
-
-            //--------------------------------
-            //scaleChangeObject.transform.localScale = new Vector3(CustomLerp(scaleChangeObject.transform.localScale.x, (scObjX / 100) * _sizePer, zoomTimer),
-            //                   CustomLerp(scaleChangeObject.transform.localScale.y, (scObjY / 100) * _sizePer, zoomTimer),
-            //                   scaleChangeObject.transform.localScale.z);
-            //---------------------------------
-
-
-
-        }
-        else
-        {
-            scaleChangeObject.transform.localScale = Vector3.SmoothDamp(scaleChangeObject.transform.localScale,
-            new Vector3(
-            (scObjX / 100) * _sizePer,
-            (scObjY / 100) * _sizePer,
-            scaleChangeObject.transform.localScale.z //z는 뭐 그대로 놔두기로 하고,,,
-             ), ref scObjVel, zoomSpeed);
-        }
-    }
     private void OnDrawGizmos()
     {
         if (isConfine)
@@ -419,7 +364,6 @@ public class CameraManager : MonoBehaviour
             Gizmos.color = Color.red;
             Gizmos.DrawWireCube(confinePos, confineSize);
         }
-
     }
 
 }
