@@ -2813,6 +2813,21 @@ PrefabInstance:
       propertyPath: timeMultiple
       value: 50
       objectReference: {fileID: 0}
+    - target: {fileID: 23147071422587645, guid: ff4105fddcdbc334181e2b1fce2ea775,
+        type: 3}
+      propertyPath: bokesColor_defalut.rgba
+      value: 4358141
+      objectReference: {fileID: 0}
+    - target: {fileID: 23147071422587645, guid: ff4105fddcdbc334181e2b1fce2ea775,
+        type: 3}
+      propertyPath: bokesColor_mouseOver.rgba
+      value: 447231
+      objectReference: {fileID: 0}
+    - target: {fileID: 23147071422587645, guid: ff4105fddcdbc334181e2b1fce2ea775,
+        type: 3}
+      propertyPath: bokesColor_skillUsed.rgba
+      value: 8849152
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ff4105fddcdbc334181e2b1fce2ea775, type: 3}
 --- !u!4 &2090533097 stripped
@@ -3917,6 +3932,11 @@ PrefabInstance:
       propertyPath: m_ConnectedAnchor.y
       value: 2.3461819
       objectReference: {fileID: 0}
+    - target: {fileID: 7720795813703570310, guid: c62c5f3098224be4f96f3d3a8713b73e,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.y
+      value: -3.183818
+      objectReference: {fileID: 0}
     - target: {fileID: 7720795813703570428, guid: c62c5f3098224be4f96f3d3a8713b73e,
         type: 3}
       propertyPath: m_LocalScale.y
@@ -4013,7 +4033,12 @@ PrefabInstance:
     - target: {fileID: 1618905864990110770, guid: 165458938ac6be64eb0ffe86486c5525,
         type: 3}
       propertyPath: m_ConnectedAnchor.y
-      value: -12.791164
+      value: -12.581164
+      objectReference: {fileID: 0}
+    - target: {fileID: 1618905864990110770, guid: 165458938ac6be64eb0ffe86486c5525,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: -12.391288
       objectReference: {fileID: 0}
     - target: {fileID: 1618905864990110792, guid: 165458938ac6be64eb0ffe86486c5525,
         type: 3}
@@ -4429,6 +4454,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.y
       value: -0.32
+      objectReference: {fileID: 0}
+    - target: {fileID: 50056390690095191, guid: 3735292ad981ffc46b53bedff6ef1884,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.y
+      value: 1.1661036
       objectReference: {fileID: 0}
     - target: {fileID: 50056390723354061, guid: 3735292ad981ffc46b53bedff6ef1884,
         type: 3}

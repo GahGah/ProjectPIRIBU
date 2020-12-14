@@ -56,7 +56,9 @@ public class ShaderManager : SingleTon<ShaderManager>
     [SerializeField] private GameObject postProcessObj;
     private Volume postProcessVolume;
 
-    [SerializeField] private Color bokesColor_skillUsed;
+    [SerializeField] [ColorUsageAttribute(true, true)] private Color32 bokesColor_defalut;
+    [SerializeField] [ColorUsageAttribute(true, true)] private Color32 bokesColor_mouseOver;
+    [SerializeField] [ColorUsageAttribute(true, true)] private Color32 bokesColor_skillUsed;
 
     private Material BG_Tree_01_Material;
     private Material BG_Tree_02_Material;
@@ -394,7 +396,22 @@ public class ShaderManager : SingleTon<ShaderManager>
         cm.active = true;
     }
 
-    public void changeBokeColor (GameObject bokeObj)
+    public void changeBokeColor_Black(GameObject bokeObj)
+    {
+        bokeObj.GetComponent<MeshRenderer>().material.SetColor("_Color", Color.black);
+    }
+
+    public void changeBokeColor_Default (GameObject bokeObj)
+    {
+        bokeObj.GetComponent<MeshRenderer>().material.SetColor("_Color", bokesColor_defalut);
+    }
+
+    public void changeBokeColor_mouseOver(GameObject bokeObj)
+    {
+        bokeObj.GetComponent<MeshRenderer>().material.SetColor("_Color", bokesColor_mouseOver);
+    }
+
+    public void changeBokeColor_SkillUsed (GameObject bokeObj)
     {
         bokeObj.GetComponent<MeshRenderer>().material.SetColor("_Color", bokesColor_skillUsed);
     }
