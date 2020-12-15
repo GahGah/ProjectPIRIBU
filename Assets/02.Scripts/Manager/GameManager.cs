@@ -138,7 +138,11 @@ public class GameManager : SingleTon<GameManager>
         //ESC키 눌러 일시정지
         if (inputManager.buttonPause.wasPressedThisFrame)
         {
-            UIManager.Instance.PauseToggle();
+            if (isStageScene)
+            {
+                UIManager.Instance.PauseToggle();
+            }
+
         }
 
 		//스테이지 씬에서의 동작
