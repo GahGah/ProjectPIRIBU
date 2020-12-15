@@ -39,7 +39,10 @@ public class SceneChanger : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(this.gameObject);
         }
+
+        Screen.SetResolution(1920, 1080, true);
         Init();
+
     }
     private void Init()
     {
