@@ -9,9 +9,6 @@ enum ECameraState
     ZOOMOUT,
     STAY
 }
-
-
-
 public class CameraManager : MonoBehaviour
 {
     [Tooltip("사용할 카메라. 넣지 않을 경우 자동으로 메인 카메라를 넣습니다. ")]

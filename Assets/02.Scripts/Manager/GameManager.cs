@@ -236,5 +236,12 @@ public class GameManager : SingleTon<GameManager>
 	public void UsePiri() {
 		targetPitch = 1.4f;
 	}
+    public void SetChildMaxSpeed(float speed)
+    {
+        foreach (Child child in childs)
+        {
+            child.unit.status.groundMoveSpeed.max = speed;
+        }
+    }
 
 }
