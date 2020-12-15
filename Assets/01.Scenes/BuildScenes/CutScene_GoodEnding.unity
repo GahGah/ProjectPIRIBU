@@ -530,7 +530,7 @@ MonoBehaviour:
   sprites:
   - {fileID: 21300000, guid: 2887974eef668b44da539f13aa63d071, type: 3}
   - {fileID: 21300000, guid: f3db9661c10d07d4d977f94c8ac9f64c, type: 3}
-  nextSceneName: HomeScene
+  nextSceneName: Credit
 --- !u!224 &1556032843 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4261479138124458662, guid: 3a5a8b5a4072a9546b1bebdf34c0a85f,

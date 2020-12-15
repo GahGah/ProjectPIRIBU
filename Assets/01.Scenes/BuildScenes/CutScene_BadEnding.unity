@@ -531,7 +531,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 004d583fcb77da84aa69c18e1de77c2d, type: 3}
   - {fileID: 21300000, guid: d3f814b9fb5a5eb419f70e7a522c97f5, type: 3}
   - {fileID: 21300000, guid: a0336022ffe98e54cb9ff09c71936660, type: 3}
-  nextSceneName: HomeScene
+  nextSceneName: Credit
 --- !u!224 &1556032843 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4261479138124458662, guid: 3a5a8b5a4072a9546b1bebdf34c0a85f,
