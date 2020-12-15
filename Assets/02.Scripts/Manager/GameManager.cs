@@ -151,7 +151,7 @@ public class GameManager : SingleTon<GameManager>
 
 			targetPitch = Mathf.Lerp(targetPitch, 1 + (float)(GetChildNumber() - maxChildNumber) / maxChildNumber * 0.4f, Time.deltaTime*2);
 			currPitch = Mathf.Lerp(currPitch,targetPitch,Time.deltaTime*2);
-            Debug.Log((float)(GetChildNumber() - maxChildNumber));
+            //Debug.Log((float)(GetChildNumber() - maxChildNumber));
 
             if (SoundManager.Instance!=null)
             {

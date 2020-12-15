@@ -39,7 +39,8 @@ public class UIManager : MonoBehaviour
     {
 
         InitSound();
-
+        currentCatchButtonName = "leftShift";
+        buttonNameInit();
         StartCoroutine(InitCursor());
         StartCoroutine(ProcessPiriMask());
         StartCoroutine(ProcessPiriGaugeImage());
@@ -150,7 +151,14 @@ public class UIManager : MonoBehaviour
     }
     public void ActiveToggleThisObject(GameObject _gameObject)
     {
+
         _gameObject.SetActive(!_gameObject.activeInHierarchy);
+        if (_gameObject.name == "SettingsCanvas")
+        {
+
+            buttonNameInit();
+
+        }
     }
 
     public void SetActiveTrueOnlyThisCanvasObject(string _name)
@@ -183,10 +191,31 @@ public class UIManager : MonoBehaviour
 
     public Transform[] selectImagePositions;
     public Image selectImage;
-    private string currentCatchButtonName;
+
+    [HideInInspector]
+    public string currentCatchButtonName;
     private void buttonNameInit()
     {
-        currentCatchButtonName = "leftShift";
+        switch (currentCatchButtonName)
+        {
+
+            case "leftShift":
+                selectImage.transform.position = selectImagePositions[0].position;
+                break;
+
+            case "r":
+                selectImage.transform.position = selectImagePositions[1].position;
+                break;
+
+            case "rightButton":
+                selectImage.transform.position = selectImagePositions[2].position;
+
+                break;
+
+            default:
+                selectImage.transform.position = selectImagePositions[0].position;
+                break;
+        }
     }
     public void ChangeCatchButton(string str)
     {

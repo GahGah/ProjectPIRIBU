@@ -181,13 +181,13 @@ public class PulleyPlatform : LinearPlatform, ISelectable
                         {
                             if (PiriManager.Instance.isReadyToUse)
                             {
-                                Debug.Log("DefalutColor");
+                            
                                 ShaderManager.Instance.changeBokeColor_Default(effectObject);
 
                             }
                             else
                             {
-                                Debug.Log("BlackColor");
+                              
                                 ShaderManager.Instance.changeBokeColor_Black(effectObject);
                             }
 

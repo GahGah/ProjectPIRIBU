@@ -30,6 +30,7 @@ public class InputManager : SingleTon<InputManager>
     {
         base.Init();
 
+        Debug.Log("InputInit");
         buttonUp = Keyboard.current.wKey;
         buttonLeft = Keyboard.current.aKey;
         buttonDown = Keyboard.current.sKey;
@@ -51,27 +52,34 @@ public class InputManager : SingleTon<InputManager>
     public void ChangeButton(ButtonControl _currentButton, ButtonControl _changeButton)
     {
         _currentButton = _changeButton;
+
     }
     public void ChangeCatchButton(string _catchButtonName)
     {
+
         switch (_catchButtonName)
         {
             case "rightButton":
-                ChangeButton(buttonCatch, Mouse.current.rightButton);
+                buttonCatch = Mouse.current.rightButton;
+                Debug.Log("rightButton OK");
                 break;
 
             case "r":
-                ChangeButton(buttonCatch, Keyboard.current.rKey);
+                buttonCatch =  Keyboard.current.rKey;
+                Debug.Log("r button OK");
                 break;
 
             case "leftShift":
-                ChangeButton(buttonCatch, Keyboard.current.leftShiftKey);
+                buttonCatch = Keyboard.current.leftShiftKey;
+                Debug.Log("Shift OK");
                 break;
 
             default:
-                ChangeButton(buttonCatch, Mouse.current.leftButton);
+                buttonCatch = Mouse.current.leftButton;
                 break;
         }
+
+        Debug.Log(buttonCatch);
     }
 
     public Vector2 GetMouseCurrentPosition()

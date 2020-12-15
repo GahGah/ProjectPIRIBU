@@ -82,8 +82,8 @@ public class CameraManager : MonoBehaviour
             instance = this;
 
 
-        //height = currentCamera.orthographicSize;
-        //width = height * Screen.width / Screen.height;
+        height = currentCamera.orthographicSize;
+        width = height * Screen.width / Screen.height;
 
         #region if <=0
 
@@ -240,7 +240,7 @@ public class CameraManager : MonoBehaviour
                 zoomTimer += Time.smoothDeltaTime * currentZoomSpeed;
                 currentCamera.orthographicSize = Mathf.Lerp(oldOrthographicSize, _size, zoomTimer);
                 //스케일 변경 하고싶은 오브젝트의 스케일을...뭐 그 퍼센트만큼으로 변경시킨다. 되려나...
-                
+
                 // BG 크기 체인지
                 ChangeScaleBGObject();
 
@@ -265,7 +265,7 @@ public class CameraManager : MonoBehaviour
         currentCamera.orthographicSize = _size;
         cameraState = ECameraState.STAY;
 
-        
+
 
     }
     private IEnumerator CameraZoomIn(float _size)
@@ -311,16 +311,30 @@ public class CameraManager : MonoBehaviour
         // BG 크기 체인지
         ChangeScaleBGObject();
     }
+
+
+    private Vector3 limitTest;
     private Vector3 GetConfinePosition()
     {
+        height = currentCamera.orthographicSize;
+        width = height * Screen.width / Screen.height;
         //애들 관련 그거를 하기 위해서는 이 부분에 아이들의 위치가 들어가야함.
         float localX = confineSize.x * 0.5f - width;
-        float clampX = Mathf.Clamp(currentCamera.transform.position.x, -localX + confinePos.x, localX + confinePos.x);
 
         float localY = confineSize.y * 0.5f - height;
+
+        float clampX = Mathf.Clamp(currentCamera.transform.position.x, -localX + confinePos.x, localX + confinePos.x);
         float clampY = Mathf.Clamp(currentCamera.transform.position.y, -localY + confinePos.y, localY + confinePos.y);
 
+        Vector3 centerBottom = Camera.main.ViewportToWorldPoint(new Vector2(0.5f, 0f));
+        //가운데 아래의 좌표를 얻어야함....
+
+        //float clampX = Mathf.Clamp(centerBottom.x, -localX + confinePos.x, localX + confinePos.x);
+        //float clampY = Mathf.Clamp(centerBottom.y, -localY + confinePos.y, localY + confinePos.y);
+
+
         Vector3 confinePosition = new Vector3(clampX, clampY, cameraDefaultPositionZ);
+        limitTest = new Vector3(clampX, clampY, cameraDefaultPositionZ);
         return confinePosition;
     }
 
@@ -360,6 +374,15 @@ public class CameraManager : MonoBehaviour
         {
             Gizmos.color = Color.red;
             Gizmos.DrawWireCube(confinePos, confineSize);
+
+            //Gizmos.color = Color.cyan;
+            //Gizmos.DrawSphere(limitTest, 3f); 
+            
+            //Gizmos.color = Color.blue;
+            //Gizmos.DrawSphere(currentConfinePos, 3f);
+            
+            //Gizmos.color = Color.yellow;
+            //Gizmos.DrawSphere(currentConfinePos, 3f);
         }
     }
 
