@@ -44,9 +44,7 @@ public class CutSceneManager : MonoBehaviour
 
             //ESC 스킵
             if (InputManager.Instance.buttonPause.wasPressedThisFrame)
-            {
                 GoNextScene();
-            }
 
             if (InputManager.Instance.buttonMouseLeft.wasPressedThisFrame)
             {
@@ -60,11 +58,7 @@ public class CutSceneManager : MonoBehaviour
 
                 //다음 페이지
                 if (pages.Count > 1)
-                {
-                   
                     page.NextPage();
-                    SoundManager.Instance.PlaySFXOneShot(SoundManager.Instance.audioClips[2]);
-                }
 
                 //마지막 페이지면 다음씬으로
                 else

@@ -31,18 +31,22 @@ public class PageCurl : MonoBehaviour {
 		transform.position = _Pos;
 		transform.eulerAngles = Vector3.zero;
 	}
-
 	public void SetSprite(Sprite _sprite) {
 		sprite = _sprite;
 		GetComponent<Image>().sprite = sprite;
 		_Front.GetComponent<Image>().sprite = sprite;
 	}
 
+	bool isStarted = false;
 	public void NextPage() {
-		_Front.gameObject.GetComponent<Animator>().SetTrigger("NextPage");
-		Destroy(transform.parent.gameObject, 2f);
+		if (!isStarted) {
+			isStarted = true;
+			SoundManager.Instance.PlaySFXOneShot(SoundManager.Instance.audioClips[2]);
+			_Front.gameObject.GetComponent<Animator>().SetTrigger("NextPage");
+			Destroy(transform.parent.gameObject, 2f);
+		}
 	}
 
-	
+
 
 }

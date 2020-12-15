@@ -217,14 +217,14 @@ public class UnitCharacter : Unit
 				isAllRayOverFoot = false;
 			}
 			
-			
+			/*
 			Color color;
 			if (distNow < 0)
 				color = Color.blue;
 			else color = Color.red;
 			Debug.DrawLine(origin, origin +_rayDir * (distNow+ rayGroundOffset), color);
-			//Debug.DrawLine(hit.point, hit.point + hit.normal*0.5f, Color.green);
-			
+			Debug.DrawLine(hit.point, hit.point + hit.normal*0.5f, Color.green);
+			*/
 
 
 		}
