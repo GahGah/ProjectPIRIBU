@@ -20,6 +20,13 @@ public class SoundManager : SingleTon<SoundManager>
     protected override void Init()
     {
         base.Init();
+      
+
+    }
+
+
+    private void Start()
+    {
         for (int i = 0; i < 3; i++)
         {
             audioSources[i].outputAudioMixerGroup = audioMixerGroups[i];
@@ -27,12 +34,6 @@ public class SoundManager : SingleTon<SoundManager>
         audioSources[0].clip = audioClips[0];
         audioSources[0].loop = true;
         audioSources[1].clip = audioClips[1];
-
-    }
-
-
-    private void Start()
-    {
     }
 
     public void PlaySFXOneShot(AudioClip ac)
