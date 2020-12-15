@@ -124,7 +124,15 @@ public class PiriManager : SingleTon<PiriManager>
 
             if (hit.collider != null)
             {
-                hitObject = hit.collider.gameObject;
+                if (hit.collider.gameObject.GetComponent<PulleyPlatform>()!=null) // 일단 풀리 플랫폼만 사용하기 때문에...
+                {
+                    hitObject = hit.collider.gameObject;
+                }
+                else
+                {
+                    hitObject = null;
+                }
+
                 if (InputManager.Instance.buttonMouseLeft.wasPressedThisFrame)
                 {
 
@@ -141,6 +149,10 @@ public class PiriManager : SingleTon<PiriManager>
 
                 }
 
+            }
+            else
+            {
+                hitObject = null;
             }
 
 

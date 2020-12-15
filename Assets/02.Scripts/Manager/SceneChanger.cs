@@ -26,13 +26,13 @@ public class SceneChanger : MonoBehaviour
     /// </summary>
     public bool isLoading;
 
-	// 페이드인 끝나야만 컷씬 스킵 가능하게 할게요. 바로 누르면 씬 로딩이 제대로 안되어서;
-	/// <summary>
-	/// 페이딩중인가?
-	/// </summary>
-	public bool isFading;
+    // 페이드인 끝나야만 컷씬 스킵 가능하게 할게요. 바로 누르면 씬 로딩이 제대로 안되어서;
+    /// <summary>
+    /// 페이딩중인가?
+    /// </summary>
+    public bool isFading;
 
-	private void Awake()
+    private void Awake()
     {
         if (Instance == null)
         {
@@ -53,10 +53,10 @@ public class SceneChanger : MonoBehaviour
     public void LoadScene(string _sceneName)
     {
         isLoading = true;
-		isFading = true;
-		//gameObject.SetActive(true);
+        isFading = true;
+        //gameObject.SetActive(true);
 
-		SceneManager.sceneLoaded += LoadSceneEnd;
+        SceneManager.sceneLoaded += LoadSceneEnd;
         loadSceneName = _sceneName;
 
         StartCoroutine(LoadingScene(_sceneName, Color.black));
@@ -75,18 +75,20 @@ public class SceneChanger : MonoBehaviour
                 SoundManager.Instance.PlayBGM(0);
                 UIManager.Instance.SetActiveTrueOnlyThisCanvasObject("MainMenuCanvas");
                 UIManager.Instance.InitChildButtons();
-				UIManager.Instance.GoDePause();
+                UIManager.Instance.GoDePause();
 
-			}
+            }
             else if (loadSceneName == "InGameScene")
             {
 
                 PiriManager.Instance.PiriInit();
                 UIManager.Instance.SetActiveTrueOnlyThisCanvasObject("HUDCanvas");
 
-            } else if (loadSceneName == "CutScene_Prologue") {
-				UIManager.Instance.SetActiveThisCanvasObject("MainMenuCanvas", false);
-			}
+            }
+            else if (loadSceneName == "CutScene_Prologue")
+            {
+                UIManager.Instance.SetActiveThisCanvasObject("MainMenuCanvas", false);
+            }
             isLoading = false;
         }
 
@@ -106,12 +108,11 @@ public class SceneChanger : MonoBehaviour
         loadingBarImage.fillAmount = 0f;
 
         yield return StartCoroutine(FadeAlphaCanvasGroup(0f, 1f));
-
-        yield return new WaitForSecondsRealtime(1f);
+        yield return new WaitForSecondsRealtime(0.5f);
         AsyncOperation loadOp = SceneManager.LoadSceneAsync(_sceneName);
         loadOp.allowSceneActivation = false;
 
-            loadingTimer = 0f;
+        loadingTimer = 0f;
 
         while (loadOp.isDone == false)
         {
@@ -160,11 +161,11 @@ public class SceneChanger : MonoBehaviour
         if (_endAlphaValue == 0f)
         {
 
-			whitePanel.gameObject.SetActive(false);
+            whitePanel.gameObject.SetActive(false);
             loadingBarImage.gameObject.SetActive(false);
 
-			//페이드인 끝나야만 컷씬 스킵 가능하게 할게요. 바로 누르면 씬 로딩이 제대로 안되어서;
-			isFading = false;
+            //페이드인 끝나야만 컷씬 스킵 가능하게 할게요. 바로 누르면 씬 로딩이 제대로 안되어서;
+            isFading = false;
         }
     }
     private IEnumerator FadeAlpha(float _startAlphaValue, float _endAlphaValue)
