@@ -2614,7 +2614,7 @@ PrefabInstance:
     - target: {fileID: 4995061381805588915, guid: 22c94e109dca2aa4d8e929b9a39131fb,
         type: 3}
       propertyPath: confineSize.x
-      value: 214.4
+      value: 218
       objectReference: {fileID: 0}
     - target: {fileID: 4995061381805588915, guid: 22c94e109dca2aa4d8e929b9a39131fb,
         type: 3}
